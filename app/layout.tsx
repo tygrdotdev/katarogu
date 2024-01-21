@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 
 import { ThemeProvider } from "@/components/theme/provider";
 import Nav from "@/components/nav";
-import { cn } from "@/lib/utils";
 
 import "./globals.css";
 
@@ -20,22 +19,22 @@ export default function RootLayout({
     <>
       <html lang="en" suppressHydrationWarning>
         <head />
-        <body className={cn(
-          "bg-neutral-100 dark:bg-neutral-900 min-h-screen antialiased container",
-        )}>
+        <body>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange
           >
-            <div vaul-drawer-wrapper="">
-              <Nav />
-              {children}
-            </div>
+            <main vaul-drawer-wrapper="" className="bg-neutral-50 dark:bg-neutral-950 min-h-screen antialiased">
+              <div className="container">
+                <Nav />
+                {children}
+              </div>
+            </main>
           </ThemeProvider>
         </body>
-      </html >
+      </html  >
     </>
   );
 }

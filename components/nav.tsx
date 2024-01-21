@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { ThemeToggle } from "./theme/toggle";
 import { Button } from "./ui/button";
-import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "./ui/drawer";
-import AuthDrawer from "./auth/drawer";
+import AuthPopup from "./auth/popup";
 
 export default function Nav() {
     return (
@@ -15,22 +14,22 @@ export default function Nav() {
                             <path d="M218.008 20C229.479 120.843 214.136 347.822 61 449" stroke="currentColor" fill="none" strokeWidth="72" />
                         </svg>
                         <span className="text-xl font-bold -top-1/2 relative">Katagoru</span>
-                        <div className="flex-row items-center pl-8 gap-4 hidden sm:flex">
-                            <Link href="#features">
-                                <Button variant="outline">
-                                    Features
+                        <div className="flex-row items-center pl-8 gap-2 hidden sm:flex">
+                            <Link href="#">
+                                <Button variant="ghost">
+                                    Discover
                                 </Button>
                             </Link>
-                            <Link href="#supported-sites">
-                                <Button variant="outline">
-                                    Supported Sites
+                            <Link href="#">
+                                <Button variant="ghost">
+                                    Browse
                                 </Button>
                             </Link>
                         </div>
                     </div>
                     <div className="flex flex-row gap-3 items-center">
                         <ThemeToggle />
-                        <AuthDrawer />
+                        <AuthPopup />
                     </div>
                 </div>
             </nav>
