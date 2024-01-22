@@ -6,7 +6,7 @@ import Nav from "@/components/nav";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Kataorgu",
+  title: "Katagoru",
   description: "An Anime and Manga tracker.",
 };
 
