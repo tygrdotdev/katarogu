@@ -5,12 +5,70 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useAuth } from "./provider";
+import Spinner from "../spinner";
 
 export default function AuthPopup() {
     const [open, setOpen] = useState(false);
     const [mode, setMode] = useState("signin");
     const isDesktop = useMediaQuery('(min-width: 768px)');
+
+    const [name, setName] = React.useState("");
+    const [email, setEmail] = React.useState("");
+    const [username, setUsername] = React.useState("");
+    const [password, setPassword] = React.useState("");
+    const [passwordConfirm, setPasswordConfirm] = React.useState("");
+
+    const [loading, setLoading] = React.useState(false);
+
+    const { signIn, register, resetPassword } = useAuth();
+
+    const reset = () => {
+        setName("");
+        setEmail("");
+        setUsername("");
+        setPassword("");
+        setPasswordConfirm("");
+
+        setLoading(false);
+    }
+
+    const onSignIn = () => {
+        setLoading(true);
+
+        signIn(email, password).then((res) => {
+            if (res) {
+                reset();
+                setOpen(false);
+            } else {
+                setLoading(false);
+            }
+        });
+    };
+
+    const onRegister = () => {
+        register(name, username, email, password, passwordConfirm).then((res) => {
+            if (res) {
+                reset();
+                setOpen(false);
+            } else {
+                setLoading(false);
+            }
+        });
+    };
+
+    const onReset = () => {
+        resetPassword(email).then(() => {
+            reset();
+            setOpen(false);
+        });
+    };
+
+    const changeMode = (mode: string) => {
+        setMode(mode);
+        reset();
+    }
 
     if (isDesktop) {
         return (
@@ -48,26 +106,37 @@ export default function AuthPopup() {
                             <div className="flex flex-col w-full gap-3 px-4">
                                 {mode === "signin" && (
                                     <>
-                                        <Input placeholder="Email / Username" type="email" />
-                                        <Input placeholder="Password" type="password" />
-                                        <Button>Submit</Button>
+                                        <form action={onSignIn} className="flex flex-col gap-4 items-center w-full">
+                                            <Input placeholder="Email / Username" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                                            <Input placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                                            <Button type="submit" className="data-[loading=true]:cursor-not-allowed w-full" disabled={loading} data-loading={loading}>
+                                                {loading ? <Spinner size={16} /> : "Submit"}
+                                            </Button>
+                                        </form>
                                     </>
                                 )}
                                 {mode === "register" && (
                                     <>
-                                        <Input placeholder="Email" />
-                                        <Input placeholder="Username" />
-                                        <Button>
-                                            GO!
-                                        </Button>
+                                        <form action={onRegister} className="flex flex-col gap-4 items-center w-full">
+                                            <Input placeholder="Name" type="text" value={name} onChange={(e) => setName(e.target.value)} />
+                                            <Input placeholder="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                                            <Input placeholder="Username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+                                            <Input placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                                            <Input placeholder="Confirm Password" type="password" value={passwordConfirm} onChange={(e) => setPasswordConfirm(e.target.value)} />
+                                            <Button type="submit" className="data-[loading=true]:cursor-not-allowed w-full" disabled={loading} data-loading={loading}>
+                                                {loading ? <Spinner size={16} /> : "Submit"}
+                                            </Button>
+                                        </form>
                                     </>
                                 )}
                                 {mode === "reset" && (
                                     <>
-                                        <Input placeholder="Email" />
-                                        <Button>
-                                            Submit
-                                        </Button>
+                                        <form action={onReset} className="flex flex-col gap-4 items-center w-full">
+                                            <Input placeholder="Email" />
+                                            <Button type="submit" className="data-[loading=true]:cursor-not-allowed w-full" disabled={loading} data-loading={loading}>
+                                                {loading ? <Spinner size={16} /> : "Submit"}
+                                            </Button>
+                                        </form>
                                     </>
                                 )}
                             </div>
@@ -85,13 +154,13 @@ export default function AuthPopup() {
                                             <span>
                                                 Forgot password?
                                             </span>
-                                            <button className="text-blue-500 hover:underline" onClick={() => setMode("reset")}>Reset</button>
+                                            <button className="text-blue-500 hover:underline" onClick={() => changeMode("reset")}>Reset</button>
                                         </div>
                                         <div className="flex flex-row gap-2">
                                             <span>
                                                 Don&apos;t have an account?
                                             </span>
-                                            <button className="text-blue-500 hover:underline" onClick={() => setMode("register")}>Register</button>
+                                            <button className="text-blue-500 hover:underline" onClick={() => changeMode("register")}>Register</button>
                                         </div>
                                     </>
                                 )}
@@ -101,13 +170,13 @@ export default function AuthPopup() {
                                             <span>
                                                 Already have an account?
                                             </span>
-                                            <button className="text-blue-500 hover:underline" onClick={() => setMode("signin")}>Sign in </button>
+                                            <button className="text-blue-500 hover:underline" onClick={() => changeMode("signin")}>Sign in </button>
                                         </div>
                                         <div className="flex flex-row gap-2">
                                             <span>
                                                 Forgot password?
                                             </span>
-                                            <button className="text-blue-500 hover:underline" onClick={() => setMode("reset")}>Reset</button>
+                                            <button className="text-blue-500 hover:underline" onClick={() => changeMode("reset")}>Reset</button>
                                         </div>
                                     </>
                                 )}
@@ -117,13 +186,13 @@ export default function AuthPopup() {
                                             <span>
                                                 Already have an account?
                                             </span>
-                                            <button className="text-blue-500 hover:underline" onClick={() => setMode("signin")}>Sign in </button>
+                                            <button className="text-blue-500 hover:underline" onClick={() => changeMode("signin")}>Sign in </button>
                                         </div>
                                         <div className="flex flex-row gap-2">
                                             <span>
                                                 Don&apos;t have an account?
                                             </span>
-                                            <button className="text-blue-500 hover:underline" onClick={() => setMode("register")}>Register</button>
+                                            <button className="text-blue-500 hover:underline" onClick={() => changeMode("register")}>Register</button>
                                         </div>
                                     </>
                                 )}
@@ -159,26 +228,37 @@ export default function AuthPopup() {
                             <div className="flex flex-col w-full gap-3 px-4">
                                 {mode === "signin" && (
                                     <>
-                                        <Input placeholder="Email / Username" />
-                                        <Input placeholder="Password" />
-                                        <Button>Submit</Button>
+                                        <form action={onSignIn} className="flex flex-col gap-4 items-center w-full">
+                                            <Input placeholder="Email / Username" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                                            <Input placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                                            <Button type="submit" className="data-[loading=true]:cursor-not-allowed w-full" disabled={loading} data-loading={loading}>
+                                                {loading ? <Spinner size={16} /> : "Submit"}
+                                            </Button>
+                                        </form>
                                     </>
                                 )}
                                 {mode === "register" && (
                                     <>
-                                        <Input placeholder="Email" />
-                                        <Input placeholder="Username" />
-                                        <Button>
-                                            GO!
-                                        </Button>
+                                        <form action={onRegister} className="flex flex-col gap-4 items-center w-full">
+                                            <Input placeholder="Name" type="text" value={name} onChange={(e) => setName(e.target.value)} />
+                                            <Input placeholder="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                                            <Input placeholder="Username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+                                            <Input placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                                            <Input placeholder="Confirm Password" type="password" value={passwordConfirm} onChange={(e) => setPasswordConfirm(e.target.value)} />
+                                            <Button type="submit" className="data-[loading=true]:cursor-not-allowed w-full" disabled={loading} data-loading={loading}>
+                                                {loading ? <Spinner size={16} /> : "Submit"}
+                                            </Button>
+                                        </form>
                                     </>
                                 )}
                                 {mode === "reset" && (
                                     <>
-                                        <Input placeholder="Email" />
-                                        <Button>
-                                            Submit
-                                        </Button>
+                                        <form action={onReset} className="flex flex-col gap-4 items-center w-full">
+                                            <Input placeholder="Email" />
+                                            <Button type="submit" className="data-[loading=true]:cursor-not-allowed w-full" disabled={loading} data-loading={loading}>
+                                                {loading ? <Spinner size={16} /> : "Submit"}
+                                            </Button>
+                                        </form>
                                     </>
                                 )}
                             </div>
@@ -197,13 +277,13 @@ export default function AuthPopup() {
                                                 <span>
                                                     Forgot password?
                                                 </span>
-                                                <button className="text-blue-500 hover:underline" onClick={() => setMode("reset")}>Reset</button>
+                                                <button className="text-blue-500 hover:underline" onClick={() => changeMode("reset")}>Reset</button>
                                             </div>
                                             <div className="flex flex-row gap-2">
                                                 <span>
                                                     Don&apos;t have an account?
                                                 </span>
-                                                <button className="text-blue-500 hover:underline" onClick={() => setMode("register")}>Register</button>
+                                                <button className="text-blue-500 hover:underline" onClick={() => changeMode("register")}>Register</button>
                                             </div>
                                         </>
                                     )}
@@ -213,13 +293,13 @@ export default function AuthPopup() {
                                                 <span>
                                                     Already have an account?
                                                 </span>
-                                                <button className="text-blue-500 hover:underline" onClick={() => setMode("signin")}>Sign in </button>
+                                                <button className="text-blue-500 hover:underline" onClick={() => changeMode("signin")}>Sign in </button>
                                             </div>
                                             <div className="flex flex-row gap-2">
                                                 <span>
                                                     Forgot password?
                                                 </span>
-                                                <button className="text-blue-500 hover:underline" onClick={() => setMode("reset")}>Reset</button>
+                                                <button className="text-blue-500 hover:underline" onClick={() => changeMode("reset")}>Reset</button>
                                             </div>
                                         </>
                                     )}
@@ -229,13 +309,13 @@ export default function AuthPopup() {
                                                 <span>
                                                     Already have an account?
                                                 </span>
-                                                <button className="text-blue-500 hover:underline" onClick={() => setMode("signin")}>Sign in </button>
+                                                <button className="text-blue-500 hover:underline" onClick={() => changeMode("signin")}>Sign in </button>
                                             </div>
                                             <div className="flex flex-row gap-2">
                                                 <span>
                                                     Don&apos;t have an account?
                                                 </span>
-                                                <button className="text-blue-500 hover:underline" onClick={() => setMode("register")}>Register</button>
+                                                <button className="text-blue-500 hover:underline" onClick={() => changeMode("register")}>Register</button>
                                             </div>
                                         </>
                                     )}
