@@ -27,7 +27,7 @@ export default function ProfilePage() {
                             </AspectRatio>
                         </div>
                         <div className="flex flex-row gap-4 w-full justify-between">
-                            <div className="flex flex-col px-6 text-xl font-semibold -translate-y-12 md:-translate-y-16 min-h-20 h-20">
+                            <div className="flex flex-col px-2 sm:px-4 md:px-6 text-xl font-semibold -translate-y-12 md:-translate-y-16 min-h-20 h-20">
                                 <Avatar className="mb-2 w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 border-2 border-black/10 dark:border-white/10"    >
                                     <AvatarImage src={avatar} aria-label="User Avatar" alt="Avatar" />
                                     <AvatarFallback>{user.username.slice(0, 1)}</AvatarFallback>
