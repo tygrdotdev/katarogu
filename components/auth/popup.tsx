@@ -106,7 +106,7 @@ export default function AuthPopup() {
                             <div className="flex flex-col w-full gap-3 px-4">
                                 {mode === "signin" && (
                                     <>
-                                        <form action={onSignIn} className="flex flex-col gap-4 items-center w-full">
+                                        <form action={onSignIn} className="flex flex-col items-center w-full gap-4">
                                             <Input placeholder="Email / Username" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
                                             <Input placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
                                             <Button type="submit" className="data-[loading=true]:cursor-not-allowed w-full" disabled={loading} data-loading={loading}>
@@ -117,7 +117,7 @@ export default function AuthPopup() {
                                 )}
                                 {mode === "register" && (
                                     <>
-                                        <form action={onRegister} className="flex flex-col gap-4 items-center w-full">
+                                        <form action={onRegister} className="flex flex-col items-center w-full gap-4">
                                             <Input placeholder="Name" type="text" value={name} onChange={(e) => setName(e.target.value)} />
                                             <Input placeholder="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
                                             <Input placeholder="Username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
@@ -131,7 +131,7 @@ export default function AuthPopup() {
                                 )}
                                 {mode === "reset" && (
                                     <>
-                                        <form action={onReset} className="flex flex-col gap-4 items-center w-full">
+                                        <form action={onReset} className="flex flex-col items-center w-full gap-4">
                                             <Input placeholder="Email" />
                                             <Button type="submit" className="data-[loading=true]:cursor-not-allowed w-full" disabled={loading} data-loading={loading}>
                                                 {loading ? <Spinner size={16} /> : "Submit"}
@@ -146,7 +146,7 @@ export default function AuthPopup() {
                                 </span>
                             </div>
                         </div>
-                        <div className="flex flex-col items-center w-full gap-2 mx-auto border-t border-black/10 dark:border-white/10 p-4">
+                        <div className="flex flex-col items-center w-full gap-2 p-4 mx-auto border-t border-black/10 dark:border-white/10">
                             <div className="flex flex-col items-center gap-2">
                                 {mode === "signin" && (
                                     <>
@@ -172,27 +172,15 @@ export default function AuthPopup() {
                                             </span>
                                             <button className="text-blue-500 hover:underline" onClick={() => changeMode("signin")}>Sign in </button>
                                         </div>
-                                        <div className="flex flex-row gap-2">
-                                            <span>
-                                                Forgot password?
-                                            </span>
-                                            <button className="text-blue-500 hover:underline" onClick={() => changeMode("reset")}>Reset</button>
-                                        </div>
                                     </>
                                 )}
                                 {mode === "reset" && (
                                     <>
                                         <div className="flex flex-row gap-2">
                                             <span>
-                                                Already have an account?
+                                                Remember your password?
                                             </span>
                                             <button className="text-blue-500 hover:underline" onClick={() => changeMode("signin")}>Sign in </button>
-                                        </div>
-                                        <div className="flex flex-row gap-2">
-                                            <span>
-                                                Don&apos;t have an account?
-                                            </span>
-                                            <button className="text-blue-500 hover:underline" onClick={() => changeMode("register")}>Register</button>
                                         </div>
                                     </>
                                 )}
@@ -228,7 +216,7 @@ export default function AuthPopup() {
                             <div className="flex flex-col w-full gap-3 px-4">
                                 {mode === "signin" && (
                                     <>
-                                        <form action={onSignIn} className="flex flex-col gap-4 items-center w-full">
+                                        <form action={onSignIn} className="flex flex-col items-center w-full gap-4">
                                             <Input placeholder="Email / Username" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
                                             <Input placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
                                             <Button type="submit" className="data-[loading=true]:cursor-not-allowed w-full" disabled={loading} data-loading={loading}>
@@ -239,7 +227,7 @@ export default function AuthPopup() {
                                 )}
                                 {mode === "register" && (
                                     <>
-                                        <form action={onRegister} className="flex flex-col gap-4 items-center w-full">
+                                        <form action={onRegister} className="flex flex-col items-center w-full gap-4">
                                             <Input placeholder="Name" type="text" value={name} onChange={(e) => setName(e.target.value)} />
                                             <Input placeholder="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
                                             <Input placeholder="Username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
@@ -253,7 +241,7 @@ export default function AuthPopup() {
                                 )}
                                 {mode === "reset" && (
                                     <>
-                                        <form action={onReset} className="flex flex-col gap-4 items-center w-full">
+                                        <form action={onReset} className="flex flex-col items-center w-full gap-4">
                                             <Input placeholder="Email" />
                                             <Button type="submit" className="data-[loading=true]:cursor-not-allowed w-full" disabled={loading} data-loading={loading}>
                                                 {loading ? <Spinner size={16} /> : "Submit"}
@@ -295,27 +283,15 @@ export default function AuthPopup() {
                                                 </span>
                                                 <button className="text-blue-500 hover:underline" onClick={() => changeMode("signin")}>Sign in </button>
                                             </div>
-                                            <div className="flex flex-row gap-2">
-                                                <span>
-                                                    Forgot password?
-                                                </span>
-                                                <button className="text-blue-500 hover:underline" onClick={() => changeMode("reset")}>Reset</button>
-                                            </div>
                                         </>
                                     )}
                                     {mode === "reset" && (
                                         <>
                                             <div className="flex flex-row gap-2">
                                                 <span>
-                                                    Already have an account?
+                                                    Remember your password?
                                                 </span>
                                                 <button className="text-blue-500 hover:underline" onClick={() => changeMode("signin")}>Sign in </button>
-                                            </div>
-                                            <div className="flex flex-row gap-2">
-                                                <span>
-                                                    Don&apos;t have an account?
-                                                </span>
-                                                <button className="text-blue-500 hover:underline" onClick={() => changeMode("register")}>Register</button>
                                             </div>
                                         </>
                                     )}

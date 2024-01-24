@@ -62,8 +62,8 @@ export default function ProtectedPage({ children }: { children: React.ReactNode 
                             <div className="absolute w-3/4 -translate-x-1/2 -translate-y-1/2 sm:w-3/4 top-1/2 left-1/2">
                                 <div className="flex flex-col items-center justify-center gap-6 text-center">
                                     <div className="flex flex-col items-center justify-center w-full gap-2">
-                                        <h1 className="text-3xl font-bold text-center sm:text-4xl">Verification required</h1>
-                                        <p className="text-sm sm:text-base text-primary-500">To continue, please check your email for a verification link.</p>
+                                        <h1 className="text-3xl font-bold text-center sm:text-4xl font-display">Verification required</h1>
+                                        <p className="text-sm sm:text-base text-neutral-500">To continue, please check your email for a verification link.</p>
                                     </div>
                                     <Button onClick={() => {
                                         toast.promise(pb.collection("users").requestVerification(user.email), {
@@ -86,13 +86,13 @@ export default function ProtectedPage({ children }: { children: React.ReactNode 
                     <div className="absolute w-3/4 -translate-x-1/2 -translate-y-1/2 sm:w-1/2 md:w-auto top-1/2 left-1/2">
                         <div className="flex flex-col items-center justify-center gap-6 text-center">
                             <div className="flex flex-col items-center justify-center w-full gap-2">
-                                <h1 className="text-3xl font-bold text-center sm:text-4xl">
+                                <h1 className="text-3xl font-bold text-center font-display sm:text-4xl">
                                     {mode === "signin" && "Sign in to Katarogu"}
                                     {mode === "register" && "Join the club!"}
                                     {mode === "reset" && "Reset password"}
                                 </h1>
 
-                                <p className="text-sm sm:text-base text-primary-500">
+                                <p className="text-sm sm:text-base text-neutral-500">
                                     {mode === "signin" && "Please log in with your Katagoru account to continue."}
                                     {mode === "register" && "Create a Katagoru account and join the club!"}
                                     {mode === "reset" && "Please enter your email address to reset your password."}
@@ -121,7 +121,7 @@ export default function ProtectedPage({ children }: { children: React.ReactNode 
                                         >
                                             Submit
                                         </Button>
-                                        <small className="px-2 pt-2 text-center text-primary-500 dark:text-primary-400">
+                                        <small className="px-2 pt-2 text-center text-neutral-500 dark:text-neutral-400">
                                             By continuing, you agree to our{" "}
                                             <a className="text-blue-500" href="/tos">
                                                 Terms of Service
@@ -180,7 +180,7 @@ export default function ProtectedPage({ children }: { children: React.ReactNode 
                                         >
                                             Create Account
                                         </Button>
-                                        <small className="px-2 pt-2 text-center text-primary-500 dark:text-primary-400">
+                                        <small className="px-2 pt-2 text-center text-neutral-500 dark:text-neutral-400">
                                             By continuing, you agree to our{" "}
                                             <a className="text-blue-500" href="/tos">
                                                 Terms of Service
@@ -206,7 +206,7 @@ export default function ProtectedPage({ children }: { children: React.ReactNode 
                                 )}
                             </div>
                             <hr className="w-full border border-black/10 dark:border-white/10" />
-                            <div className="flex flex-col items-center w-full gap-1">
+                            <div className="flex flex-col items-center w-full">
                                 {mode === "signin" && (
                                     <>
                                         <span>
