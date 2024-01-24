@@ -8,7 +8,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuItem
 } from "@/components/ui/dropdown-menu";
-import { AlertTriangle, LogOut, User } from "lucide-react";
+import { AlertTriangle, LogOut, Settings, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { useAuth } from "@/components/auth/provider";
@@ -72,6 +72,15 @@ export default function UserPopup() {
                                 </DropdownMenuItem>
                             </Link>
 
+                            <Link href="/account">
+                                <DropdownMenuItem>
+                                    <Settings className="mr-2 w-4 h-4" />
+                                    <span>
+                                        Account
+                                    </span>
+                                </DropdownMenuItem>
+                            </Link>
+
                             <DropdownMenuItem onClick={() => signOut()}>
                                 <LogOut className="mr-2 w-4 h-4" />
                                 <span>
@@ -128,6 +137,16 @@ export default function UserPopup() {
                                             <User className="mr-2 w-4 h-4" />
                                             <span>
                                                 Profile
+                                            </span>
+                                        </div>
+                                    </DrawerClose>
+                                </Link>
+                                <Link href="/account" className="w-full">
+                                    <DrawerClose>
+                                        <div className="flex cursor-default select-none items-center w-full p-4 text-md outline-none transition-colors focus:bg-neutral-100 focus:text-neutral-900 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 dark:focus:bg-neutral-800 dark:focus:text-neutral-50">
+                                            <Settings className="mr-2 w-4 h-4" />
+                                            <span>
+                                                Account
                                             </span>
                                         </div>
                                     </DrawerClose>

@@ -1,9 +1,23 @@
+"use client";
+
+import { useAuth } from "@/components/auth/provider";
+import DashboardPage from "./dashboard/page";
+import HomePage from "./home/page";
+
 export default function Home() {
+  const { loggedIn } = useAuth();
+
   return (
-    <main className="flex flex-col w-full">
-      <h1 className="text-3xl font-bold">
-        Hello, World!
-      </h1>
-    </main>
+    <>
+      {loggedIn ? (
+        <>
+          <DashboardPage />
+        </>
+      ) : (
+        <>
+          <HomePage />
+        </>
+      )}
+    </>
   );
 }

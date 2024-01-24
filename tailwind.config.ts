@@ -1,3 +1,4 @@
+import { fontFamily } from "tailwindcss/defaultTheme"
 import type { Config } from "tailwindcss"
 
 const config = {
@@ -31,6 +32,15 @@ const config = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+      },
+      fontFamily: {
+        sans: ["var(--font-inter)", ...fontFamily.sans],
+        display: ["var(--font-sora)", ...fontFamily.sans],
+      },
+      spacing: {
+        // Minus navbar height
+        "screen-no-nav": "calc(100vh - 68px)",
+        "snug": "calc(100vh - 68px - 2rem)",
       },
     },
   },
