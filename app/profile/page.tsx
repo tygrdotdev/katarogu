@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProfileStats from "./overview";
 import ProfileAnimeList from "./anime";
 import ProfileMangaList from "./manga";
-import ProfileHeader from "@/components/auth/profile-header";
+import ProfileHeader from "@/components/profile/header";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 

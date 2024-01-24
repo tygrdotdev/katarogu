@@ -47,14 +47,14 @@ export default function UserPopup() {
                                 )}
                                 <Image src={banner} width={350} height={150} alt="banner" className="object-cover w-full h-full" />
                             </AspectRatio>
-                            <DropdownMenuLabel className="flex flex-col px-3 text-xl font-semibold -translate-y-16 min-h-16 h-16">
-                                <Avatar className="mb-2 w-20 h-20 border-2 border-black/10 dark:border-white/10">
+                            <DropdownMenuLabel className="flex flex-col h-16 px-3 text-xl font-semibold -translate-y-16 min-h-16">
+                                <Avatar className="w-20 h-20 mb-2 border-2 border-black/10 dark:border-white/10">
                                     <AvatarImage src={avatar} aria-label="User Avatar" alt="Avatar" />
                                     <AvatarFallback>{user.username.slice(0, 1)}</AvatarFallback>
                                 </Avatar>
-                                <div className="flex flex-row justify-between items-center">
-                                    <span className="text-black dark:text-white font-semibold">
-                                        {user.username} <span className="text-neutral-500 font-normal text-sm">({user.email})</span>
+                                <div className="flex flex-row items-center justify-between">
+                                    <span className="font-semibold text-black dark:text-white">
+                                        {user.name} <span className="text-sm font-normal text-neutral-500">({user.username})</span>
                                     </span>
                                     <div className="flex flex-row items-start">
                                         {/* Badges */}
@@ -65,7 +65,7 @@ export default function UserPopup() {
 
                             <Link href="/profile">
                                 <DropdownMenuItem>
-                                    <User className="mr-2 w-4 h-4" />
+                                    <User className="w-4 h-4 mr-2" />
                                     <span>
                                         Profile
                                     </span>
@@ -74,7 +74,7 @@ export default function UserPopup() {
 
                             <Link href="/account">
                                 <DropdownMenuItem>
-                                    <Settings className="mr-2 w-4 h-4" />
+                                    <Settings className="w-4 h-4 mr-2" />
                                     <span>
                                         Account
                                     </span>
@@ -82,7 +82,7 @@ export default function UserPopup() {
                             </Link>
 
                             <DropdownMenuItem onClick={() => signOut()}>
-                                <LogOut className="mr-2 w-4 h-4" />
+                                <LogOut className="w-4 h-4 mr-2" />
                                 <span>
                                     Sign out
                                 </span>
@@ -115,14 +115,14 @@ export default function UserPopup() {
                                 )}
                                 <Image src={banner} width={350} height={150} alt="banner" className="object-cover w-full h-full rounded-t-md" />
                             </AspectRatio>
-                            <div className="flex flex-col px-3 text-xl font-semibold -translate-y-12 min-h-20 h-20">
-                                <Avatar className="mb-2 w-20 h-20 border-2 border-black/10 dark:border-white/10">
+                            <div className="flex flex-col h-20 px-3 text-xl font-semibold -translate-y-12 min-h-20">
+                                <Avatar className="w-20 h-20 mb-2 border-2 border-black/10 dark:border-white/10">
                                     <AvatarImage src={avatar} aria-label="User Avatar" alt="Avatar" />
                                     <AvatarFallback>{user.username.slice(0, 1)}</AvatarFallback>
                                 </Avatar>
-                                <div className="flex flex-row justify-between items-center">
-                                    <span className="text-black dark:text-white font-semibold">
-                                        {user.username} <span className="text-neutral-500 font-normal text-sm">({user.email})</span>
+                                <div className="flex flex-row items-center justify-between">
+                                    <span className="font-semibold text-black dark:text-white">
+                                        {user.name} <span className="text-sm font-normal text-neutral-500">({user.username})</span>
                                     </span>
                                     <div className="flex flex-row items-start">
                                         {/* Badges */}
@@ -134,7 +134,7 @@ export default function UserPopup() {
                                 <Link href="/profile" className="w-full">
                                     <DrawerClose>
                                         <div className="flex cursor-default select-none items-center w-full p-4 text-md outline-none transition-colors focus:bg-neutral-100 focus:text-neutral-900 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 dark:focus:bg-neutral-800 dark:focus:text-neutral-50">
-                                            <User className="mr-2 w-4 h-4" />
+                                            <User className="w-4 h-4 mr-2" />
                                             <span>
                                                 Profile
                                             </span>
@@ -144,7 +144,7 @@ export default function UserPopup() {
                                 <Link href="/account" className="w-full">
                                     <DrawerClose>
                                         <div className="flex cursor-default select-none items-center w-full p-4 text-md outline-none transition-colors focus:bg-neutral-100 focus:text-neutral-900 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 dark:focus:bg-neutral-800 dark:focus:text-neutral-50">
-                                            <Settings className="mr-2 w-4 h-4" />
+                                            <Settings className="w-4 h-4 mr-2" />
                                             <span>
                                                 Account
                                             </span>
@@ -154,7 +154,7 @@ export default function UserPopup() {
                                 <hr className="w-full border-b border-black/10 dark:border-white/10" />
                                 <DrawerClose>
                                     <div className="flex cursor-default select-none items-center text-md outline-none p-4 transition-colors focus:bg-neutral-100 focus:text-neutral-900 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 dark:focus:bg-neutral-800 dark:focus:text-neutral-50" onClick={() => signOut()}>
-                                        <LogOut className="mr-2 w-4 h-4" />
+                                        <LogOut className="w-4 h-4 mr-2" />
                                         <span>
                                             Sign out
                                         </span>

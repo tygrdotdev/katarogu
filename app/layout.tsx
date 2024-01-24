@@ -31,7 +31,11 @@ export default function RootLayout({
     <>
       <html lang="en" suppressHydrationWarning>
         <head />
-        <body className={cn(inter.variable, sora.variable, 'font-sans')}>
+        <body className={cn(
+          "font-sans antialiased min-h-screen bg-background",
+          inter.variable,
+          sora.variable,
+        )}>
           <Script async src="https://analytics.tygr.dev/script.js" data-website-id="b77fbcb1-45fe-44b5-b08d-7f6b5d775451" />
           <ThemeProvider
             attribute="class"
