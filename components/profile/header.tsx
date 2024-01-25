@@ -31,7 +31,7 @@ export default function ProfileHeader({ children }: { children?: React.ReactNode
                         <div className="flex flex-col w-full h-20 px-2 text-xl font-semibold sm:flex-row -translate-y-14 sm:-translate-y-10 sm:px-4 md:px-6 md:-translate-y-14 min-h-20">
                             <Avatar className="w-24 h-24 mb-2 border-2 sm:w-28 sm:h-28 md:w-32 md:h-32 border-black/10 dark:border-white/10"    >
                                 <AvatarImage src={avatar} aria-label="User Avatar" alt="Avatar" />
-                                <AvatarFallback>{user.username.slice(0, 1)}</AvatarFallback>
+                                <AvatarFallback>{(user.username ?? "A").slice(0, 1).toUpperCase()}</AvatarFallback>
                             </Avatar>
                             <div className="flex flex-row items-center justify-between w-full sm:pt-20 md:pt-24 sm:pl-4">
                                 <span className="flex flex-col w-full font-semibold text-black dark:text-white">

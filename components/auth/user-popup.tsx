@@ -32,7 +32,7 @@ export default function UserPopup() {
                         <DropdownMenuTrigger asChild className="cursor-pointer">
                             <Avatar className="border border-black/10 dark:border dark:border-white/10">
                                 <AvatarImage src={avatar} alt="Avatar" aria-label="Avatar" />
-                                <AvatarFallback>{user.username.slice(0, 1)}</AvatarFallback>
+                                <AvatarFallback>{(user.username ?? "A").slice(0, 1).toUpperCase()}</AvatarFallback>
                             </Avatar>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="min-w-[22rem] p-0 mr-2" side="bottom">
@@ -50,7 +50,7 @@ export default function UserPopup() {
                             <DropdownMenuLabel className="flex flex-col h-16 px-3 text-xl font-semibold -translate-y-16 min-h-16">
                                 <Avatar className="w-20 h-20 mb-2 border-2 border-black/10 dark:border-white/10">
                                     <AvatarImage src={avatar} aria-label="User Avatar" alt="Avatar" />
-                                    <AvatarFallback>{user.username.slice(0, 1)}</AvatarFallback>
+                                    <AvatarFallback>{(user.username ?? "A").slice(0, 1).toUpperCase()}</AvatarFallback>
                                 </Avatar>
                                 <div className="flex flex-row items-center justify-between">
                                     <span className="font-semibold text-black dark:text-white">
@@ -100,7 +100,7 @@ export default function UserPopup() {
                         <DrawerTrigger asChild className="cursor-pointer">
                             <Avatar className="border border-black/10 dark:border dark:border-white/10">
                                 <AvatarImage src={avatar} alt="Avatar" aria-label="Avatar" />
-                                <AvatarFallback>{user.username.slice(0, 1)}</AvatarFallback>
+                                <AvatarFallback>{(user.username ?? "A").slice(0, 1).toUpperCase()}</AvatarFallback>
                             </Avatar>
                         </DrawerTrigger>
                         <DrawerContent className="p-0 border-0" handle={false}>
@@ -118,7 +118,7 @@ export default function UserPopup() {
                             <div className="flex flex-col h-20 px-3 text-xl font-semibold -translate-y-12 min-h-20">
                                 <Avatar className="w-20 h-20 mb-2 border-2 border-black/10 dark:border-white/10">
                                     <AvatarImage src={avatar} aria-label="User Avatar" alt="Avatar" />
-                                    <AvatarFallback>{user.username.slice(0, 1)}</AvatarFallback>
+                                    <AvatarFallback>{(user.username ?? "A").slice(0, 1).toUpperCase()}</AvatarFallback>
                                 </Avatar>
                                 <div className="flex flex-row items-center justify-between">
                                     <span className="font-semibold text-black dark:text-white">
@@ -132,7 +132,7 @@ export default function UserPopup() {
                             <hr className="w-full border-b border-black/10 dark:border-white/10" />
                             <div className="flex flex-col items-start">
                                 <Link href="/profile" className="w-full">
-                                    <DrawerClose>
+                                    <DrawerClose className="w-full">
                                         <div className="flex cursor-default select-none items-center w-full p-4 text-md outline-none transition-colors focus:bg-neutral-100 focus:text-neutral-900 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 dark:focus:bg-neutral-800 dark:focus:text-neutral-50">
                                             <User className="w-4 h-4 mr-2" />
                                             <span>
@@ -142,7 +142,7 @@ export default function UserPopup() {
                                     </DrawerClose>
                                 </Link>
                                 <Link href="/account" className="w-full">
-                                    <DrawerClose>
+                                    <DrawerClose className="w-full">
                                         <div className="flex cursor-default select-none items-center w-full p-4 text-md outline-none transition-colors focus:bg-neutral-100 focus:text-neutral-900 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 dark:focus:bg-neutral-800 dark:focus:text-neutral-50">
                                             <Settings className="w-4 h-4 mr-2" />
                                             <span>

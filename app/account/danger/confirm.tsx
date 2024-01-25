@@ -27,11 +27,22 @@ import { useAuth } from "@/components/auth/provider"
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 
 export function DeleteAccountConfirm({ children }: { children: React.ReactNode }) {
-    const { user } = useAuth();
+    const { user, deleteAccount } = useAuth();
 
     const [open, setOpen] = React.useState(false);
     const [username, setUsername] = React.useState("");
     const [phrase, setPhrase] = React.useState("");
+    const [loading, setLoading] = React.useState(false);
+    const [enabled, setEnabled] = React.useState(false);
+
+    React.useEffect(() => {
+        if (username === user?.username && phrase === "delete my account") {
+            setEnabled(true);
+        } else {
+            setEnabled(false);
+        }
+    }, [username, phrase]);
+
 
     const isDesktop = useMediaQuery("(min-width: 768px)");
 
@@ -72,7 +83,7 @@ export function DeleteAccountConfirm({ children }: { children: React.ReactNode }
                                 <Button variant="outline" onClick={() => setOpen(false)}>
                                     Cancel
                                 </Button>
-                                <Button variant="destructive">
+                                <Button variant="destructive" disabled={!enabled} onClick={() => deleteAccount()}>
                                     Confirm Deletion
                                 </Button>
                             </div>
@@ -117,7 +128,7 @@ export function DeleteAccountConfirm({ children }: { children: React.ReactNode }
                         </DrawerHeader>
                         <DrawerFooter className="flex flex-row justify-between w-full p-3 border-t bg-neutral-200 dark:bg-neutral-900">
                             <Button variant="outline">Cancel</Button>
-                            <Button variant="destructive">Delete Account</Button>
+                            <Button variant="destructive" onClick={() => deleteAccount()} disabled={!enabled}>Delete Account</Button>
                         </DrawerFooter>
                     </DrawerContent>
                 </Drawer >

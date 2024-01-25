@@ -37,7 +37,7 @@ export default function ProtectedPage({ children }: { children: React.ReactNode 
 
                     case "reset": {
                         resetPassword(email);
-                        setMode("signin");
+                        changeMode("signin");
                         break;
                     }
                 }
@@ -47,6 +47,15 @@ export default function ProtectedPage({ children }: { children: React.ReactNode 
         document.addEventListener("keydown", down)
         return () => document.removeEventListener("keydown", down)
     }, [confirmPassword, email, signIn, mode, name, password, register, resetPassword, username, user])
+
+    const changeMode = (mode: "signin" | "register" | "reset") => {
+        setMode(mode);
+        setName("");
+        setUsername("");
+        setEmail("");
+        setPassword("");
+        setConfirmPassword("");
+    };
 
     return (
         <>
@@ -175,7 +184,7 @@ export default function ProtectedPage({ children }: { children: React.ReactNode 
                                             className="w-full text-md"
                                             onClick={() => {
                                                 register(name, username, email, password, confirmPassword)
-                                                setMode("signin")
+                                                changeMode("signin")
                                             }}
                                         >
                                             Create Account
@@ -200,7 +209,7 @@ export default function ProtectedPage({ children }: { children: React.ReactNode 
                                         <Input id="email" type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
                                         <Button className="w-full text-md" onClick={() => {
                                             resetPassword(email);
-                                            setMode("signin");
+                                            changeMode("signin");
                                         }}>Send</Button>
                                     </>
                                 )}
@@ -214,7 +223,7 @@ export default function ProtectedPage({ children }: { children: React.ReactNode 
                                             <Button
                                                 variant={"link"}
                                                 className="p-0 text-blue-500 dark:text-blue-500"
-                                                onClick={() => setMode("reset")}
+                                                onClick={() => changeMode("reset")}
                                             >
                                                 Reset
                                             </Button>
@@ -224,7 +233,7 @@ export default function ProtectedPage({ children }: { children: React.ReactNode 
                                             <Button
                                                 variant={"link"}
                                                 className="p-0 text-blue-500 dark:text-blue-500"
-                                                onClick={() => setMode("register")}
+                                                onClick={() => changeMode("register")}
                                             >
                                                 Sign up
                                             </Button>
@@ -238,7 +247,7 @@ export default function ProtectedPage({ children }: { children: React.ReactNode 
                                             <Button
                                                 variant={"link"}
                                                 className="p-0 text-blue-500 dark:text-blue-500"
-                                                onClick={() => setMode("signin")}
+                                                onClick={() => changeMode("signin")}
                                             >
                                                 Sign in
                                             </Button>
@@ -252,7 +261,7 @@ export default function ProtectedPage({ children }: { children: React.ReactNode 
                                             <Button
                                                 variant={"link"}
                                                 className="p-0 text-blue-500 dark:text-blue-500"
-                                                onClick={() => setMode("signin")}
+                                                onClick={() => changeMode("signin")}
                                             >
                                                 Sign in
                                             </Button>

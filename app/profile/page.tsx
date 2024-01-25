@@ -28,7 +28,7 @@ export default function ProfilePage() {
                         <div className="flex flex-row items-center gap-3 px-2">
                             <div className="flex flex-col w-full gap-3">
                                 <Tabs defaultValue="overview" className="w-full">
-                                    <TabsList className="justify-start w-full overflow-x-scroll scrollbar-none">
+                                    <TabsList className="justify-start w-full">
                                         <TabsTrigger value="overview" className="w-full">Overview</TabsTrigger>
                                         <TabsTrigger value="anime" className="w-full">Anime List</TabsTrigger>
                                         <TabsTrigger value="manga" className="w-full">Manga List</TabsTrigger>
