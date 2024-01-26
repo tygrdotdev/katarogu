@@ -6,7 +6,7 @@ import { useAuth } from "@/components/auth/provider";
 import React from "react";
 import { Mail } from "lucide-react";
 import { toast } from "sonner";
-import { pb } from "@/lib/pocketbase";
+import pb from "@/lib/pocketbase";
 
 export default function ProtectedPage({ children }: { children: React.ReactNode }) {
     const { user, signIn, register, resetPassword } = useAuth();

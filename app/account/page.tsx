@@ -13,7 +13,7 @@ import AvatarRemove from "@/components/profile/avatar-remove";
 import AvatarUpload from "@/components/profile/avatar-upload";
 import BannerUpload from "@/components/profile/banner-upload";
 import BannerRemove from "@/components/profile/banner-remove";
-import { pb } from "@/lib/pocketbase";
+import pb from "@/lib/pocketbase";
 import { toast } from "sonner";
 
 export default function AccountPage() {

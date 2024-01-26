@@ -1,6 +1,6 @@
 "use client";
 
-import { pb } from "@/lib/pocketbase";
+import pb from "@/lib/pocketbase";
 import React, { useCallback, useEffect } from "react";
 import { toast } from "sonner";
 
@@ -64,7 +64,7 @@ export const AuthContext = React.createContext<AuthSession>({
 
     banner: pb.authStore.model?.banner ?
         `${process.env.NEXT_PUBLIC_AUTH_URL}/api/files/_pb_users_auth_/${pb.authStore.model.id}/${pb.authStore.model.banner}` :
-        `https://preview.redd.it/jn8jyih8obj71.jpg?width=1060&format=pjpg&auto=webp&s=00093bf1491726eea4a752290353e0e169522b66`,
+        `https://images.unsplash.com/photo-1636955816868-fcb881e57954?q=50`,
 
     isDefaultBanner: pb.authStore.model?.banner ? false : true,
 
@@ -96,7 +96,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [isDefaultAvatar, setIsDefaultAvatar] = React.useState(pb.authStore.model?.avatar ? false : true);
     const [banner, setBanner] = React.useState(pb.authStore.model?.banner ?
         `${process.env.NEXT_PUBLIC_AUTH_URL}/api/files/_pb_users_auth_/${pb.authStore.model.id}/${pb.authStore.model.banner}` :
-        `https://images.unsplash.com/photo-1636955816868-fcb881e57954?q=80?w=1380&t=st=1705966073~exp=1705966673~hmac=b8a5b4d0ece52da95b8c863cfde28ef6c9355603a80dea71cbd1412fa5bcdb78`)
+        `https://images.unsplash.com/photo-1636955816868-fcb881e57954?q=50`)
     const [isDefaultBanner, setIsDefaultBanner] = React.useState(pb.authStore.model?.banner ? false : true);
 
     const signIn = async (email: string, password: string) => {
@@ -104,7 +104,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         await pb.collection("users").authWithPassword(email, password).then((record) => {
             setLoggedIn(true);
             setUser(pb.authStore.model);
-            update(false);
             toast.success("Success!", {
                 description: `Welcome back, ${record.record.username}`
             });
@@ -227,7 +226,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             {
                 loading: "Removing...",
                 success: (data) => {
-                    setAvatar(`${process.env.NEXT_PUBLIC_URL}/assets/auth/avatar.jpg`);
+                    setAvatar(`https://api.dicebear.com/7.x/lorelei-neutral/png?seed=${pb.authStore.model?.username}&radius=50`);
                     return "Successfully removed avatar.";
                 },
                 error: (err) => {
@@ -258,7 +257,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             {
                 loading: "Removing...",
                 success: (data) => {
-                    setBanner(`${process.env.NEXT_PUBLIC_URL}/assets/auth/banner.jpg`);
+                    setBanner(`https://images.unsplash.com/photo-1636955816868-fcb881e57954?q=50`);
                     return "Successfully removed banner.";
                 },
                 error: (err) => {
@@ -280,82 +279,81 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         })
     }, []);
 
-    async function update(authRefresh = true) {
-        if (authRefresh) {
-            await pb.collection("users").authRefresh().then((response) => {
-                setLoggedIn(true);
-                setUser(response.record);
-                setAvatar(response.record?.avatar ?
-                    `${process.env.NEXT_PUBLIC_AUTH_URL}/api/files/_pb_users_auth_/${response.record.id}/${response.record.avatar}` :
-                    `https://api.dicebear.com/7.x/lorelei-neutral/png?seed=${pb.authStore.model?.username}&radius=50`);
-                setIsDefaultAvatar(response.record?.avatar ? false : true);
-
-                setBanner(pb.authStore.model?.banner ?
-                    `${process.env.NEXT_PUBLIC_AUTH_URL}/api/files/_pb_users_auth_/${pb.authStore.model.id}/${pb.authStore.model.banner}` :
-                    `https://images.unsplash.com/photo-1636955816868-fcb881e57954?q=80`)
-                setIsDefaultBanner(response.record?.banner ? false : true);
-            }).catch((err: ClientError) => {
-                console.error(err)
-                if (err.status === 401) {
-                    signOut(false);
-                    toast.warning("Session expired!", {
-                        description: "Please log in again to continue."
-                    });
-                }
-            })
-        } else {
+    async function update() {
+        await pb.collection("users").authRefresh().then((response) => {
             setLoggedIn(true);
-            setUser(pb.authStore.model);
-            setAvatar(pb.authStore.model?.avatar ?
-                `${process.env.NEXT_PUBLIC_AUTH_URL}/api/files/_pb_users_auth_/${pb.authStore.model.id}/${pb.authStore.model.avatar}` :
+            setUser(response.record);
+            setAvatar(response.record?.avatar ?
+                `${process.env.NEXT_PUBLIC_AUTH_URL}/api/files/_pb_users_auth_/${response.record.id}/${response.record.avatar}` :
                 `https://api.dicebear.com/7.x/lorelei-neutral/png?seed=${pb.authStore.model?.username}&radius=50`);
-            setIsDefaultAvatar(pb.authStore.model?.avatar ? false : true);
+            setIsDefaultAvatar(response.record?.avatar ? false : true);
 
             setBanner(pb.authStore.model?.banner ?
                 `${process.env.NEXT_PUBLIC_AUTH_URL}/api/files/_pb_users_auth_/${pb.authStore.model.id}/${pb.authStore.model.banner}` :
                 `https://images.unsplash.com/photo-1636955816868-fcb881e57954?q=80`)
-            setIsDefaultBanner(pb.authStore.model?.banner ? false : true);
-        }
+            setIsDefaultBanner(response.record?.banner ? false : true);
+        }).catch((err: ClientError) => {
+            console.error(JSON.stringify(err, null, 2))
+            if (err.status === 401) {
+                signOut(false);
+                toast.warning("Session expired!", {
+                    description: "Please log in again to continue."
+                });
+            } else if (err.isAbort) {
+                console.log("Aborted request.");
+            } else {
+                toast.warning("Failed to update state.", {
+                    description: "You may need to log in again."
+                });
+            }
+        })
     }
 
     useEffect(() => {
+        // Once we are in the client, we can allow the provider to render children
         setMounted(true);
 
-        // check if a model exists and if it's valid
-        if (pb.authStore.model && !pb.authStore.isValid) {
-            signOut(false);
-            toast.warning("Session expired!", {
-                description: "Please log in again to continue."
+        // Check if the user has a valid session
+        if (pb.authStore.isValid) {
+            // Get the updated state from the server and update the context
+            update();
+
+            // Subscribe to changes to the user's record
+            pb.collection("users").subscribe(pb.authStore.model?.id, (res) => {
+                switch (res.action.toLowerCase()) {
+                    case "update": {
+                        // Any updates to the record will be reflected in the context
+                        console.log(res.action);
+                        console.log(res.record);
+                        update();
+                        break;
+                    }
+                    case "delete": {
+                        // If the user's record is deleted, log them out and show a toast
+                        console.log(res.action);
+                        console.log(res.record);
+                        signOut(false);
+                        toast.warning("Your account has been deleted.");
+                        break;
+                    }
+                }
             });
-        } else if (pb.authStore.model && pb.authStore.isValid) {
-            pb.collection("users").subscribe(pb.authStore.model.id, (res) => {
-                // If email has changed, the cookie is invalidated and the user is logged out.
-                console.log(res.record)
-                // if (res.record.email !== user?.email) {
-                //     setUser(null);
-                //     pb.authStore.clear();
-                //     toast.info("Head's up!", {
-                //         description: "We noticed that your email changed. Please log in again to continue.",
-                //         duration: 10000
-                //     });
-                // }
-                update(false);
-            })
         } else {
-            setLoggedIn(false);
-            setUser(null);
+            // If the user does not have a valid session, log them out and clear the local data
+            signOut(false);
         }
 
         return () => {
-            pb.collection("users").unsubscribe("*");
+            pb.collection("users").unsubscribe();
             setMounted(false);
         }
-    }, [pb.authStore.isValid])
+    }, [pb.authStore.isValid, pb.authStore.token])
 
     const value = React.useMemo(() => ({
         authStore: pb.authStore,
 
         user,
+
         avatar,
         isDefaultAvatar,
         banner,
@@ -376,7 +374,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         removeBanner,
 
         update,
-    }), [avatar, loggedIn, user]);
+    }), [avatar, banner, isDefaultAvatar, isDefaultBanner, loggedIn, user]);
 
     return (
         <>
