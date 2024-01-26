@@ -15,6 +15,8 @@ import { useAuth } from "../auth/provider"
 import { randomUUID } from "crypto"
 import { toast } from "sonner"
 
+const MAX_FILE_SIZE = 12582912; // 12 MB
+
 export default function AvatarUpload(props: ButtonProps) {
     const [open, setOpen] = React.useState(false)
     const isDesktop = useMediaQuery("(min-width: 768px)");
@@ -76,6 +78,10 @@ export default function AvatarUpload(props: ButtonProps) {
 
     function onSelectFile(e: React.ChangeEvent<HTMLInputElement>) {
         if (e.target.files && e.target.files.length > 0) {
+            if (e.target.files[0].size > MAX_FILE_SIZE) {
+                resetCrop();
+                return toast.error("Images must be under 12 MB.");
+            }
             const reader = new FileReader();
             reader.addEventListener("load", () =>
                 setSrc(reader.result?.toString() || ""),
@@ -93,7 +99,8 @@ export default function AvatarUpload(props: ButtonProps) {
                 if (!["image/jpeg", "image/png", "image/gif", "image/webp"].includes(type)) {
                     resetCrop();
                     return toast.error("Images must be in either JPEG, PNG, GIF, or WEBP format.");
-                } else {
+                }
+                else {
                     setOpen(true);
                 }
             }
