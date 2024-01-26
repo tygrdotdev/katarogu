@@ -45,7 +45,7 @@ export default function UserPopup() {
                                         </div>
                                     </div>
                                 )}
-                                <Image src={banner} width={350} height={150} alt="banner" className="object-cover w-full h-full" />
+                                <Image src={banner} width={1050} height={450} alt="banner" className="object-cover w-full h-full" />
                             </AspectRatio>
                             <DropdownMenuLabel className="flex flex-col h-16 px-3 text-xl font-semibold -translate-y-16 min-h-16">
                                 <Avatar className="w-20 h-20 mb-2 border-2 border-black/10 dark:border-white/10">
@@ -113,7 +113,7 @@ export default function UserPopup() {
                                         </div>
                                     </div>
                                 )}
-                                <Image src={banner} width={350} height={150} alt="banner" className="object-cover w-full h-full rounded-t-md" />
+                                <Image src={banner} width={1050} height={450} alt="banner" className="object-cover w-full h-full rounded-t-md" />
                             </AspectRatio>
                             <div className="flex flex-col h-20 px-3 text-xl font-semibold -translate-y-12 min-h-20">
                                 <Avatar className="w-20 h-20 mb-2 border-2 border-black/10 dark:border-white/10">
