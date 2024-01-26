@@ -4,8 +4,8 @@ import { useAuth } from "@/components/auth/provider";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from "next/image";
-import Link from "next/link";
-import { Button } from "../ui/button";
+import { EyeOff, Lock } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 function Badges() {
     return (
@@ -36,6 +36,26 @@ export default function ProfileHeader({ children }: { children?: React.ReactNode
                             <div className="flex flex-row items-center justify-between w-full sm:pt-20 md:pt-24 sm:pl-4">
                                 <span className="flex flex-col w-full font-semibold text-black dark:text-white">
                                     <span className="flex flex-row items-center gap-2">
+                                        {user.visibility === "private" && (
+                                            <Tooltip delayDuration={500}>
+                                                <TooltipTrigger>
+                                                    <Lock size={24} />
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                    Private
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        )}
+                                        {user.visibility === "unlisted" && (
+                                            <Tooltip delayDuration={500}>
+                                                <TooltipTrigger>
+                                                    <EyeOff size={24} />
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                    Unlisted
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        )}
                                         <p className="w-full text-2xl font-bold sm:text-xl md:text-2xl">
                                             {user.name}
                                         </p>

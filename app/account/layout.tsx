@@ -25,10 +25,15 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
                             </Link>
                         </ProfileHeader>
                         <div className="flex flex-col gap-4 py-0 sm:py-4 sm:flex-row">
-                            <div className="flex flex-col w-full gap-2 p-2 sm:w-1/4 bg-card">
+                            <div className="flex flex-col w-full gap-2 p-2 sm:w-1/4">
                                 <Link href="/account" className="w-full">
-                                    <Button variant="ghost" className={cn("w-full justify-start", `${path === "/account" ? "bg-neutral-100 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-50" : ""}`)}>
+                                    <Button variant="ghost" className={cn("w-full justify-start", `${path === "/account" ? "bg-neutral-200 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-50" : ""}`)}>
                                         General
+                                    </Button>
+                                </Link>
+                                <Link href="/account/privacy" className="w-full">
+                                    <Button variant="ghost" className={cn("w-full justify-start", `${path === "/account/privacy" ? "bg-neutral-200 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-50" : ""}`)}>
+                                        Privacy
                                     </Button>
                                 </Link>
                                 <Link href="/account/danger" className="w-full">

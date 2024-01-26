@@ -8,7 +8,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuItem
 } from "@/components/ui/dropdown-menu";
-import { AlertTriangle, LogOut, Settings, User } from "lucide-react";
+import { AlertTriangle, EyeOff, LogOut, Settings, User, Lock } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { useAuth } from "@/components/auth/provider";
@@ -16,7 +16,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { useState } from "react";
-import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from "../ui/drawer";
+import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
 export default function UserPopup() {
     const [open, setOpen] = useState(false);
@@ -47,15 +48,38 @@ export default function UserPopup() {
                                 )}
                                 <Image src={banner} width={1050} height={450} alt="banner" className="object-cover w-full h-full" />
                             </AspectRatio>
-                            <DropdownMenuLabel className="flex flex-col h-16 px-3 text-xl font-semibold -translate-y-16 min-h-16">
+                            <DropdownMenuLabel className="flex flex-col h-20 px-3 text-xl font-semibold -translate-y-16 min-h-20">
                                 <Avatar className="w-20 h-20 mb-2 border-2 border-black/10 dark:border-white/10">
                                     <AvatarImage src={avatar} aria-label="User Avatar" alt="Avatar" />
                                     <AvatarFallback>{(user.username ?? "A").slice(0, 1).toUpperCase()}</AvatarFallback>
                                 </Avatar>
                                 <div className="flex flex-row items-center justify-between">
-                                    <span className="font-semibold text-black dark:text-white">
-                                        {user.name} <span className="text-sm font-normal text-neutral-500">({user.username})</span>
-                                    </span>
+                                    <div className="flex flex-col items-start">
+                                        <span className="font-semibold flex flex-row gap-2 items-center text-black dark:text-white">
+                                            {user.name}
+                                            {user.visibility === "private" && (
+                                                <Tooltip delayDuration={0}>
+                                                    <TooltipTrigger>
+                                                        <Lock size={16} />
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
+                                                        Private
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            )}
+                                            {user.visibility === "unlisted" && (
+                                                <Tooltip delayDuration={500}>
+                                                    <TooltipTrigger>
+                                                        <EyeOff size={16} />
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
+                                                        Unlisted
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            )}
+                                        </span>
+                                        <span className="text-sm font-normal text-neutral-500">({user.username})</span>
+                                    </div>
                                     <div className="flex flex-row items-start">
                                         {/* Badges */}
                                     </div>
@@ -115,15 +139,39 @@ export default function UserPopup() {
                                 )}
                                 <Image src={banner} width={1050} height={450} alt="banner" className="object-cover w-full h-full rounded-t-md" />
                             </AspectRatio>
-                            <div className="flex flex-col h-20 px-3 text-xl font-semibold -translate-y-12 min-h-20">
+                            <div className="flex flex-col h-24 px-3 text-xl font-semibold -translate-y-12 min-h-24">
                                 <Avatar className="w-20 h-20 mb-2 border-2 border-black/10 dark:border-white/10">
                                     <AvatarImage src={avatar} aria-label="User Avatar" alt="Avatar" />
                                     <AvatarFallback>{(user.username ?? "A").slice(0, 1).toUpperCase()}</AvatarFallback>
                                 </Avatar>
                                 <div className="flex flex-row items-center justify-between">
-                                    <span className="font-semibold text-black dark:text-white">
-                                        {user.name} <span className="text-sm font-normal text-neutral-500">({user.username})</span>
-                                    </span>
+                                    <div className="flex flex-col items-start">
+                                        <span className="font-semibold flex flex-row items-center gap-2 text-black dark:text-white">
+                                            {user.name}
+                                            {user.visibility === "private" && (
+                                                <Tooltip delayDuration={0}>
+                                                    <TooltipTrigger>
+                                                        <Lock size={16} />
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
+                                                        Private
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            )}
+                                            {user.visibility === "unlisted" && (
+                                                <Tooltip delayDuration={500}>
+                                                    <TooltipTrigger>
+                                                        <EyeOff size={16} />
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
+                                                        Unlisted
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            )}
+                                        </span>
+                                        <span className="text-sm font-normal text-neutral-500">({user.username})</span>
+                                    </div>
+
                                     <div className="flex flex-row items-start">
                                         {/* Badges */}
                                     </div>

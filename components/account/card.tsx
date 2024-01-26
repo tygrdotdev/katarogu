@@ -1,4 +1,4 @@
-export default function AccountCard({ title, description, children, footer, action }: { title: string, description: string, children: React.ReactNode, footer: React.ReactNode, action: React.ReactNode }) {
+export default function AccountCard({ title, description, children, footer, action }: { title: string, description: string, children: React.ReactNode, footer?: React.ReactNode, action?: React.ReactNode }) {
     return (
         <>
             <div className="flex flex-col w-full border rounded-md">
