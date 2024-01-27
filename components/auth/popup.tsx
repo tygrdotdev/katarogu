@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useAuth } from "./provider";
 import Spinner from "../spinner";
 
@@ -34,10 +34,10 @@ export default function AuthPopup() {
         setLoading(false);
     }
 
-    const onSignIn = () => {
+    const onSignIn = async () => {
         setLoading(true);
 
-        signIn(email, password).then((res) => {
+        await signIn(email, password).then((res) => {
             if (res) {
                 reset();
                 setOpen(false);
@@ -47,8 +47,8 @@ export default function AuthPopup() {
         });
     };
 
-    const onRegister = () => {
-        register(name, username, email, password, passwordConfirm).then((res) => {
+    const onRegister = async () => {
+        await register(name, username, email, password, passwordConfirm).then((res) => {
             if (res) {
                 reset();
                 setOpen(false);
@@ -58,8 +58,8 @@ export default function AuthPopup() {
         });
     };
 
-    const onReset = () => {
-        resetPassword(email).then(() => {
+    const onReset = async () => {
+        await resetPassword(email).then(() => {
             reset();
             setOpen(false);
         });
@@ -132,7 +132,7 @@ export default function AuthPopup() {
                                 {mode === "reset" && (
                                     <>
                                         <form action={onReset} className="flex flex-col items-center w-full gap-4">
-                                            <Input placeholder="Email" />
+                                            <Input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
                                             <Button type="submit" className="data-[loading=true]:cursor-not-allowed w-full" disabled={loading} data-loading={loading}>
                                                 {loading ? <Spinner size={16} /> : "Submit"}
                                             </Button>
@@ -170,7 +170,7 @@ export default function AuthPopup() {
                                             <span>
                                                 Already have an account?
                                             </span>
-                                            <button className="text-blue-500 hover:underline" onClick={() => changeMode("signin")}>Sign in </button>
+                                            <button className="text-blue-500 hover:underline" onClick={() => changeMode("signin")}>Sign in</button>
                                         </div>
                                     </>
                                 )}
@@ -180,7 +180,7 @@ export default function AuthPopup() {
                                             <span>
                                                 Remember your password?
                                             </span>
-                                            <button className="text-blue-500 hover:underline" onClick={() => changeMode("signin")}>Sign in </button>
+                                            <button className="text-blue-500 hover:underline" onClick={() => changeMode("signin")}>Sign in</button>
                                         </div>
                                     </>
                                 )}
@@ -242,7 +242,7 @@ export default function AuthPopup() {
                                 {mode === "reset" && (
                                     <>
                                         <form action={onReset} className="flex flex-col items-center w-full gap-4">
-                                            <Input placeholder="Email" />
+                                            <Input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
                                             <Button type="submit" className="data-[loading=true]:cursor-not-allowed w-full" disabled={loading} data-loading={loading}>
                                                 {loading ? <Spinner size={16} /> : "Submit"}
                                             </Button>
@@ -291,7 +291,7 @@ export default function AuthPopup() {
                                                 <span>
                                                     Remember your password?
                                                 </span>
-                                                <button className="text-blue-500 hover:underline" onClick={() => changeMode("signin")}>Sign in </button>
+                                                <button className="text-blue-500 hover:underline" onClick={() => changeMode("signin")}>Sign in</button>
                                             </div>
                                         </>
                                     )}
