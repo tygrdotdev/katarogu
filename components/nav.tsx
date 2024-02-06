@@ -7,6 +7,36 @@ import AuthPopup from "./auth/popup";
 import { useAuth } from "./auth/provider";
 import { Suspense } from "react";
 import UserPopup from "./auth/user-popup";
+import { NavigationMenu, NavigationMenuList, NavigationMenuItem, NavigationMenuTrigger, NavigationMenuContent, NavigationMenuLink } from "@/components/ui/navigation-menu";
+import { Library } from "lucide-react";
+import { cn } from "@/lib/utils";
+import React from "react";
+
+const ListItem = React.forwardRef<
+    React.ElementRef<"a">,
+    React.ComponentPropsWithoutRef<"a">
+>(({ className, title, children, ...props }, ref) => {
+    return (
+        <li>
+            <NavigationMenuLink asChild>
+                <a
+                    ref={ref}
+                    className={cn(
+                        "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+                        className
+                    )}
+                    {...props}
+                >
+                    <div className="text-sm font-medium leading-none">{title}</div>
+                    <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                        {children}
+                    </p>
+                </a>
+            </NavigationMenuLink>
+        </li>
+    )
+})
+ListItem.displayName = "ListItem"
 
 export default function Nav() {
     const { user } = useAuth();
@@ -23,16 +53,40 @@ export default function Nav() {
                             <span className="text-xl font-bold -top-1/2 relative">Katarogu</span>
                         </Link>
                         <div className="flex-row items-center pl-8 gap-2 hidden sm:flex">
-                            <Link href="#">
-                                <Button variant="ghost">
-                                    Discover
-                                </Button>
-                            </Link>
-                            <Link href="#">
-                                <Button variant="ghost">
-                                    Browse
-                                </Button>
-                            </Link>
+                            <NavigationMenu>
+                                <NavigationMenuList>
+                                    <NavigationMenuItem>
+                                        <NavigationMenuTrigger>Manga</NavigationMenuTrigger>
+                                        <NavigationMenuContent>
+                                            <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
+                                                <li className="row-span-3">
+                                                    <NavigationMenuLink asChild>
+                                                        <a
+                                                            className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
+                                                            href="/manga"
+                                                        >
+                                                            <Library />
+                                                            <div className="mb-2 mt-4 text-lg font-medium">
+                                                                All Manga
+                                                            </div>
+                                                            <p className="text-sm leading-tight text-muted-foreground">
+                                                                The complete list of manga on Katarogu.
+                                                            </p>
+                                                        </a>
+                                                    </NavigationMenuLink>
+                                                </li>
+                                                <ListItem href="/manga/top" title="Top Manga">
+                                                    A list of the most popular manga on Katarogu.
+                                                </ListItem>
+                                                <ListItem href="/manga/search" title="Search">
+                                                    Fully featured search for manga.
+                                                </ListItem>
+                                            </ul>
+                                        </NavigationMenuContent>
+                                    </NavigationMenuItem>
+                                </NavigationMenuList>
+                            </NavigationMenu>
+
                         </div>
                     </div>
                     <div className="flex flex-row gap-3 items-center">

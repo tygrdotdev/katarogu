@@ -47,20 +47,18 @@ export default function RootLayout({
           >
             <main vaul-drawer-wrapper="" className="min-h-screen antialiased bg-neutral-50 dark:bg-neutral-950">
               <div className="container">
-                <Suspense fallback={<Spinner />}>
-                  <TooltipProvider>
-                    <Toaster />
-                    <AuthProvider>
-                      <Nav />
-                      {children}
-                    </AuthProvider>
-                  </TooltipProvider>
-                </Suspense>
+                <TooltipProvider>
+                  <Toaster />
+                  <AuthProvider>
+                    <Nav />
+                    {children}
+                  </AuthProvider>
+                </TooltipProvider>
               </div>
             </main>
           </ThemeProvider>
         </body>
-      </html  >
+      </html>
     </>
   );
 }

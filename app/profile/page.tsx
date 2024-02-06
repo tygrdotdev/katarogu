@@ -1,5 +1,6 @@
-"use client";
+'use client'
 
+import { useQueryState } from 'nuqs'
 import ProtectedPage from "@/components/auth/protected";
 import { useAuth } from "@/components/auth/provider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -11,6 +12,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 export default function ProfilePage() {
+    const [currentTab, setCurrentTab] = useQueryState("tab");
     const { user } = useAuth();
 
     return (
@@ -27,20 +29,20 @@ export default function ProfilePage() {
                         </ProfileHeader>
                         <div className="flex flex-row items-center gap-3 px-2">
                             <div className="flex flex-col w-full gap-3">
-                                <Tabs defaultValue="overview" className="w-full">
+                                <Tabs defaultValue="overview" className="w-full" value={currentTab ?? "overview"} onValueChange={e => setCurrentTab(e)}>
                                     <TabsList className="justify-start w-full">
                                         <TabsTrigger value="overview" className="w-full">Overview</TabsTrigger>
-                                        <TabsTrigger value="anime" className="w-full">Anime List</TabsTrigger>
                                         <TabsTrigger value="manga" className="w-full">Manga List</TabsTrigger>
+                                        <TabsTrigger value="anime" className="w-full">Anime List</TabsTrigger>
                                     </TabsList>
                                     <TabsContent value="overview">
                                         <ProfileStats />
                                     </TabsContent>
-                                    <TabsContent value="anime">
-                                        <ProfileAnimeList />
-                                    </TabsContent>
                                     <TabsContent value="manga">
                                         <ProfileMangaList />
+                                    </TabsContent>
+                                    <TabsContent value="anime">
+                                        <ProfileAnimeList />
                                     </TabsContent>
                                 </Tabs>
                             </div>
