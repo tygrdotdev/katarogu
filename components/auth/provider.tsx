@@ -152,7 +152,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 username,
                 email,
                 password,
-                passwordConfirm
+                passwordConfirm,
+                visibility: "public"
             }).then(async () => {
                 await pb.collection("users").requestVerification(email);
                 toast.success("Success!", {
