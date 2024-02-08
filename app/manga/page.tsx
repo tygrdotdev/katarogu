@@ -1,3 +1,5 @@
+"use client"
+
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import pb from "@/lib/pocketbase";
 import Image from "next/image";
