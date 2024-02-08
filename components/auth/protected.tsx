@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/auth/provider";
 import React from "react";
-import { Mail } from "lucide-react";
+import { Eye, Mail, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import pb from "@/lib/pocketbase";
 
@@ -19,7 +19,11 @@ export default function ProtectedPage({ children }: { children: React.ReactNode 
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [confirmPassword, setConfirmPassword] = React.useState("");
+    const [showPassword, setShowPassword] = React.useState(false);
 
+    const togglePassword = () => setShowPassword(!showPassword);
+
+    // TODO: Change this to use <form> instead
     React.useEffect(() => {
         const down = (e: KeyboardEvent) => {
             if (e.key === "Enter" && !user) {
@@ -55,6 +59,7 @@ export default function ProtectedPage({ children }: { children: React.ReactNode 
         setEmail("");
         setPassword("");
         setConfirmPassword("");
+        setShowPassword(false);
     };
 
     return (
@@ -117,13 +122,27 @@ export default function ProtectedPage({ children }: { children: React.ReactNode 
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
                                         />
-                                        <Input
-                                            id="password"
-                                            type="password"
-                                            placeholder="Password"
-                                            value={password}
-                                            onChange={(e) => setPassword(e.target.value)}
-                                        />
+                                        <div className="flex flex-row gap-2 items-center w-full">
+                                            <Input
+                                                id="password"
+                                                type={showPassword ? "text" : "password"}
+                                                placeholder="Password"
+                                                value={password}
+                                                onChange={(e) => setPassword(e.target.value)}
+                                            />
+                                            <Button
+                                                variant="outline"
+                                                size="icon"
+                                                className="p-2"
+                                                onClick={togglePassword}
+                                            >
+                                                {showPassword ? (
+                                                    <EyeOff size={22} />
+                                                ) : (
+                                                    <Eye size={22} />
+                                                )}
+                                            </Button>
+                                        </div>
                                         <Button
                                             className="w-full text-md"
                                             onClick={() => signIn(email, password)}
@@ -166,16 +185,31 @@ export default function ProtectedPage({ children }: { children: React.ReactNode 
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
                                         />
-                                        <Input
-                                            id="password"
-                                            type="password"
-                                            placeholder="Password"
-                                            value={password}
-                                            onChange={(e) => setPassword(e.target.value)}
-                                        />
+                                        <div className="flex flex-row gap-2 items-center w-full">
+
+                                            <Input
+                                                id="password"
+                                                type={showPassword ? "text" : "password"}
+                                                placeholder="Password"
+                                                value={password}
+                                                onChange={(e) => setPassword(e.target.value)}
+                                            />
+                                            <Button
+                                                variant="outline"
+                                                size="icon"
+                                                className="p-2"
+                                                onClick={togglePassword}
+                                            >
+                                                {showPassword ? (
+                                                    <EyeOff size={22} />
+                                                ) : (
+                                                    <Eye size={22} />
+                                                )}
+                                            </Button>
+                                        </div>
                                         <Input
                                             id="passwordConfirm"
-                                            type="password"
+                                            type={showPassword ? "text" : "password"}
                                             placeholder="Password Confirmation"
                                             value={confirmPassword}
                                             onChange={(e) => setConfirmPassword(e.target.value)}
@@ -272,7 +306,8 @@ export default function ProtectedPage({ children }: { children: React.ReactNode 
                         </div>
                     </div>
                 </>
-            )}
+            )
+            }
         </>
     )
 }
