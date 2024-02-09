@@ -35,11 +35,23 @@ export function DeleteAccountConfirm({ children }: { children: React.ReactNode }
     const [loading, setLoading] = React.useState(false);
     const [enabled, setEnabled] = React.useState(false);
 
+    const toggleOpen = () => {
+        setOpen(!open);
+        setUsername("");
+        setPhrase("");
+        setLoading(false);
+        setEnabled(false);
+    }
+
     React.useEffect(() => {
-        if (username === user?.username && phrase === "delete my account") {
-            setEnabled(true);
+        if (user) {
+            if (username === user.username && phrase === "delete my account") {
+                setEnabled(true);
+            } else {
+                setEnabled(false);
+            }
         } else {
-            setEnabled(false);
+            toggleOpen();
         }
     }, [username, phrase]);
 
@@ -50,7 +62,7 @@ export function DeleteAccountConfirm({ children }: { children: React.ReactNode }
         return (
             <>
                 {user && (
-                    <Dialog open={open} onOpenChange={setOpen}>
+                    <Dialog open={open} onOpenChange={toggleOpen}>
                         <DialogTrigger asChild>
                             {children}
                         </DialogTrigger>
@@ -60,7 +72,7 @@ export function DeleteAccountConfirm({ children }: { children: React.ReactNode }
                                 <DialogDescription>
                                     Katarogu will <b>permanently</b> delete all data associated with your account.
                                     <br /> <br />
-                                    We reccomend you export your data before deleting your account.
+                                    We recommend you export your data before deleting your account.
                                     <div className="flex flex-row items-center gap-2 p-2 mt-4 text-red-500 border border-red-500 rounded-md dark:border-red-700">
                                         <ExclamationTriangleIcon className="w-4 h-4 text-red-500 dark:text-red-700" />
                                         <span>
@@ -80,7 +92,7 @@ export function DeleteAccountConfirm({ children }: { children: React.ReactNode }
                                 </div>
                             </div>
                             <div className="flex flex-row justify-between w-full p-3 border-t bg-neutral-200 dark:bg-neutral-900">
-                                <Button variant="outline" onClick={() => setOpen(false)}>
+                                <Button variant="outline" onClick={toggleOpen}>
                                     Cancel
                                 </Button>
                                 <Button variant="destructive" disabled={!enabled} onClick={() => deleteAccount()}>
@@ -97,7 +109,7 @@ export function DeleteAccountConfirm({ children }: { children: React.ReactNode }
     return (
         <>
             {user && (
-                <Drawer open={open} onOpenChange={setOpen}>
+                <Drawer open={open} onOpenChange={setOpen} onClose={toggleOpen}>
                     <DrawerTrigger asChild>
                         {children}
                     </DrawerTrigger>
@@ -117,23 +129,22 @@ export function DeleteAccountConfirm({ children }: { children: React.ReactNode }
                             </DrawerDescription>
                             <div className="flex flex-col items-start gap-4">
                                 <div className="flex flex-col w-full gap-1">
-                                    <Label htmlFor="name" className="text-sm text-neutral-500">Enter your username <b>{user.username}</b> to continue:</Label>
+                                    <Label className="text-sm text-neutral-500">Enter your username <b>{user.username}</b> to continue:</Label>
                                     <Input value={username} onChange={(e) => setUsername(e.target.value)} />
                                 </div>
                                 <div className="flex flex-col w-full gap-1">
-                                    <Label htmlFor="name" className="text-sm text-neutral-500">To verify, type <b>delete my account</b> below:</Label>
+                                    <Label className="text-sm text-neutral-500">To verify, type <b>delete my account</b> below:</Label>
                                     <Input value={phrase} onChange={(e) => setPhrase(e.target.value)} />
                                 </div>
                             </div>
                         </DrawerHeader>
                         <DrawerFooter className="flex flex-row justify-between w-full p-3 border-t bg-neutral-200 dark:bg-neutral-900">
-                            <Button variant="outline">Cancel</Button>
+                            <Button variant="outline" onClick={toggleOpen}>Cancel</Button>
                             <Button variant="destructive" onClick={() => deleteAccount()} disabled={!enabled}>Delete Account</Button>
                         </DrawerFooter>
                     </DrawerContent>
-                </Drawer >
-            )
-            }
+                </Drawer>
+            )}
         </>
     )
 }
