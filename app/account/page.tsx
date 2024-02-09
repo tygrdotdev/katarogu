@@ -28,7 +28,7 @@ export default function AccountPage() {
             success: (data) => {
                 return message ?? "Your changes have been saved.";
             },
-            error: "Failed to save. Try again later."
+            error: "Sorry, we failed to save your changes"
         });
     }
 
