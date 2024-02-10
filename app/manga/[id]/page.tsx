@@ -5,11 +5,11 @@ import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Plus, X } from "lucide-react";
 import BackButton from "./back";
-import RawManga from "@/types/manga";
+import Manga from "@/types/manga";
 import { sanitize } from "isomorphic-dompurify";
 
 export default async function MangaSingleton({ params }: { params: { id: string } }) {
-    const manga = await pb.collection("manga").getOne<RawManga>(params.id, { expand: "authors,actors,genres" }).catch((err) =>
+    const manga = await pb.collection("manga").getOne<Manga>(params.id, { expand: "authors,actors,genres" }).catch((err) =>
         console.error(err)
     );
 

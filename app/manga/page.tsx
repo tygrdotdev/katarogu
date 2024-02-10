@@ -4,11 +4,11 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import pb from "@/lib/pocketbase";
 import Image from "next/image";
 import Link from "next/link";
-import { RawManga } from "@/types/manga";
+import Manga from "@/types/manga";
 
 export default async function AllMangaPage() {
     // TODO: Implement pagination
-    const manga = await pb.collection("manga").getFullList<RawManga>();
+    const manga = await pb.collection("manga").getFullList<Manga>();
 
     return (
         <>
