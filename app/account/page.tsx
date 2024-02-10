@@ -44,7 +44,7 @@ export default function AccountPage() {
                                         Avatar
                                     </h1>
                                     <p className="text-sm">
-                                        Click on the avatar to upload a custom one from your files.
+                                        Your avatar can be viewed publicly. Please be sensible with your choice.
                                     </p>
                                 </div>
                                 <div className="flex flex-row items-center gap-6 pr-4">
@@ -75,7 +75,7 @@ export default function AccountPage() {
                                         Banner
                                     </h1>
                                     <p className="text-sm">
-                                        Click on the banner to upload a custom one from your files.
+                                        Your banner can be viewed publicly. Please be sensible with your choice.
                                     </p>
                                 </div>
                                 <div className="flex flex-col items-center gap-4 sm:flex-row">
