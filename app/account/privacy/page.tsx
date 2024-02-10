@@ -24,7 +24,7 @@ export default function AccountPrivacyPage() {
             success: (data) => {
                 return message ?? "Your changes have been saved.";
             },
-            error: "Failed to save. Try again later."
+            error: "Something went wrong. Your changes couldn't be saved"
         });
     }
 

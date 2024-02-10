@@ -169,7 +169,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     });
                 } else {
                     toast.error("Something went wrong sending your request.", {
-                        description: "Please try again later."
+                        description: "Check the console for more details."
                     });
                 }
 
@@ -208,7 +208,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     return "Successfully uploaded avatar.";
                 },
                 error: (err) => {
-                    return "Failed to upload avatar. Please try again later."
+                    return "Failed to upload your avatar."
                 }
             })
     }
@@ -222,7 +222,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     return "Successfully removed avatar.";
                 },
                 error: (err) => {
-                    return "Failed to remove avatar. Please try again later."
+                    return "Failed to reset your avatar."
                 }
             });
     }
@@ -239,7 +239,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     return "Successfully uploaded banner.";
                 },
                 error: (err) => {
-                    return "Failed to upload banner. Please try again later."
+                    return "Failed to upload your banner."
                 }
             })
     }
@@ -253,20 +253,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     return "Successfully removed banner.";
                 },
                 error: (err) => {
-                    return "Failed to remove banner. Please try again later."
+                    return "Failed to reset your banner."
                 }
             })
     }
 
     const deleteAccount = useCallback(async () => {
         toast.promise(pb.collection("users").delete(pb.authStore.model?.id as string), {
-            loading: "Deleting...",
+            loading: "Loading...",
             success: (data) => {
                 signOut(false);
                 return "Successfully deleted your account. So long, partner.";
             },
             error: (err) => {
-                return "Something went wrong. Please try again later.";
+                return "Something went wrong. Please contact support for assistance.";
             }
         })
     }, []);
