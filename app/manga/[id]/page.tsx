@@ -7,9 +7,10 @@ import { Plus, X } from "lucide-react";
 import BackButton from "./back";
 import Manga from "@/types/manga";
 import { sanitize } from "isomorphic-dompurify";
+import { Badge } from "@/components/ui/badge";
 
 export default async function MangaSingleton({ params }: { params: { id: string } }) {
-    const manga = await pb.collection("manga").getOne<Manga>(params.id, { expand: "authors,actors,genres" }).catch((err) =>
+    const manga = await pb.collection("manga").getOne<Manga>(params.id, { expand: "authors,actors" }).catch((err) =>
         console.error(err)
     );
 
@@ -35,15 +36,27 @@ export default async function MangaSingleton({ params }: { params: { id: string 
                 <div className="flex flex-row w-full gap-2 items-center justify-between">
                     <div className="flex flex-col gap-2">
                         <BackButton />
-                        <div className="flex flex-col gap-0">
+                        <div className="flex flex-col gap-1">
                             <h1 className="text-4xl font-bold">{manga.title}</h1>
-                            <p>
-                                {manga.alternative_titles["japanese"] && (
-                                    <span className="text-neutral-500 dark:text-neutral-400">
-                                        {manga.alternative_titles["japanese"]}
-                                    </span>
+                            <div className="flex flex-row gap-2 items-center">
+                                <p>
+                                    {manga.alternative_titles["japanese"] && (
+                                        <span className="text-neutral-500 dark:text-neutral-400">
+                                            {manga.alternative_titles["japanese"]}
+                                        </span>
+                                    )}
+                                </p>
+                                &bull;
+                                {typeof manga.genres !== "undefined" && (
+                                    <div className="flex flex-row gap-2 items-center">
+                                        {manga.genres.map((genre, i) => (
+                                            <Badge key={i} variant="secondary">
+                                                {genre}
+                                            </Badge>
+                                        ))}
+                                    </div>
                                 )}
-                            </p>
+                            </div>
                         </div>
                     </div>
                     <div className="flex flex-row gap-3 items-center">
