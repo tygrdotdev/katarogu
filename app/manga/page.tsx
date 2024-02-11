@@ -19,7 +19,7 @@ export default async function AllMangaPage() {
                         A full list of all manga on Katarogu.
                     </p>
                 </div>
-                <div className="grid grid-cols-6 gap-6 w-full">
+                <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 w-full">
                     {manga.map((manga: any) => (
                         <Link href={`/manga/${manga.id}`} passHref key={manga.id}>
                             <div className="border-black/10 dark:border-white/10 rounded-md gap-2 flex flex-col group" >

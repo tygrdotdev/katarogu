@@ -82,6 +82,9 @@ const config = {
         "screen-no-nav": "calc(100vh - 68px)",
         "snug": "calc(100vh - 68px - 2rem)",
       },
+      screens: {
+        "xs": "375px",
+      }
     },
   },
   plugins: [require("tailwindcss-animate")],
