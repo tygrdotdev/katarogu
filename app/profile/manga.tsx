@@ -13,7 +13,7 @@ export default function ProfileMangaList() {
         <>
             {user && (
                 <>
-                    <div className="grid grid-cols-6 gap-6 py-4 w-full h-full">
+                    <div className="grid xs:grid-cols-2 grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 py-4 w-full h-full">
                         {mangaList && mangaList.map((manga: Manga) => (
                             <Link href={`/manga/${manga.id}`} passHref key={manga.id}>
                                 <div className="flex border-black/10 dark:border-white/10 rounded-md w-full h-fit gap-2 flex-col group">
