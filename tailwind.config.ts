@@ -79,8 +79,8 @@ const config = {
       },
       spacing: {
         // Minus navbar height
-        "screen-no-nav": "calc(100vh - 68px)",
-        "snug": "calc(100vh - 68px - 2rem)",
+        "screen-no-nav": "calc(100vh - 72px)",
+        "snug": "calc(100vh - 72px - 2rem)",
       },
       screens: {
         "xs": "375px",
