@@ -1,7 +1,6 @@
 "use client";
 
 import pb, { ClientError } from "@/lib/pocketbase";
-import Manga from "@/types/manga";
 import React, { useCallback, useEffect } from "react";
 import { toast } from "sonner";
 
@@ -31,10 +30,6 @@ export interface AuthSession {
     deleteAccount: () => Promise<void>;
 
     update: () => Promise<void>;
-
-    // App specific fields
-
-    mangaList: Manga[];
 }
 
 export const AuthContext = React.createContext<AuthSession>({
@@ -70,8 +65,6 @@ export const AuthContext = React.createContext<AuthSession>({
     deleteAccount: async () => { },
 
     update: async () => { },
-
-    mangaList: []
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -87,8 +80,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         `${process.env.NEXT_PUBLIC_AUTH_URL}/api/files/_pb_users_auth_/${pb.authStore.model.id}/${pb.authStore.model.banner}` :
         `https://images.unsplash.com/photo-1636955816868-fcb881e57954?q=50`)
     const [isDefaultBanner, setIsDefaultBanner] = React.useState(pb.authStore.model?.banner ? false : true);
-
-    const [mangaList, setMangaList] = React.useState<Manga[]>([]);
 
     const signIn = async (email: string, password: string) => {
         let res = false;
@@ -284,9 +275,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 `${process.env.NEXT_PUBLIC_AUTH_URL}/api/files/_pb_users_auth_/${pb.authStore.model.id}/${pb.authStore.model.banner}` :
                 `https://images.unsplash.com/photo-1636955816868-fcb881e57954?q=80`)
             setIsDefaultBanner(response.record?.banner ? false : true);
-
-            // app specific fields
-            setMangaList(response.record?.expand?.manga_list as Manga[]);
         }).catch((err: ClientError) => {
             console.error(JSON.stringify(err, null, 2))
             if (err.status === 401) {
@@ -379,8 +367,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         removeBanner,
 
         update,
-
-        mangaList
     }), [avatar, banner, isDefaultAvatar, isDefaultBanner, loggedIn, user]);
 
     return (

@@ -200,7 +200,7 @@ export default async function MangaSingleton({ params }: { params: { id: string 
                                             <div className="flex flex-col items-start w-full h-full">
                                                 <Image src={`${process.env.NEXT_PUBLIC_AUTH_URL}/api/files/characters/${character.id}/${character.portrait}`} alt={character.name} width={800} height={900} className="w-full h-full object-cover rounded-md" />
                                                 <div className="relative w-full h-full">
-                                                    <div className="absolute left-0 bottom-0 right-0 bg-white/10 dark:bg-black/10 backdrop-blur-md border-black/10 dark:border-white/10 p-2 text-white rounded-b-md">
+                                                    <div className="absolute left-0 bottom-0 right-0 bg-black/10 backdrop-blur-md border-black/10 dark:border-white/10 p-2 text-white rounded-b-md">
                                                         <h3 className="text-lg font-medium">
                                                             {character.name}
                                                         </h3>
