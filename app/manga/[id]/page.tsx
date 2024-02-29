@@ -59,16 +59,18 @@ export default async function MangaSingleton({ params }: { params: { id: string 
                                                 </span>
                                             )}
                                         </p>
-                                        <p className="hidden md:block">
-                                            &bull;
-                                        </p>
                                         {typeof manga.genres !== "undefined" && (
-                                            <div className="flex flex-row gap-2 items-center">
-                                                {manga.genres.map((genre, i) => (
-                                                    <Badge key={i} variant="secondary">
-                                                        {genre}
-                                                    </Badge>
-                                                ))}
+                                            <div className="flex flex-col gap-2 items-start md:flex-row md:items-center">
+                                                <p className="hidden md:block">
+                                                    &bull;
+                                                </p>
+                                                <div className="flex flex-row gap-2 items-center">
+                                                    {manga.genres.map((genre, i) => (
+                                                        <Badge key={i} variant="secondary">
+                                                            {genre}
+                                                        </Badge>
+                                                    ))}
+                                                </div>
                                             </div>
                                         )}
                                     </div>
