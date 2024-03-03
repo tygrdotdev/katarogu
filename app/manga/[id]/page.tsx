@@ -6,7 +6,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Plus, X } from "lucide-react";
-import BackButton from "./back";
+import BackButton from "@/components/back";
 import Manga from "@/types/manga";
 import { sanitize } from "isomorphic-dompurify";
 import { Badge } from "@/components/ui/badge";

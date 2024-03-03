@@ -9,10 +9,10 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import Image from "next/image";
 
-import AvatarRemove from "@/components/profile/avatar-remove";
-import AvatarUpload from "@/components/profile/avatar-upload";
-import BannerUpload from "@/components/profile/banner-upload";
-import BannerRemove from "@/components/profile/banner-remove";
+import AvatarRemove from "@/components/account/avatar-remove";
+import AvatarUpload from "@/components/account/avatar-upload";
+import BannerUpload from "@/components/account/banner-upload";
+import BannerRemove from "@/components/account/banner-remove";
 import pb from "@/lib/pocketbase";
 import { toast } from "sonner";
 

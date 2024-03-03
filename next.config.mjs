@@ -6,7 +6,10 @@ const nextConfig = {
             { hostname: "localhost" },
             { hostname: "api.dicebear.com" },
             { hostname: "images.unsplash.com" },
-            { hostname: "db.katarogu.tygr.dev" }
+            { hostname: "db.katarogu.tygr.dev" },
+            { hostname: "placehold.co" },
+            // Local instance of Pocketbase on my mesh network
+            { hostname: "100.84.155.75" }
         ]
     },
     headers() {

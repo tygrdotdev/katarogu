@@ -1,10 +1,10 @@
-"use client"
-
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import pb from "@/lib/pocketbase";
 import Image from "next/image";
 import Link from "next/link";
 import Manga from "@/types/manga";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
 export default async function AllMangaPage() {
     // TODO: Implement pagination
@@ -13,11 +13,18 @@ export default async function AllMangaPage() {
     return (
         <>
             <main className="flex flex-col gap-6 items-start w-full pb-4">
-                <div>
-                    <h1 className="text-4xl font-bold">Manga</h1>
-                    <p className="text-neutral-500 dark:text-neutral-400">
-                        A full list of all manga on Katarogu.
-                    </p>
+                <div className="flex flex-row gap-4 items-center items-between w-full">
+                    <div className="flex flex-col w-full">
+                        <h1 className="text-4xl font-bold">Manga</h1>
+                        <p className="text-neutral-500 dark:text-neutral-400">
+                            A full list of all manga on Katarogu.
+                        </p>
+                    </div>
+                    <Link href="/manga/new" passHref>
+                        <Button className="flex flex-row gap-2 items-center">
+                            <Plus className="w-4 h-4" /> Add Entry
+                        </Button>
+                    </Link>
                 </div>
                 <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 w-full">
                     {manga.map((manga: any) => (
