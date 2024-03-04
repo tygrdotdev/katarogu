@@ -14,6 +14,7 @@ import ReactCrop, { Crop, centerCrop, makeAspectCrop } from "react-image-crop"
 import { useAuth } from "../auth/provider"
 import { randomUUID } from "crypto"
 import { toast } from "sonner"
+import { default as NextImage } from "next/image"
 
 const MAX_FILE_SIZE = 12582912; // 12 MB
 
@@ -168,7 +169,7 @@ export default function AvatarUpload(props: ButtonProps) {
                 <Dialog open={open} onOpenChange={onOpenChange}>
                     <DialogContent className="w-fit min-w-[256px] max-w-[900px] p-0 gap-0">
                         <ReactCrop crop={crop} onChange={(_, p) => setCrop(p)} onComplete={(c, _) => setCompletedCrop(c)} aspect={1 / 1} minHeight={100} circularCrop keepSelection>
-                            <img src={src} onLoad={onImageLoad} ref={imageRef} className="rounded-t-lg" />
+                            <NextImage alt="Cropper" src={src} onLoad={onImageLoad} ref={imageRef} className="rounded-t-lg" />
                         </ReactCrop>
                         <div className="flex flex-row justify-between w-full gap-2 p-4 border-t">
                             <Button variant="outline" onClick={onOpenChange}>Cancel</Button>
@@ -187,7 +188,7 @@ export default function AvatarUpload(props: ButtonProps) {
             <Drawer open={open} dismissible={false}>
                 <DrawerContent handle={false}>
                     <ReactCrop crop={crop} onChange={(_, p) => setCrop(p)} onComplete={(c, _) => setCompletedCrop(c)} aspect={1 / 1} minHeight={256} circularCrop keepSelection>
-                        <img src={src} onLoad={onImageLoad} ref={imageRef} className="rounded-t-lg" />
+                        <NextImage alt="Cropper" src={src} onLoad={onImageLoad} ref={imageRef} className="rounded-t-lg" />
                     </ReactCrop>
                     <div className="flex flex-row justify-between w-full gap-2 p-4 border-t">
                         <Button variant="outline" onClick={onOpenChange}>Cancel</Button>

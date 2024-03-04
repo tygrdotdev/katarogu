@@ -8,8 +8,8 @@ const nextConfig = {
             { hostname: "images.unsplash.com" },
             { hostname: "db.katarogu.tygr.dev" },
             { hostname: "placehold.co" },
-            // Local instance of Pocketbase on my mesh network
-            { hostname: "100.84.155.75" }
+            // Canary instance of the database
+            { hostname: "db.canary.katarogu.tygr.dev" }
         ]
     },
     headers() {

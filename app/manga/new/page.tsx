@@ -32,7 +32,7 @@ export default function NewMangaPage() {
     const [authors, setAuthors] = useState<Manga["authors"]>();
     const [genres, setGenres] = useState<Manga["genres"]>();
     // const [media, setMedia] = useState<Manga["media"]>();
-    const [status, setStatus] = useState<Manga["status"]>();
+    const [status, setStatus] = useState<Manga["status"]>("unpublished");
 
     function DatePicker({ value, setValue }: any) {
         return (
@@ -151,7 +151,7 @@ export default function NewMangaPage() {
                                 <hr className="border-b w-full" />
                                 <div className="list-disc list-inside">
                                     {Object.keys(alternativeTitles).map((key) => (
-                                        <p className="flex flex-row gap-2">
+                                        <p className="flex flex-row gap-2" key={key}>
                                             <span className="text-neutral-500 dark:text-neutral-400 font-semibold">
                                                 {key[0].toUpperCase() + key.slice(1, key.length)}: {" "}
                                             </span>

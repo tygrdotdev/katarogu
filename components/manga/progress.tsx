@@ -39,7 +39,7 @@ export function MangaProgressDialog({ manga }: { manga: Manga }) {
                     <DialogHeader>
                         <DialogTitle>Editing: {manga.title}</DialogTitle>
                         <DialogDescription>
-                            You're currently updating your progress for <b>{manga.title}</b>.
+                            You&apos;re currently updating your progress for <b>{manga.title}</b>.
                         </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4">
@@ -66,7 +66,7 @@ export function MangaProgressDialog({ manga }: { manga: Manga }) {
                 <DrawerHeader className="text-left">
                     <DrawerTitle>Edit profile</DrawerTitle>
                     <DrawerDescription>
-                        Make changes to your profile here. Click save when you're done.
+                        Make changes to your profile here. Click save when you&apos;re done.
                     </DrawerDescription>
                 </DrawerHeader>
                 <DrawerFooter className="pt-2">

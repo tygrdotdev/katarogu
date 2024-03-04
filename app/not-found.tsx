@@ -15,7 +15,7 @@ export default function NotFound() {
                     ┐(￣∀￣)┌
                 </h1>
                 <h2 className="text-lg">
-                    This page doesn't exist or you don't have access to it.
+                    This page doesn&apos;t exist or you don&apos;t have access to it.
                 </h2>
                 <Link href="/" passHref>
                     <Button variant="outline">

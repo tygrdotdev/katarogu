@@ -262,7 +262,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         })
     }, []);
 
-    async function update() {
+    const update = useCallback(async () => {
         await pb.collection("users").authRefresh({ expand: "manga_list" }).then((response) => {
             setLoggedIn(true);
             setUser(response.record);
@@ -300,7 +300,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 });
             }
         })
-    }
+    }, []);
 
     useEffect(() => {
         // Once we are in the client, we can allow the provider to render children
@@ -340,7 +340,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             pb.collection("users").unsubscribe();
             setMounted(false);
         }
-    }, [pb.authStore.isValid, pb.authStore.token])
+    }, [update])
 
     const value = React.useMemo(() => ({
         authStore: pb.authStore,
@@ -367,7 +367,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         removeBanner,
 
         update,
-    }), [avatar, banner, isDefaultAvatar, isDefaultBanner, loggedIn, user]);
+    }), [avatar, banner, deleteAccount, isDefaultAvatar, isDefaultBanner, loggedIn, update, user]);
 
     return (
         <>

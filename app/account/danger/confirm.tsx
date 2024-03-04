@@ -35,13 +35,13 @@ export function DeleteAccountConfirm({ children }: { children: React.ReactNode }
     const [loading, setLoading] = React.useState(false);
     const [enabled, setEnabled] = React.useState(false);
 
-    const toggleOpen = () => {
+    const toggleOpen = React.useCallback(() => {
         setOpen(!open);
         setUsername("");
         setPhrase("");
         setLoading(false);
         setEnabled(false);
-    }
+    }, [open])
 
     React.useEffect(() => {
         if (user) {
@@ -53,7 +53,7 @@ export function DeleteAccountConfirm({ children }: { children: React.ReactNode }
         } else {
             toggleOpen();
         }
-    }, [username, phrase]);
+    }, [username, phrase, user, toggleOpen]);
 
 
     const isDesktop = useMediaQuery("(min-width: 768px)");

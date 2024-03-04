@@ -1,5 +1,3 @@
-"use client";
-
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import pb from "@/lib/pocketbase";
 import Image from "next/image";
@@ -10,10 +8,8 @@ import BackButton from "@/components/back";
 import Manga from "@/types/manga";
 import { sanitize } from "isomorphic-dompurify";
 import { Badge } from "@/components/ui/badge";
-import { useMediaQuery } from "@/hooks/use-media-query";
 
 export default async function MangaSingleton({ params }: { params: { id: string } }) {
-    const isDesktop = useMediaQuery("(min-width: 768px)");
     const manga = await pb.collection("manga").getOne<Manga>(params.id, { expand: "authors,actors" }).catch((err) =>
         console.error(err)
     );
@@ -41,13 +37,11 @@ export default async function MangaSingleton({ params }: { params: { id: string 
                     <div className="flex flex-col gap-4 w-full">
                         <BackButton />
                         <div className="flex flex-row gap-4 w-full">
-                            {!isDesktop && (
-                                <div className="w-1/3 hidden xs:block">
-                                    <AspectRatio ratio={2 / 3} className="w-full h-full rounded-md overflow-hidden">
-                                        <Image src={`${process.env.NEXT_PUBLIC_AUTH_URL}/api/files/manga/${manga.id}/${manga.cover}`} alt={manga.title + "cover"} priority width={200} height={400} className="w-full h-full rounded-md border border-black/10 dark:border-white/10" />
-                                    </AspectRatio>
-                                </div>
-                            )}
+                            <div className="w-1/3 block md:hidden h-full">
+                                <AspectRatio ratio={2 / 3} className="w-full h-full rounded-md overflow-hidden">
+                                    <Image src={`${process.env.NEXT_PUBLIC_AUTH_URL}/api/files/manga/${manga.id}/${manga.cover}`} alt={manga.title + "cover"} priority width={200} height={400} className="w-full h-full rounded-md border border-black/10 dark:border-white/10" />
+                                </AspectRatio>
+                            </div>
                             <div className="flex flex-col w-2/3 gap-6 justify-between">
                                 <div className="flex flex-col gap-1 w-full">
                                     <h1 className="text-3xl md:text-3xl lg:text-4xl font-bold">{manga.title}</h1>
@@ -97,11 +91,11 @@ export default async function MangaSingleton({ params }: { params: { id: string 
                 </div>
                 <div className="flex flex-col md:flex-row gap-8 items-start w-full h-full">
                     <div className="flex flex-col gap-4 items-start h-full md:w-1/4 lg:w-1/5 w-full">
-                        {isDesktop && (
+                        <div className="hidden md:block h-full w-full">
                             <AspectRatio ratio={2 / 3} className="w-full h-full rounded-md overflow-hidden">
                                 <Image src={`${process.env.NEXT_PUBLIC_AUTH_URL}/api/files/manga/${manga.id}/${manga.cover}`} alt={manga.title + "cover"} priority width={200} height={400} className="w-full h-full rounded-md border border-black/10 dark:border-white/10" />
                             </AspectRatio>
-                        )}
+                        </div>
                         {typeof manga.alternative_titles !== "undefined" && (
                             <div className="flex flex-col gap-2 items-start w-full">
                                 <h2 className="text-lg font-medium">
@@ -110,7 +104,7 @@ export default async function MangaSingleton({ params }: { params: { id: string 
                                 <hr className="border-b w-full" />
                                 <div className="list-disc list-inside">
                                     {Object.keys(manga.alternative_titles).map((key) => (
-                                        <p className="flex flex-row gap-2">
+                                        <p className="flex flex-row gap-2" key={key}>
                                             <span className="text-neutral-500 dark:text-neutral-400 font-semibold">
                                                 {key[0].toUpperCase() + key.slice(1, key.length)}: {" "}
                                             </span>
@@ -199,7 +193,7 @@ export default async function MangaSingleton({ params }: { params: { id: string 
                                 <>
                                     <div className="grid grid-cols-2 md:grid-cols-4 w-full lg:grid-cols-6 gap-4 py-2">
                                         {characters.map((character: any) => (
-                                            <div className="flex flex-col items-start w-full h-full">
+                                            <div className="flex flex-col items-start w-full h-full" key={character.id}>
                                                 <Image src={`${process.env.NEXT_PUBLIC_AUTH_URL}/api/files/characters/${character.id}/${character.portrait}`} alt={character.name} width={800} height={900} className="w-full h-full object-cover rounded-md" />
                                                 <div className="relative w-full h-full">
                                                     <div className="absolute left-0 bottom-0 right-0 bg-black/10 backdrop-blur-md border-black/10 dark:border-white/10 p-2 text-white rounded-b-md">

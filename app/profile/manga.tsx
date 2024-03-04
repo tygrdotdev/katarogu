@@ -6,7 +6,7 @@ import pb from "@/lib/pocketbase";
 import { MangaProgress } from "@/types/manga/progress";
 import { User } from "@/types/user";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 
 export default function ProfileMangaList() {
@@ -14,7 +14,7 @@ export default function ProfileMangaList() {
 
     const [mangaList, setMangaList] = useState<MangaProgress[]>();
 
-    async function getMangaList() {
+    const getMangaList = useCallback(async () => {
         if (user) {
             await pb.collection<User>("users").getOne(user.id, {
                 expand: "manga_list.entry",
@@ -22,7 +22,7 @@ export default function ProfileMangaList() {
                 setMangaList(res.expand?.manga_list)
             });
         }
-    }
+    }, [user])
 
     useEffect(() => {
         if (user) {
@@ -32,7 +32,7 @@ export default function ProfileMangaList() {
                 getMangaList();
             });
         }
-    }, []);
+    }, [getMangaList, user]);
 
     return (
         <>

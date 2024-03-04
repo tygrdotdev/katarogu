@@ -2,7 +2,6 @@ import { Inter, Sora } from 'next/font/google'
 
 import type { Metadata } from "next";
 import Script from 'next/script';
-import { Suspense } from "react";
 import { Toaster } from "sonner";
 
 import { cn } from '@/lib/utils';
@@ -11,7 +10,6 @@ import { AuthProvider } from "@/components/auth/provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 import Nav from "@/components/nav";
-import Spinner from '@/components/spinner';
 
 import 'react-image-crop/dist/ReactCrop.css'
 import "./globals.css";
