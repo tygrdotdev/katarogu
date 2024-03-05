@@ -1,9 +1,9 @@
 import Spinner from "@/components/spinner";
 
 export default function Loading() {
-    return (
-        <div className='w-full gap-2 h-full flex flex-col items-center justify-center min-h-snug'>
-            <Spinner />
-        </div>
-    )
+	return (
+		<div className="flex h-full min-h-snug w-full flex-col items-center justify-center gap-2">
+			<Spinner />
+		</div>
+	);
 }

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -8,306 +8,348 @@ import { Eye, Mail, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import pb from "@/lib/pocketbase";
 
-export default function ProtectedPage({ children }: { children: React.ReactNode }) {
-    const { user, signIn, register, resetPassword } = useAuth();
+export default function ProtectedPage({
+	children,
+}: {
+	children: React.ReactNode;
+}) {
+	const { user, signIn, register, resetPassword } = useAuth();
 
-    const [mode, setMode] = React.useState<"signin" | "register" | "reset">("signin");
+	const [mode, setMode] = React.useState<"signin" | "register" | "reset">(
+		"signin"
+	);
 
-    const [name, setName] = React.useState("");
-    const [username, setUsername] = React.useState("");
+	const [name, setName] = React.useState("");
+	const [username, setUsername] = React.useState("");
 
-    const [email, setEmail] = React.useState("");
-    const [password, setPassword] = React.useState("");
-    const [confirmPassword, setConfirmPassword] = React.useState("");
-    const [showPassword, setShowPassword] = React.useState(false);
+	const [email, setEmail] = React.useState("");
+	const [password, setPassword] = React.useState("");
+	const [confirmPassword, setConfirmPassword] = React.useState("");
+	const [showPassword, setShowPassword] = React.useState(false);
 
-    const togglePassword = () => setShowPassword(!showPassword);
+	const togglePassword = () => setShowPassword(!showPassword);
 
-    // TODO: Change this to use <form> instead
-    React.useEffect(() => {
-        const down = (e: KeyboardEvent) => {
-            if (e.key === "Enter" && !user) {
-                e.preventDefault()
-                switch (mode) {
-                    case "signin": {
-                        signIn(email, password);
-                        break;
-                    }
+	// TODO: Change this to use <form> instead
+	React.useEffect(() => {
+		const down = (e: KeyboardEvent) => {
+			if (e.key === "Enter" && !user) {
+				e.preventDefault();
+				switch (mode) {
+					case "signin": {
+						signIn(email, password);
+						break;
+					}
 
-                    case "register": {
-                        register(name, username, email, password, confirmPassword);
-                        break;
-                    }
+					case "register": {
+						register(name, username, email, password, confirmPassword);
+						break;
+					}
 
-                    case "reset": {
-                        resetPassword(email);
-                        changeMode("signin");
-                        break;
-                    }
-                }
-            }
-        }
+					case "reset": {
+						resetPassword(email);
+						changeMode("signin");
+						break;
+					}
+				}
+			}
+		};
 
-        document.addEventListener("keydown", down)
-        return () => document.removeEventListener("keydown", down)
-    }, [confirmPassword, email, signIn, mode, name, password, register, resetPassword, username, user])
+		document.addEventListener("keydown", down);
+		return () => document.removeEventListener("keydown", down);
+	}, [
+		confirmPassword,
+		email,
+		signIn,
+		mode,
+		name,
+		password,
+		register,
+		resetPassword,
+		username,
+		user,
+	]);
 
-    const changeMode = (mode: "signin" | "register" | "reset") => {
-        setMode(mode);
-        setName("");
-        setUsername("");
-        setEmail("");
-        setPassword("");
-        setConfirmPassword("");
-        setShowPassword(false);
-    };
+	const changeMode = (mode: "signin" | "register" | "reset") => {
+		setMode(mode);
+		setName("");
+		setUsername("");
+		setEmail("");
+		setPassword("");
+		setConfirmPassword("");
+		setShowPassword(false);
+	};
 
-    return (
-        <>
-            {user ? (
-                <>
-                    {user.verified ? (
-                        <>
-                            {children}
-                        </>
-                    ) : (
-                        <>
-                            {/* If user is not verified */}
-                            <div className="absolute w-3/4 -translate-x-1/2 -translate-y-1/2 sm:w-3/4 top-1/2 left-1/2">
-                                <div className="flex flex-col items-center justify-center gap-6 text-center">
-                                    <div className="flex flex-col items-center justify-center w-full gap-2">
-                                        <h1 className="text-3xl font-bold text-center sm:text-4xl font-display">Verification required</h1>
-                                        <p className="text-sm sm:text-base text-neutral-500">To continue, please check your email for a verification link.</p>
-                                    </div>
-                                    <Button onClick={() => {
-                                        toast.promise(pb.collection("users").requestVerification(user.email), {
-                                            loading: "Sending verification email...",
-                                            success: "Verification email sent!",
-                                            error: "Failed to send verification email."
-                                        })
-                                    }} className="flex flex-row items-center">
-                                        <Mail className="w-4 h-4 mr-2" />
-                                        Resend verification email
-                                    </Button>
-                                </div>
-                            </div>
-                        </>
-                    )}
-                </>
-            ) : (
-                <>
-                    {/* If not authenticated */}
-                    <div className="absolute w-3/4 -translate-x-1/2 -translate-y-1/2 sm:w-1/2 md:w-auto top-1/2 left-1/2">
-                        <div className="flex flex-col items-center justify-center gap-6 text-center">
-                            <div className="flex flex-col items-center justify-center w-full gap-2">
-                                <h1 className="text-3xl font-bold text-center font-display sm:text-4xl">
-                                    {mode === "signin" && "Sign in to Katarogu"}
-                                    {mode === "register" && "Join the club!"}
-                                    {mode === "reset" && "Reset password"}
-                                </h1>
+	return (
+		<>
+			{user ? (
+				<>
+					{user.verified ? (
+						<>{children}</>
+					) : (
+						<>
+							{/* If user is not verified */}
+							<div className="absolute left-1/2 top-1/2 w-3/4 -translate-x-1/2 -translate-y-1/2 sm:w-3/4">
+								<div className="flex flex-col items-center justify-center gap-6 text-center">
+									<div className="flex w-full flex-col items-center justify-center gap-2">
+										<h1 className="text-center font-display text-3xl font-bold sm:text-4xl">
+											Verification required
+										</h1>
+										<p className="text-sm text-neutral-500 sm:text-base">
+											To continue, please check your email for a verification
+											link.
+										</p>
+									</div>
+									<Button
+										onClick={() => {
+											toast.promise(
+												pb.collection("users").requestVerification(user.email),
+												{
+													loading: "Sending verification email...",
+													success: "Verification email sent!",
+													error: "Failed to send verification email.",
+												}
+											);
+										}}
+										className="flex flex-row items-center"
+									>
+										<Mail className="mr-2 h-4 w-4" />
+										Resend verification email
+									</Button>
+								</div>
+							</div>
+						</>
+					)}
+				</>
+			) : (
+				<>
+					{/* If not authenticated */}
+					<div className="absolute left-1/2 top-1/2 w-3/4 -translate-x-1/2 -translate-y-1/2 sm:w-1/2 md:w-auto">
+						<div className="flex flex-col items-center justify-center gap-6 text-center">
+							<div className="flex w-full flex-col items-center justify-center gap-2">
+								<h1 className="text-center font-display text-3xl font-bold sm:text-4xl">
+									{mode === "signin" && "Sign in to Katarogu"}
+									{mode === "register" && "Join the club!"}
+									{mode === "reset" && "Reset password"}
+								</h1>
 
-                                <p className="text-sm sm:text-base text-neutral-500">
-                                    {mode === "signin" && "Please log in with your Katagoru account to continue."}
-                                    {mode === "register" && "Create a Katagoru account and join the club!"}
-                                    {mode === "reset" && "Please enter your email address to reset your password."}
-                                </p>
-                            </div>
-                            <div className="flex flex-col items-center justify-center w-full gap-4">
-                                {mode === "signin" && (
-                                    <>
-                                        <Input
-                                            id="email"
-                                            type="email"
-                                            placeholder="Email"
-                                            value={email}
-                                            onChange={(e) => setEmail(e.target.value)}
-                                        />
-                                        <div className="flex flex-row gap-2 items-center w-full">
-                                            <Input
-                                                id="password"
-                                                type={showPassword ? "text" : "password"}
-                                                placeholder="Password"
-                                                value={password}
-                                                onChange={(e) => setPassword(e.target.value)}
-                                            />
-                                            <Button
-                                                variant="outline"
-                                                size="icon"
-                                                className="p-2"
-                                                onClick={togglePassword}
-                                            >
-                                                {showPassword ? (
-                                                    <EyeOff size={22} />
-                                                ) : (
-                                                    <Eye size={22} />
-                                                )}
-                                            </Button>
-                                        </div>
-                                        <Button
-                                            className="w-full text-md"
-                                            onClick={() => signIn(email, password)}
-                                        >
-                                            Submit
-                                        </Button>
-                                        <small className="px-2 pt-2 text-center text-neutral-500 dark:text-neutral-400">
-                                            By continuing, you agree to our{" "}
-                                            <a className="text-blue-500" href="/tos">
-                                                Terms of Service
-                                            </a>
-                                            {" "} and {" "}
-                                            <a className="text-blue-500" href="/privacy">
-                                                Privacy Policy
-                                            </a>
-                                            .
-                                        </small>
-                                    </>
-                                )}
-                                {mode === "register" && (
-                                    <>
-                                        <Input
-                                            id="name"
-                                            type="text"
-                                            placeholder="Full Name"
-                                            value={name}
-                                            onChange={(e) => setName(e.target.value)}
-                                        />
-                                        <Input
-                                            id="username"
-                                            type="text"
-                                            placeholder="Username"
-                                            value={username}
-                                            onChange={(e) => setUsername(e.target.value)}
-                                        />
-                                        <Input
-                                            id="email"
-                                            type="email"
-                                            placeholder="Email"
-                                            value={email}
-                                            onChange={(e) => setEmail(e.target.value)}
-                                        />
-                                        <div className="flex flex-row gap-2 items-center w-full">
-
-                                            <Input
-                                                id="password"
-                                                type={showPassword ? "text" : "password"}
-                                                placeholder="Password"
-                                                value={password}
-                                                onChange={(e) => setPassword(e.target.value)}
-                                            />
-                                            <Button
-                                                variant="outline"
-                                                size="icon"
-                                                className="p-2"
-                                                onClick={togglePassword}
-                                            >
-                                                {showPassword ? (
-                                                    <EyeOff size={22} />
-                                                ) : (
-                                                    <Eye size={22} />
-                                                )}
-                                            </Button>
-                                        </div>
-                                        <Input
-                                            id="passwordConfirm"
-                                            type={showPassword ? "text" : "password"}
-                                            placeholder="Password Confirmation"
-                                            value={confirmPassword}
-                                            onChange={(e) => setConfirmPassword(e.target.value)}
-                                        />
-                                        <Button
-                                            className="w-full text-md"
-                                            onClick={() => {
-                                                register(name, username, email, password, confirmPassword)
-                                                changeMode("signin")
-                                            }}
-                                        >
-                                            Create Account
-                                        </Button>
-                                        <small className="px-2 pt-2 text-center text-neutral-500 dark:text-neutral-400">
-                                            By continuing, you agree to our{" "}
-                                            <a className="text-blue-500" href="/tos">
-                                                Terms of Service
-                                            </a>
-                                            {" "}
-                                            and
-                                            {" "}
-                                            <a className="text-blue-500" href="/privacy">
-                                                Privacy Policy
-                                            </a>
-                                            .
-                                        </small>
-                                    </>
-                                )}
-                                {mode === "reset" && (
-                                    <>
-                                        <Input id="email" type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                                        <Button className="w-full text-md" onClick={() => {
-                                            resetPassword(email);
-                                            changeMode("signin");
-                                        }}>Send</Button>
-                                    </>
-                                )}
-                            </div>
-                            <hr className="w-full border border-black/10 dark:border-white/10" />
-                            <div className="flex flex-col items-center w-full">
-                                {mode === "signin" && (
-                                    <>
-                                        <span>
-                                            Forgot password?{" "}
-                                            <Button
-                                                variant={"link"}
-                                                className="p-0 text-blue-500 dark:text-blue-500"
-                                                onClick={() => changeMode("reset")}
-                                            >
-                                                Reset
-                                            </Button>
-                                        </span>
-                                        <span>
-                                            Don&apos;t have an account?{" "}
-                                            <Button
-                                                variant={"link"}
-                                                className="p-0 text-blue-500 dark:text-blue-500"
-                                                onClick={() => changeMode("register")}
-                                            >
-                                                Sign up
-                                            </Button>
-                                        </span>
-                                    </>
-                                )}
-                                {mode === "reset" && (
-                                    <>
-                                        <span>
-                                            Remember your password?{" "}
-                                            <Button
-                                                variant={"link"}
-                                                className="p-0 text-blue-500 dark:text-blue-500"
-                                                onClick={() => changeMode("signin")}
-                                            >
-                                                Sign in
-                                            </Button>
-                                        </span>
-                                    </>
-                                )}
-                                {mode === "register" && (
-                                    <>
-                                        <span>
-                                            Already have an account?{" "}
-                                            <Button
-                                                variant={"link"}
-                                                className="p-0 text-blue-500 dark:text-blue-500"
-                                                onClick={() => changeMode("signin")}
-                                            >
-                                                Sign in
-                                            </Button>
-                                        </span>
-                                    </>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                </>
-            )
-            }
-        </>
-    )
+								<p className="text-sm text-neutral-500 sm:text-base">
+									{mode === "signin" &&
+										"Please log in with your Katagoru account to continue."}
+									{mode === "register" &&
+										"Create a Katagoru account and join the club!"}
+									{mode === "reset" &&
+										"Please enter your email address to reset your password."}
+								</p>
+							</div>
+							<div className="flex w-full flex-col items-center justify-center gap-4">
+								{mode === "signin" && (
+									<>
+										<Input
+											id="email"
+											type="email"
+											placeholder="Email"
+											value={email}
+											onChange={(e) => setEmail(e.target.value)}
+										/>
+										<div className="flex w-full flex-row items-center gap-2">
+											<Input
+												id="password"
+												type={showPassword ? "text" : "password"}
+												placeholder="Password"
+												value={password}
+												onChange={(e) => setPassword(e.target.value)}
+											/>
+											<Button
+												variant="outline"
+												size="icon"
+												className="p-2"
+												onClick={togglePassword}
+											>
+												{showPassword ? (
+													<EyeOff size={22} />
+												) : (
+													<Eye size={22} />
+												)}
+											</Button>
+										</div>
+										<Button
+											className="text-md w-full"
+											onClick={() => signIn(email, password)}
+										>
+											Submit
+										</Button>
+										<small className="px-2 pt-2 text-center text-neutral-500 dark:text-neutral-400">
+											By continuing, you agree to our{" "}
+											<a className="text-blue-500" href="/tos">
+												Terms of Service
+											</a>{" "}
+											and{" "}
+											<a className="text-blue-500" href="/privacy">
+												Privacy Policy
+											</a>
+											.
+										</small>
+									</>
+								)}
+								{mode === "register" && (
+									<>
+										<Input
+											id="name"
+											type="text"
+											placeholder="Full Name"
+											value={name}
+											onChange={(e) => setName(e.target.value)}
+										/>
+										<Input
+											id="username"
+											type="text"
+											placeholder="Username"
+											value={username}
+											onChange={(e) => setUsername(e.target.value)}
+										/>
+										<Input
+											id="email"
+											type="email"
+											placeholder="Email"
+											value={email}
+											onChange={(e) => setEmail(e.target.value)}
+										/>
+										<div className="flex w-full flex-row items-center gap-2">
+											<Input
+												id="password"
+												type={showPassword ? "text" : "password"}
+												placeholder="Password"
+												value={password}
+												onChange={(e) => setPassword(e.target.value)}
+											/>
+											<Button
+												variant="outline"
+												size="icon"
+												className="p-2"
+												onClick={togglePassword}
+											>
+												{showPassword ? (
+													<EyeOff size={22} />
+												) : (
+													<Eye size={22} />
+												)}
+											</Button>
+										</div>
+										<Input
+											id="passwordConfirm"
+											type={showPassword ? "text" : "password"}
+											placeholder="Password Confirmation"
+											value={confirmPassword}
+											onChange={(e) => setConfirmPassword(e.target.value)}
+										/>
+										<Button
+											className="text-md w-full"
+											onClick={() => {
+												register(
+													name,
+													username,
+													email,
+													password,
+													confirmPassword
+												);
+												changeMode("signin");
+											}}
+										>
+											Create Account
+										</Button>
+										<small className="px-2 pt-2 text-center text-neutral-500 dark:text-neutral-400">
+											By continuing, you agree to our{" "}
+											<a className="text-blue-500" href="/tos">
+												Terms of Service
+											</a>{" "}
+											and{" "}
+											<a className="text-blue-500" href="/privacy">
+												Privacy Policy
+											</a>
+											.
+										</small>
+									</>
+								)}
+								{mode === "reset" && (
+									<>
+										<Input
+											id="email"
+											type="email"
+											placeholder="Email"
+											value={email}
+											onChange={(e) => setEmail(e.target.value)}
+										/>
+										<Button
+											className="text-md w-full"
+											onClick={() => {
+												resetPassword(email);
+												changeMode("signin");
+											}}
+										>
+											Send
+										</Button>
+									</>
+								)}
+							</div>
+							<hr className="w-full border border-black/10 dark:border-white/10" />
+							<div className="flex w-full flex-col items-center">
+								{mode === "signin" && (
+									<>
+										<span>
+											Forgot password?{" "}
+											<Button
+												variant={"link"}
+												className="p-0 text-blue-500 dark:text-blue-500"
+												onClick={() => changeMode("reset")}
+											>
+												Reset
+											</Button>
+										</span>
+										<span>
+											Don&apos;t have an account?{" "}
+											<Button
+												variant={"link"}
+												className="p-0 text-blue-500 dark:text-blue-500"
+												onClick={() => changeMode("register")}
+											>
+												Sign up
+											</Button>
+										</span>
+									</>
+								)}
+								{mode === "reset" && (
+									<>
+										<span>
+											Remember your password?{" "}
+											<Button
+												variant={"link"}
+												className="p-0 text-blue-500 dark:text-blue-500"
+												onClick={() => changeMode("signin")}
+											>
+												Sign in
+											</Button>
+										</span>
+									</>
+								)}
+								{mode === "register" && (
+									<>
+										<span>
+											Already have an account?{" "}
+											<Button
+												variant={"link"}
+												className="p-0 text-blue-500 dark:text-blue-500"
+												onClick={() => changeMode("signin")}
+											>
+												Sign in
+											</Button>
+										</span>
+									</>
+								)}
+							</div>
+						</div>
+					</div>
+				</>
+			)}
+		</>
+	);
 }

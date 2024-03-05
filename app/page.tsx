@@ -5,19 +5,19 @@ import DashboardPage from "./dashboard/page";
 import HomePage from "./home/page";
 
 export default function Home() {
-  const { loggedIn } = useAuth();
+	const { loggedIn } = useAuth();
 
-  return (
-    <>
-      {loggedIn ? (
-        <>
-          <DashboardPage />
-        </>
-      ) : (
-        <>
-          <HomePage />
-        </>
-      )}
-    </>
-  );
+	return (
+		<>
+			{loggedIn ? (
+				<>
+					<DashboardPage />
+				</>
+			) : (
+				<>
+					<HomePage />
+				</>
+			)}
+		</>
+	);
 }

@@ -1,23 +1,22 @@
 import PocketBase from "pocketbase";
 
 export interface ClientError {
-    url: string;
-    status: number;
-    response: {
-        code: number;
-        message: string;
-        data: {
-            [x: string]: {
-                code: string;
-                message: string;
-            },
-        }
-    },
-    isAbort: boolean;
-    originalError: any;
-    name: string;
+	url: string;
+	status: number;
+	response: {
+		code: number;
+		message: string;
+		data: {
+			[x: string]: {
+				code: string;
+				message: string;
+			};
+		};
+	};
+	isAbort: boolean;
+	originalError: any;
+	name: string;
 }
-
 
 const pb = new PocketBase(process.env.NEXT_PUBLIC_AUTH_URL);
 
