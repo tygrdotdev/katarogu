@@ -19,12 +19,11 @@ export default function BackButton({ confirm = false }) {
                 onSubmit={() => {
                     router.back();
                 }}
-            >
+            />
                 <button className="flex flex-row gap-2 items-center text-neutral-500" onClick={confirm ? () => setOpen(!open) : router.back}>
                     <ArrowLeft size={16} />
                     <span className="text-lg font-medium">Back</span>
                 </button>
-            </Alert>
         </>
     )
 }
