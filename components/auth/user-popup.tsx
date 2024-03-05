@@ -37,7 +37,7 @@ export default function UserPopup() {
                             </Avatar>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="min-w-[22rem] p-0 mr-2" side="bottom">
-                            <AspectRatio ratio={2 / 1}>
+                            <AspectRatio ratio={3 / 1}>
                                 {!user.verified && (
                                     <div className="h-[32px] w-full absolute z-[51] top-0 bg-[#EBCB8B] text-black dark:text-black">
                                         <div className="flex flex-row items-center justify-start gap-2 max-h-[32px] p-2">

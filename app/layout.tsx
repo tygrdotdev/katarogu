@@ -13,6 +13,8 @@ import Nav from "@/components/nav";
 
 import 'react-image-crop/dist/ReactCrop.css'
 import "./globals.css";
+import { Suspense } from 'react';
+import Loading from './loading';
 
 const inter = Inter({ subsets: ['latin'], display: "swap", variable: "--font-inter" });
 const sora = Sora({ subsets: ['latin'], display: "swap", variable: "--font-sora" });
@@ -48,8 +50,10 @@ export default function RootLayout({
                 <TooltipProvider>
                   <Toaster />
                   <AuthProvider>
-                    <Nav />
-                    {children}
+                    <Suspense fallback={<Loading />}>
+                      <Nav />
+                      {children}
+                    </Suspense>
                   </AuthProvider>
                 </TooltipProvider>
               </div>
