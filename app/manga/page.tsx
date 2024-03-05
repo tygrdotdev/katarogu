@@ -6,6 +6,8 @@ import Manga from "@/types/manga";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 
+export const dynamic = 'force-dynamic';
+
 export default async function AllMangaPage() {
     // TODO: Implement pagination
     const manga = await pb.collection("manga").getFullList<Manga>();
