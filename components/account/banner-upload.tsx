@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+// Disabled eslint for img element because images are loaded from local storage, not from the web.
 import * as React from "react"
 
 import { useMediaQuery } from "@/hooks/use-media-query"
@@ -14,7 +16,6 @@ import ReactCrop, { Crop, centerCrop, makeAspectCrop } from "react-image-crop"
 import { useAuth } from "../auth/provider"
 import { randomUUID } from "crypto"
 import { toast } from "sonner"
-import { default as NextImage } from "next/image"
 
 const MAX_FILE_SIZE = 12582912; // 12 MB
 
@@ -162,9 +163,9 @@ export default function BannerUpload(props: ButtonProps) {
                 <Button onClick={() => imageInputRef.current?.click()} {...props} />
                 <input ref={imageInputRef} type="file" accept="image/jpeg, image/png, image/gif, image/webp" className="hidden" onChange={onSelectFile} />
                 <Dialog open={open} onOpenChange={onOpenChange}>
-                    <DialogContent className="gap-0 p-0 max-w-[900px] w-fit">
-                        <ReactCrop crop={crop} onChange={(_, p) => setCrop(p)} onComplete={(c, _) => setCompletedCrop(c)} aspect={4 / 1} minHeight={150} keepSelection>
-                            <NextImage alt="Cropper" src={src} onLoad={onImageLoad} ref={imageRef} className="rounded-t-lg" />
+                    <DialogContent className="gap-0 p-0 w-fit">
+                        <ReactCrop crop={crop} onChange={(_, p) => setCrop(p)} onComplete={(c, _) => setCompletedCrop(c)} aspect={4 / 1} minHeight={100} keepSelection>
+                            <img alt="Cropper" src={src} onLoad={onImageLoad} ref={imageRef} className="rounded-t-lg" />
                         </ReactCrop>
                         <div className="flex flex-row justify-between w-full gap-2 p-4 border-t">
                             <Button variant="outline" onClick={onOpenChange}>Cancel</Button>
@@ -182,8 +183,8 @@ export default function BannerUpload(props: ButtonProps) {
             <input ref={imageInputRef} type="file" accept="image/jpeg, image/png, image/gif, image/webp" className="hidden" onChange={onSelectFile} />
             <Drawer open={open} dismissible={false}>
                 <DrawerContent handle={false}>
-                    <ReactCrop crop={crop} onChange={(_, p) => setCrop(p)} onComplete={(c, _) => setCompletedCrop(c)} aspect={4 / 1} minHeight={150} keepSelection>
-                        <NextImage alt="Cropper" src={src} onLoad={onImageLoad} ref={imageRef} className="rounded-t-lg" />
+                    <ReactCrop crop={crop} onChange={(_, p) => setCrop(p)} onComplete={(c, _) => setCompletedCrop(c)} aspect={3 / 1} minHeight={50} keepSelection>
+                        <img alt="Cropper" src={src} onLoad={onImageLoad} ref={imageRef} className="rounded-t-lg" />
                     </ReactCrop>
                     <div className="flex flex-row justify-between w-full gap-2 p-4 border-t">
                         <Button variant="outline" onClick={onOpenChange}>Cancel</Button>

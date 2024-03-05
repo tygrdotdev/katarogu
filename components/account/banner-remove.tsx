@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+// Disabled eslint for img element because images are loaded from local storage, not from the web.
 import * as React from "react"
 
 import { useMediaQuery } from "@/hooks/use-media-query"
@@ -21,7 +23,6 @@ import {
 import { useAuth } from "../auth/provider"
 import { ArrowDown } from "lucide-react"
 import { AspectRatio } from "@radix-ui/react-aspect-ratio"
-import Image from "next/image"
 
 export default function BannerRemove(props: ButtonProps) {
     const { banner, removeBanner, isDefaultBanner } = useAuth();
@@ -48,11 +49,11 @@ export default function BannerRemove(props: ButtonProps) {
                     </DialogHeader>
                     <div className="flex flex-col items-center justify-between gap-4 px-6 pb-4">
                         <AspectRatio ratio={4 / 1}>
-                            <Image src={banner} priority width={1400} height={250} alt="banner" className="object-cover w-full h-full border rounded-md border-black/10 dark:border-white/10" />
+                            <img src={banner} width={1400} height={250} alt="banner" className="object-cover w-full h-full border rounded-md border-black/10 dark:border-white/10" />
                         </AspectRatio>
                         <ArrowDown className="w-8 h-8 mx-4 text-neutral-500" />
                         <AspectRatio ratio={4 / 1}>
-                            <Image src={"https://images.unsplash.com/photo-1636955816868-fcb881e57954?q=80"} priority width={1400} height={250} alt="banner" className="object-cover w-full h-full border rounded-md border-black/10 dark:border-white/10" />
+                            <img src={"https://images.unsplash.com/photo-1636955816868-fcb881e57954?q=80"} width={1400} height={250} alt="banner" className="object-cover w-full h-full border rounded-md border-black/10 dark:border-white/10" />
                         </AspectRatio>
                     </div>
                     <div className="flex flex-row items-center justify-between gap-4 p-4 border-t bg-neutral-900/50">
@@ -80,11 +81,11 @@ export default function BannerRemove(props: ButtonProps) {
                 </DrawerHeader>
                 <div className="flex flex-col items-center justify-center gap-4 p-6">
                     <AspectRatio ratio={4 / 1}>
-                        <Image src={banner} priority width={1400} height={250} alt="banner" className="object-cover w-full h-full border rounded-md border-black/10 dark:border-white/10" />
+                        <img src={banner} width={1400} height={250} alt="banner" className="object-cover w-full h-full border rounded-md border-black/10 dark:border-white/10" />
                     </AspectRatio>
                     <ArrowDown className="w-8 h-8 mx-4 text-neutral-500" />
                     <AspectRatio ratio={4 / 1}>
-                        <Image src={"https://images.unsplash.com/photo-1636955816868-fcb881e57954?q=80"} priority width={1400} height={250} alt="banner" className="object-cover w-full h-full border rounded-md border-black/10 dark:border-white/10" />
+                        <img src={"https://images.unsplash.com/photo-1636955816868-fcb881e57954?q=80"} width={1400} height={250} alt="banner" className="object-cover w-full h-full border rounded-md border-black/10 dark:border-white/10" />
                     </AspectRatio>
                 </div>
                 <div className="flex flex-row justify-between w-full gap-2 p-4 border-t">

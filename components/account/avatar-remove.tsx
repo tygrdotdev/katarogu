@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+// Disabled eslint for img element because images are loaded from local storage, not from the web.
 import * as React from "react"
 
 import { useMediaQuery } from "@/hooks/use-media-query"
@@ -20,7 +22,6 @@ import {
 } from "@/components/ui/drawer"
 import { useAuth } from "../auth/provider"
 import { ArrowRight } from "lucide-react"
-import Image from "next/image"
 
 export default function AvatarRemove(props: ButtonProps) {
     const { user, avatar, removeAvatar, isDefaultAvatar } = useAuth();
@@ -46,9 +47,9 @@ export default function AvatarRemove(props: ButtonProps) {
                         </DialogDescription>
                     </DialogHeader>
                     <div className="flex flex-row items-center justify-between px-6 pb-4">
-                        <Image src={avatar} className="w-32 h-32 rounded-full" alt="Current Avatar" />
+                        <img src={avatar} className="w-32 h-32 rounded-full" alt="Current Avatar" />
                         <ArrowRight className="w-8 h-8 mx-4 text-neutral-500" />
-                        <Image src={`https://api.dicebear.com/7.x/lorelei-neutral/png?seed=${user?.username}&radius=50`} className="w-32 h-32 rounded-full" alt="New Avatar" />
+                        <img src={`https://api.dicebear.com/7.x/lorelei-neutral/png?seed=${user?.username}&radius=50`} className="w-32 h-32 rounded-full" alt="New Avatar" />
                     </div>
                     <div className="flex flex-row items-center justify-between gap-4 p-4 border-t bg-neutral-900/50">
                         <span className="text-sm text-neutral-600 dark:text-neutral-400">
@@ -74,9 +75,9 @@ export default function AvatarRemove(props: ButtonProps) {
                     <DrawerDescription>Are you sure you want to delete your avatar?</DrawerDescription>
                 </DrawerHeader>
                 <div className="flex flex-row items-center justify-center p-6">
-                    <Image src={avatar} className="w-32 h-32 rounded-full" alt="Current Avatar" />
+                    <img src={avatar} className="w-32 h-32 rounded-full" alt="Current Avatar" />
                     <ArrowRight className="w-8 h-8 mx-4 text-neutral-500" />
-                    <Image src={`https://api.dicebear.com/7.x/lorelei-neutral/png?seed=${user?.username}&radius=50`} className="w-32 h-32 rounded-full" alt="New Avatar" />
+                    <img src={`https://api.dicebear.com/7.x/lorelei-neutral/png?seed=${user?.username}&radius=50`} className="w-32 h-32 rounded-full" alt="New Avatar" />
                 </div>
                 <div className="flex flex-row justify-between w-full gap-2 p-4 border-t">
                     <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
