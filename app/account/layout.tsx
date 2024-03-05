@@ -12,6 +12,8 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
     const { user } = useAuth();
     const path = usePathname();
 
+
+
     return (
         <>
             <ProtectedPage>

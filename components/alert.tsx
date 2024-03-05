@@ -17,7 +17,7 @@ import {
     DrawerTitle,
 } from "@/components/ui/drawer"
 
-export default function BannerRemove({
+export default function Alert({
     open,
     setOpen,
     title,
@@ -25,7 +25,6 @@ export default function BannerRemove({
     footer,
     onSubmit,
     onCancel,
-    children,
     ...props
 }: {
     open: boolean,
@@ -35,7 +34,6 @@ export default function BannerRemove({
     footer?: string,
     onSubmit?: () => void,
     onCancel?: () => void
-    children: React.ReactNode
 }) {
     const isDesktop = useMediaQuery("(min-width: 768px)")
 
@@ -83,7 +81,6 @@ export default function BannerRemove({
                         </div>
                     </DialogContent>
                 </Dialog>
-                {children}
             </>
         )
     }
@@ -98,11 +95,10 @@ export default function BannerRemove({
                     </DrawerHeader>
                     <div className="flex flex-row justify-between w-full gap-2 p-4 border-t">
                         <Button variant="outline" onClick={cancel}>Cancel</Button>
-                        <Button onClick={submit}>Confirm</Button>
+                        <Button variant="destructive" onClick={submit}>Confirm</Button>
                     </div>
                 </DrawerContent>
             </Drawer>
-            {children}
         </>
     )
 }

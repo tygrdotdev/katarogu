@@ -340,7 +340,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             pb.collection("users").unsubscribe();
             setMounted(false);
         }
-    }, [update])
+
+        // I want to run this effect when the isValid property changes, shut up eslint
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [update, pb.authStore.isValid])
 
     const value = React.useMemo(() => ({
         authStore: pb.authStore,
