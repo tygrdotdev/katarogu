@@ -28,7 +28,7 @@ export default function Error({
 				<h2 className="text-center text-lg text-neutral-500 dark:text-neutral-400">
 					Oops! Something went wrong while loading this page.
 				</h2>
-				<code className="rounded-lg bg-neutral-800 p-2 text-sm">
+				<code className="overflow-scroll max-w-2xl rounded-lg bg-neutral-200 p-2 text-sm dark:bg-neutral-800">
 					{error.message}
 				</code>
 				<Link href="/" passHref>
