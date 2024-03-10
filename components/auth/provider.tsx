@@ -368,7 +368,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 					console.log("Aborted request.");
 				} else if (err.status === 0) {
 					toast.warning("Failed to connect to the database.", {
-						description: "Your account may not be up to date.",
+						description: "Some functionality may not work.",
 						action: {
 							label: "Retry",
 							onClick: async () => await update(),
