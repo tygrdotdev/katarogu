@@ -6,7 +6,6 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Drawer, DrawerContent } from "@/components/ui/drawer";
 import ReactCrop, { Crop, centerCrop, makeAspectCrop } from "react-image-crop";
 import { toast } from "sonner";
-import { default as NextImage } from "next/image";
 
 const MAX_FILE_SIZE = 12582912; // 12 MB
 
@@ -170,7 +169,9 @@ export default function MangaCoverUpload(
 							minHeight={100}
 							keepSelection
 						>
-							<NextImage
+							{/* This isn't an issue, I can't use next/image for this  */}
+							{/* eslint-disable-next-line @next/next/no-img-element */}
+							<img
 								alt="Cropper"
 								src={src}
 								onLoad={onImageLoad}
@@ -210,7 +211,9 @@ export default function MangaCoverUpload(
 						minHeight={200}
 						keepSelection
 					>
-						<NextImage
+						{/* This isn't an issue, I can't use next/image for this  */}
+						{/* eslint-disable-next-line @next/next/no-img-element */}
+						<img
 							alt="Cropper"
 							src={src}
 							onLoad={onImageLoad}
