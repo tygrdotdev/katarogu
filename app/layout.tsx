@@ -13,8 +13,6 @@ import Nav from "@/components/nav";
 
 import "react-image-crop/dist/ReactCrop.css";
 import "./globals.css";
-import { Suspense } from "react";
-import Loading from "./loading";
 
 const inter = Inter({
 	subsets: ["latin"],
@@ -67,10 +65,8 @@ export default function RootLayout({
 								<TooltipProvider>
 									<Toaster />
 									<AuthProvider>
-										<Suspense fallback={<Loading />}>
-											<Nav />
-											{children}
-										</Suspense>
+										<Nav />
+										{children}
 									</AuthProvider>
 								</TooltipProvider>
 							</div>

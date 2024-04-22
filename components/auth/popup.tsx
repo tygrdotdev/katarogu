@@ -124,6 +124,7 @@ export default function AuthPopup() {
 												placeholder="Email"
 												type="email"
 												value={email}
+												autoComplete="email"
 												onChange={(e) => setEmail(e.target.value)}
 											/>
 											<div className="flex w-full flex-row items-center gap-2">
@@ -132,6 +133,7 @@ export default function AuthPopup() {
 													type={showPassword ? "text" : "password"}
 													placeholder="Password"
 													value={password}
+													autoComplete="current-password"
 													onChange={(e) => setPassword(e.target.value)}
 												/>
 												<Button
@@ -166,29 +168,36 @@ export default function AuthPopup() {
 											className="flex w-full flex-col items-center gap-4"
 										>
 											<Input
+												id="register-name"
 												placeholder="Name"
 												type="text"
 												value={name}
+												autoComplete="name"
 												onChange={(e) => setName(e.target.value)}
 											/>
 											<Input
+												id="register-email"
 												placeholder="Email"
 												type="email"
 												value={email}
+												autoComplete="email"
 												onChange={(e) => setEmail(e.target.value)}
 											/>
 											<Input
+												id="register-username"
 												placeholder="Username"
 												type="text"
 												value={username}
+												autoComplete="username"
 												onChange={(e) => setUsername(e.target.value)}
 											/>
 											<div className="flex w-full flex-row items-center gap-2">
 												<Input
-													id="password"
+													id="register-password"
 													type={showPassword ? "text" : "password"}
 													placeholder="Password"
 													value={password}
+													autoComplete="new-password"
 													onChange={(e) => setPassword(e.target.value)}
 												/>
 												<Button
@@ -206,9 +215,11 @@ export default function AuthPopup() {
 												</Button>
 											</div>
 											<Input
+												id="register-confirm-password"
 												placeholder="Confirm Password"
 												type={showPassword ? "text" : "password"}
 												value={passwordConfirm}
+												autoComplete="new-password"
 												onChange={(e) => setPasswordConfirm(e.target.value)}
 											/>
 											<Button
@@ -229,8 +240,10 @@ export default function AuthPopup() {
 											className="flex w-full flex-col items-center gap-4"
 										>
 											<Input
+												id="reset-password-email"
 												placeholder="Email"
 												value={email}
+												autoComplete="email"
 												onChange={(e) => setEmail(e.target.value)}
 											/>
 											<Button

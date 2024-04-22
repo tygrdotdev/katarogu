@@ -2,10 +2,8 @@
 
 import Link from "next/link";
 import { ThemeToggle } from "./theme/toggle";
-import { Button } from "./ui/button";
 import AuthPopup from "./auth/popup";
 import { useAuth } from "./auth/provider";
-import { Suspense } from "react";
 import UserPopup from "./auth/user-popup";
 import {
 	NavigationMenu,
@@ -119,17 +117,15 @@ export default function Nav() {
 					</div>
 					<div className="flex flex-row items-center gap-3">
 						<ThemeToggle />
-						<Suspense fallback="Loading...">
-							{user ? (
-								<>
-									<UserPopup />
-								</>
-							) : (
-								<>
-									<AuthPopup />
-								</>
-							)}
-						</Suspense>
+						{user ? (
+							<>
+								<UserPopup />
+							</>
+						) : (
+							<>
+								<AuthPopup />
+							</>
+						)}
 					</div>
 				</div>
 			</nav>
