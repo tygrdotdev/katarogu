@@ -221,10 +221,10 @@ export default async function MangaSingleton({
 								</div>
 							) : (
 								<>
-									<div className="grid w-full grid-cols-2 gap-4 py-2 md:grid-cols-4 lg:grid-cols-6">
+									<div className="grid h-full w-full grid-cols-2 gap-4 py-2 md:grid-cols-4 lg:grid-cols-6">
 										{characters.map((character: any) => (
 											<div
-												className="flex h-full w-full flex-col items-start"
+												className="flex h-full w-full flex-col items-center"
 												key={character.id}
 											>
 												<Image
@@ -234,7 +234,7 @@ export default async function MangaSingleton({
 													height={900}
 													className="h-full w-full rounded-md object-cover"
 												/>
-												<div className="relative h-full w-full">
+												<div className="relative w-full">
 													<div className="absolute bottom-0 left-0 right-0 rounded-b-md border-black/10 bg-black/10 p-2 text-white backdrop-blur-md dark:border-white/10">
 														<h3 className="text-lg font-medium">
 															{character.name}
