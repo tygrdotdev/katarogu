@@ -23,11 +23,13 @@ export interface AuthSession {
 	isDefaultBanner: boolean;
 
 	signIn: (email: string, password: string) => Promise<boolean>;
+	signOut: () => void;
+
 	signInWithOAuth: (
 		provider: "github" | "google" | "discord"
 	) => Promise<boolean>;
+	unlinkOAuth: (provider: "github" | "google" | "discord") => Promise<void>;
 	refreshOAuth: () => Promise<void>;
-	signOut: () => void;
 
 	register: (
 		name: string,
@@ -73,9 +75,11 @@ export const AuthContext = React.createContext<AuthSession>({
 	isDefaultBanner: pb.authStore.model?.banner ? false : true,
 
 	signIn: async () => false,
+	signOut: () => {},
+
 	signInWithOAuth: async () => false,
 	refreshOAuth: async () => {},
-	signOut: () => {},
+	unlinkOAuth: async () => {},
 
 	register: async () => false,
 	resetPassword: async () => {},
@@ -179,7 +183,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 		let res = false;
 		await pb
 			.collection("users")
-			.authWithOAuth2({ provider: provider })
+			.authWithOAuth2({ provider })
 			.then(async (record) => {
 				setLoggedIn(true);
 				setUser(pb.authStore.model);
@@ -193,27 +197,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 			.catch((err: ClientError) => {
 				console.error(JSON.stringify(err, null, 2));
 				let title = "Invalid ";
+
 				if (err.response.message === "Failed to authenticate.")
 					title += "credentials.";
-				if (err.response.code === 403) {
-					title += "Email.";
-				}
+
 				if (!err.response.data)
 					return toast.error("An unexpected error occured!", {
 						description: "Check the console for more details.",
 					});
-				if (
-					err.response.data.identity &&
-					err.response.data.identity.code === "validation_required"
-				)
-					title += "email";
-				if (
-					err.response.data.password &&
-					err.response.data.password.code === "validation_required"
-				)
-					title.length <= 8
-						? (title += "password.")
-						: (title += " and password.");
 
 				toast.error(title, {
 					description: err.response.message,
@@ -225,25 +216,41 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 		return res;
 	};
 
+	// TODO: fix this mf, reloading updates the state but doing it here don't hlkjhflkajshflakjshflaksjh
 	const refreshOAuth = async () => {
-		if (pb.authStore.isValid) {
-			await pb
-				.collection("users")
-				.listExternalAuths(pb.authStore.model?.id as string)
-				.then((res) => {
-					console.log(res);
-					if (res) {
-						setOauth({
-							github: res.find((r) => r.provider === "github") || null,
-							google: res.find((r) => r.provider === "google") || null,
-							discord: res.find((r) => r.provider === "discord") || null,
-						});
-					}
-				})
-				.catch((err) => {
-					console.error(err);
+		await pb
+			.collection("users")
+			.listExternalAuths(pb.authStore.model?.id as string)
+			.then((res) => {
+				console.log(res);
+				if (res) {
+					setOauth({
+						github: res.find((r) => r.provider === "github") || null,
+						google: res.find((r) => r.provider === "google") || null,
+						discord: res.find((r) => r.provider === "discord") || null,
+					});
+				}
+			})
+			.catch((err) => {
+				console.error(err);
+			});
+	};
+
+	const unlinkOAuth = async (provider: "github" | "google" | "discord") => {
+		await pb
+			.collection("users")
+			.unlinkExternalAuth(pb.authStore.model?.id, provider)
+			.then(async () => {
+				toast.success("Success!", {
+					description: `Successfully unlinked ${provider}.`,
 				});
-		}
+				await refreshOAuth();
+			})
+			.catch((err) => {
+				toast.error("Failed to unlink provider.", {
+					description: "Please try again later.",
+				});
+			});
 	};
 
 	const signOut = (msg = true) => {
@@ -504,7 +511,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 					});
 				}
 			});
-	}, [pb.authStore.model?.id]);
+	}, []);
 
 	useEffect(() => {
 		// Once we are in the client, we can allow the provider to render children
@@ -579,9 +586,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 			loggedIn,
 
 			signIn,
+			signOut,
+
 			signInWithOAuth,
 			refreshOAuth,
-			signOut,
+			unlinkOAuth,
 
 			register,
 			resetPassword,

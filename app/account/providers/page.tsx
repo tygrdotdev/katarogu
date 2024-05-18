@@ -8,9 +8,13 @@ import { Suspense, useEffect, useState } from "react";
 import pb from "@/lib/pocketbase";
 import { toast } from "sonner";
 import Spinner from "@/components/spinner";
+import Alert from "@/components/alert";
 
 export default function AccountPrivacyPage() {
-	const { user, oauth, refreshOAuth } = useAuth();
+	const { user, oauth, refreshOAuth, unlinkOAuth } = useAuth();
+	const [unlinkGithub, setUnlinkGithub] = useState(false);
+	const [unlinkGoogle, setUnlinkGoogle] = useState(false);
+	const [unlinkDiscord, setUnlinkDiscord] = useState(false);
 
 	return (
 		<>
@@ -23,14 +27,24 @@ export default function AccountPrivacyPage() {
 					>
 						<div className="flex flex-wrap gap-3">
 							{oauth.github ? (
-								<>
-									<Suspense fallback={<Spinner />}>
-										<Button className="w-fit" variant="outline" disabled>
-											<Icons.Github className="w-4 h-4 mr-2" />
-											Linked with GitHub
-										</Button>
-									</Suspense>
-								</>
+								<Suspense fallback={<Spinner />}>
+									<Button
+										className="w-fit"
+										variant="secondary"
+										onClick={() => setUnlinkGithub(true)}
+									>
+										<Icons.Github className="w-4 h-4 mr-2" />
+										Unlink GitHub
+									</Button>
+									<Alert
+										title="Disconnect GitHub?"
+										description="Are you sure you want to disconnect your GitHub account?"
+										onSubmit={async () => await unlinkOAuth("github")}
+										onCancel={() => setUnlinkGithub(false)}
+										open={unlinkGithub}
+										setOpen={setUnlinkGithub}
+									/>
+								</Suspense>
 							) : (
 								<>
 									<Button
@@ -54,14 +68,24 @@ export default function AccountPrivacyPage() {
 								</>
 							)}
 							{oauth.google ? (
-								<>
-									<Suspense fallback={<Spinner />}>
-										<Button className="w-fit" variant="outline" disabled>
-											<Icons.Google className="w-4 h-4 mr-2" />
-											Linked with Google
-										</Button>
-									</Suspense>
-								</>
+								<Suspense fallback={<Spinner />}>
+									<Button
+										className="w-fit"
+										variant="secondary"
+										onClick={() => setUnlinkGoogle(true)}
+									>
+										<Icons.Google className="w-4 h-4 mr-2" />
+										Unlink Google
+									</Button>
+									<Alert
+										title="Disconnect Google?"
+										description="Are you sure you want to disconnect your Google account?"
+										onSubmit={async () => await unlinkOAuth("google")}
+										onCancel={() => setUnlinkGoogle(false)}
+										open={unlinkGoogle}
+										setOpen={setUnlinkGoogle}
+									/>
+								</Suspense>
 							) : (
 								<>
 									<Button
@@ -86,12 +110,24 @@ export default function AccountPrivacyPage() {
 							)}
 
 							{oauth.discord ? (
-								<>
-									<Button className="w-fit" variant="outline" disabled>
-										<Icons.Discord className="w-4 h-4 mr-2" /> Linked with
-										Discord
+								<Suspense fallback={<Spinner />}>
+									<Button
+										className="w-fit"
+										variant="secondary"
+										onClick={() => setUnlinkDiscord(true)}
+									>
+										<Icons.Discord className="w-4 h-4 mr-2" />
+										Unlink Discord
 									</Button>
-								</>
+									<Alert
+										title="Disconnect Discord?"
+										description="Are you sure you want to disconnect your Discord account?"
+										onSubmit={async () => await unlinkOAuth("discord")}
+										onCancel={() => setUnlinkDiscord(false)}
+										open={unlinkDiscord}
+										setOpen={setUnlinkDiscord}
+									/>
+								</Suspense>
 							) : (
 								<>
 									<Button

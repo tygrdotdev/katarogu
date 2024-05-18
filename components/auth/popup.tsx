@@ -129,39 +129,44 @@ export default function AuthPopup() {
 						</DialogHeader>
 						<div className="flex flex-col gap-2 py-2">
 							<div className="flex w-full flex-col gap-3 px-4">
-								<div className="flex flex-col gap-4">
-									<div className="w-full flex flex-row gap-4 items-center justify-center">
-										<Button
-											className="w-full"
-											variant="outline"
-											onClick={async () => await onOAuthSignIn("github")}
-										>
-											<Icons.Github className="w-4 h-4 mr-2" />
-											GitHub
-										</Button>
+								{mode === "signin" && (
+									<>
+										<div className="flex flex-col gap-4">
+											<div className="w-full flex flex-row gap-4 items-center justify-center">
+												<Button
+													className="w-full"
+													variant="outline"
+													onClick={async () => await onOAuthSignIn("github")}
+												>
+													<Icons.Github className="w-4 h-4 mr-2" />
+													GitHub
+												</Button>
 
-										<Button
-											className="w-full"
-											variant="outline"
-											onClick={async () => await onOAuthSignIn("google")}
-										>
-											<Icons.Google className="w-4 h-4 mr-2" />
-											Google
-										</Button>
+												<Button
+													className="w-full"
+													variant="outline"
+													onClick={async () => await onOAuthSignIn("google")}
+												>
+													<Icons.Google className="w-4 h-4 mr-2" />
+													Google
+												</Button>
 
-										<Button
-											className="w-full"
-											variant="outline"
-											onClick={async () => await onOAuthSignIn("discord")}
-										>
-											<Icons.Discord className="w-4 h-4 mr-2" />
-											Discord
-										</Button>
-									</div>
-								</div>
-								<div className="w-full py-2 flex items-center">
-									<hr className="w-full border-t border-black/10 dark:border-white/10" />
-								</div>
+												<Button
+													className="w-full"
+													variant="outline"
+													onClick={async () => await onOAuthSignIn("discord")}
+												>
+													<Icons.Discord className="w-4 h-4 mr-2" />
+													Discord
+												</Button>
+											</div>
+										</div>
+										<div className="w-full py-2 flex items-center">
+											<hr className="w-full border-t border-black/10 dark:border-white/10" />
+										</div>
+									</>
+								)}
+
 								{mode === "signin" && (
 									<>
 										<form
@@ -401,6 +406,43 @@ export default function AuthPopup() {
 						</DrawerHeader>
 						<div className="flex flex-col gap-2 pt-2">
 							<div className="flex w-full flex-col gap-3 px-4">
+								{mode === "signin" && (
+									<>
+										<div className="flex flex-col gap-4">
+											<div className="w-full flex flex-row gap-4 items-center justify-center">
+												<Button
+													className="w-full"
+													variant="outline"
+													onClick={async () => await onOAuthSignIn("github")}
+												>
+													<Icons.Github className="w-4 h-4 mr-2" />
+													<span className="hidden xs:block">GitHub</span>
+												</Button>
+
+												<Button
+													className="w-full"
+													variant="outline"
+													onClick={async () => await onOAuthSignIn("google")}
+												>
+													<Icons.Google className="w-4 h-4 mr-2" />
+													<span className="hidden xs:block">Google</span>
+												</Button>
+
+												<Button
+													className="w-full"
+													variant="outline"
+													onClick={async () => await onOAuthSignIn("discord")}
+												>
+													<Icons.Discord className="w-4 h-4 mr-2" />
+													<span className="hidden xs:block">Discord</span>
+												</Button>
+											</div>
+										</div>
+										<div className="w-full py-2 flex items-center">
+											<hr className="w-full border-t border-black/10 dark:border-white/10" />
+										</div>
+									</>
+								)}
 								{mode === "signin" && (
 									<>
 										<form

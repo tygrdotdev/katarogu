@@ -7,13 +7,14 @@ import React from "react";
 import { Eye, Mail, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import pb from "@/lib/pocketbase";
+import { Icons } from "../ui/icons";
 
 export default function ProtectedPage({
 	children,
 }: {
 	children: React.ReactNode;
 }) {
-	const { user, signIn, register, resetPassword } = useAuth();
+	const { user, signIn, signInWithOAuth, register, resetPassword } = useAuth();
 
 	const [mode, setMode] = React.useState<"signin" | "register" | "reset">(
 		"signin"
@@ -142,6 +143,44 @@ export default function ProtectedPage({
 								</p>
 							</div>
 							<div className="flex w-full flex-col items-center justify-center gap-4">
+								{mode === "signin" && (
+									<>
+										<div className="flex flex-col gap-4 w-full">
+											<div className="w-full flex flex-row gap-4 items-center justify-center">
+												<Button
+													className="w-full"
+													variant="outline"
+													onClick={async () => await signInWithOAuth("github")}
+												>
+													<Icons.Github className="w-4 h-4 mr-2" />
+													<span className="hidden xs:block">GitHub</span>
+												</Button>
+
+												<Button
+													className="w-full"
+													variant="outline"
+													onClick={async () => await signInWithOAuth("google")}
+												>
+													<Icons.Google className="w-4 h-4 mr-2" />
+													<span className="hidden xs:block">Google</span>
+												</Button>
+
+												<Button
+													className="w-full"
+													variant="outline"
+													onClick={async () => await signInWithOAuth("discord")}
+												>
+													<Icons.Discord className="w-4 h-4 mr-2" />
+													<span className="hidden xs:block">Discord</span>
+												</Button>
+											</div>
+										</div>
+										<div className="w-full py-2 flex items-center">
+											<hr className="w-full border-t border-black/10 dark:border-white/10" />
+										</div>
+									</>
+								)}
+
 								{mode === "signin" && (
 									<>
 										<Input
