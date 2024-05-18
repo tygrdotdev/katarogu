@@ -216,36 +216,33 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 		return res;
 	};
 
-	// TODO: fix this mf, reloading updates the state but doing it here don't hlkjhflkajshflakjshflaksjh
 	const refreshOAuth = async () => {
-		await pb
+		const data = await pb
 			.collection("users")
 			.listExternalAuths(pb.authStore.model?.id as string)
-			.then((res) => {
-				console.log(res);
-				if (res) {
-					setOauth({
-						github: res.find((r) => r.provider === "github") || null,
-						google: res.find((r) => r.provider === "google") || null,
-						discord: res.find((r) => r.provider === "discord") || null,
-					});
-				}
-			})
+			.then((res) => res)
 			.catch((err) => {
 				console.error(err);
+				return [] as ExternalAuthModel[];
 			});
+
+		setOauth({
+			github: data.find((r) => r.provider === "github") || null,
+			google: data.find((r) => r.provider === "google") || null,
+			discord: data.find((r) => r.provider === "discord") || null,
+		});
 	};
 
 	const unlinkOAuth = async (provider: "github" | "google" | "discord") => {
 		await pb
 			.collection("users")
 			.unlinkExternalAuth(pb.authStore.model?.id, provider)
-			.then(async () => {
+			.then(() =>
 				toast.success("Success!", {
 					description: `Successfully unlinked ${provider}.`,
-				});
-				await refreshOAuth();
-			})
+				})
+			)
+			.then(async () => await refreshOAuth())
 			.catch((err) => {
 				toast.error("Failed to unlink provider.", {
 					description: "Please try again later.",
@@ -607,6 +604,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 		[
 			avatar,
 			banner,
+			oauth,
 			deleteAccount,
 			isDefaultAvatar,
 			isDefaultBanner,
