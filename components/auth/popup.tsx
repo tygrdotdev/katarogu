@@ -24,6 +24,8 @@ import React, { useState } from "react";
 import { useAuth } from "./provider";
 import Spinner from "../spinner";
 import { Eye, EyeOff } from "lucide-react";
+import { Icons } from "../ui/icons";
+import pb from "@/lib/pocketbase";
 
 export default function AuthPopup() {
 	const [open, setOpen] = useState(false);
@@ -41,7 +43,7 @@ export default function AuthPopup() {
 
 	const [loading, setLoading] = React.useState(false);
 
-	const { signIn, register, resetPassword } = useAuth();
+	const { signIn, register, resetPassword, signInWithOAuth } = useAuth();
 
 	const reset = () => {
 		setName("");
@@ -57,6 +59,19 @@ export default function AuthPopup() {
 		setLoading(true);
 
 		await signIn(email, password).then((res) => {
+			if (res) {
+				reset();
+				setOpen(false);
+			} else {
+				setLoading(false);
+			}
+		});
+	};
+
+	const onOAuthSignIn = async (provider: "github" | "google" | "discord") => {
+		setLoading(true);
+
+		await signInWithOAuth(provider).then((res) => {
 			if (res) {
 				reset();
 				setOpen(false);
@@ -114,6 +129,39 @@ export default function AuthPopup() {
 						</DialogHeader>
 						<div className="flex flex-col gap-2 py-2">
 							<div className="flex w-full flex-col gap-3 px-4">
+								<div className="flex flex-col gap-4">
+									<div className="w-full flex flex-row gap-4 items-center justify-center">
+										<Button
+											className="w-full"
+											variant="outline"
+											onClick={async () => await onOAuthSignIn("github")}
+										>
+											<Icons.Github className="w-4 h-4 mr-2" />
+											GitHub
+										</Button>
+
+										<Button
+											className="w-full"
+											variant="outline"
+											onClick={async () => await onOAuthSignIn("google")}
+										>
+											<Icons.Google className="w-4 h-4 mr-2" />
+											Google
+										</Button>
+
+										<Button
+											className="w-full"
+											variant="outline"
+											onClick={async () => await onOAuthSignIn("discord")}
+										>
+											<Icons.Discord className="w-4 h-4 mr-2" />
+											Discord
+										</Button>
+									</div>
+								</div>
+								<div className="w-full py-2 flex items-center">
+									<hr className="w-full border-t border-black/10 dark:border-white/10" />
+								</div>
 								{mode === "signin" && (
 									<>
 										<form
@@ -126,6 +174,7 @@ export default function AuthPopup() {
 												value={email}
 												autoComplete="email"
 												onChange={(e) => setEmail(e.target.value)}
+												disabled={loading}
 											/>
 											<div className="flex w-full flex-row items-center gap-2">
 												<Input
@@ -135,6 +184,7 @@ export default function AuthPopup() {
 													value={password}
 													autoComplete="current-password"
 													onChange={(e) => setPassword(e.target.value)}
+													disabled={loading}
 												/>
 												<Button
 													variant="outline"

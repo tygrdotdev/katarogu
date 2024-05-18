@@ -1,6 +1,7 @@
 "use client";
 
 import pb, { ClientError } from "@/lib/pocketbase";
+import { AuthProviderInfo, ExternalAuthModel } from "pocketbase";
 import React, { useCallback, useEffect } from "react";
 import { toast } from "sonner";
 
@@ -8,14 +9,24 @@ export interface AuthSession {
 	authStore: typeof pb.authStore;
 
 	user: typeof pb.authStore.model;
+	oauth: {
+		github: ExternalAuthModel | null;
+		google: ExternalAuthModel | null;
+		discord: ExternalAuthModel | null;
+	};
 	loggedIn: typeof pb.authStore.isValid;
 
 	avatar: string;
 	isDefaultAvatar: boolean;
+
 	banner: string;
 	isDefaultBanner: boolean;
 
 	signIn: (email: string, password: string) => Promise<boolean>;
+	signInWithOAuth: (
+		provider: "github" | "google" | "discord"
+	) => Promise<boolean>;
+	refreshOAuth: () => Promise<void>;
 	signOut: () => void;
 
 	register: (
@@ -42,6 +53,11 @@ export const AuthContext = React.createContext<AuthSession>({
 	authStore: pb.authStore,
 
 	user: pb.authStore.model,
+	oauth: {
+		github: null,
+		google: null,
+		discord: null,
+	},
 	loggedIn: pb.authStore.isValid,
 
 	avatar: pb.authStore.model?.avatar
@@ -52,11 +68,13 @@ export const AuthContext = React.createContext<AuthSession>({
 
 	banner: pb.authStore.model?.banner
 		? `${process.env.NEXT_PUBLIC_AUTH_URL}/api/files/_pb_users_auth_/${pb.authStore.model.id}/${pb.authStore.model.banner}`
-		: `https://images.unsplash.com/photo-1636955816868-fcb881e57954?q=50`,
+		: `https://images.unsplash.com/photo-1636955816868-fcb881e57954?q=20`,
 
 	isDefaultBanner: pb.authStore.model?.banner ? false : true,
 
 	signIn: async () => false,
+	signInWithOAuth: async () => false,
+	refreshOAuth: async () => {},
 	signOut: () => {},
 
 	register: async () => false,
@@ -78,6 +96,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
 	const [loggedIn, setLoggedIn] = React.useState(pb.authStore.isValid);
 	const [user, setUser] = React.useState(pb.authStore.model);
+
+	const [oauth, setOauth] = React.useState<{
+		github: ExternalAuthModel | null;
+		google: ExternalAuthModel | null;
+		discord: ExternalAuthModel | null;
+	}>({
+		github: null,
+		google: null,
+		discord: null,
+	});
+
 	const [avatar, setAvatar] = React.useState(
 		pb.authStore.model?.avatar
 			? `${process.env.NEXT_PUBLIC_AUTH_URL}/api/files/_pb_users_auth_/${pb.authStore.model.id}/${pb.authStore.model.avatar}`
@@ -86,6 +115,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 	const [isDefaultAvatar, setIsDefaultAvatar] = React.useState(
 		pb.authStore.model?.avatar ? false : true
 	);
+
 	const [banner, setBanner] = React.useState(
 		pb.authStore.model?.banner
 			? `${process.env.NEXT_PUBLIC_AUTH_URL}/api/files/_pb_users_auth_/${pb.authStore.model.id}/${pb.authStore.model.banner}`
@@ -100,9 +130,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 		await pb
 			.collection("users")
 			.authWithPassword(email, password)
-			.then((record) => {
+			.then(async (record) => {
 				setLoggedIn(true);
 				setUser(pb.authStore.model);
+
 				toast.success("Success!", {
 					description: `Welcome back, ${record.record.username}`,
 				});
@@ -114,6 +145,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 				let title = "Invalid ";
 				if (err.response.message === "Failed to authenticate.")
 					title += "credentials.";
+				if (err.response.code === 403) {
+					title += "Email.";
+				}
 				if (!err.response.data)
 					return toast.error("An unexpected error occured!", {
 						description: "Check the console for more details.",
@@ -139,6 +173,77 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 			});
 
 		return res;
+	};
+
+	const signInWithOAuth = async (provider: "github" | "google" | "discord") => {
+		let res = false;
+		await pb
+			.collection("users")
+			.authWithOAuth2({ provider: provider })
+			.then(async (record) => {
+				setLoggedIn(true);
+				setUser(pb.authStore.model);
+
+				toast.success("Success!", {
+					description: `Welcome back, ${record.record.username}`,
+				});
+
+				res = true;
+			})
+			.catch((err: ClientError) => {
+				console.error(JSON.stringify(err, null, 2));
+				let title = "Invalid ";
+				if (err.response.message === "Failed to authenticate.")
+					title += "credentials.";
+				if (err.response.code === 403) {
+					title += "Email.";
+				}
+				if (!err.response.data)
+					return toast.error("An unexpected error occured!", {
+						description: "Check the console for more details.",
+					});
+				if (
+					err.response.data.identity &&
+					err.response.data.identity.code === "validation_required"
+				)
+					title += "email";
+				if (
+					err.response.data.password &&
+					err.response.data.password.code === "validation_required"
+				)
+					title.length <= 8
+						? (title += "password.")
+						: (title += " and password.");
+
+				toast.error(title, {
+					description: err.response.message,
+				});
+
+				res = false;
+			});
+
+		return res;
+	};
+
+	const refreshOAuth = async () => {
+		if (pb.authStore.isValid) {
+			await pb
+				.collection("users")
+				.listExternalAuths(pb.authStore.model?.id as string)
+				.then((res) => {
+					console.log(res);
+					if (res) {
+						setOauth({
+							github: res.find((r) => r.provider === "github") || null,
+							google: res.find((r) => r.provider === "google") || null,
+							discord: res.find((r) => r.provider === "discord") || null,
+						});
+					}
+				})
+				.catch((err) => {
+					console.error(err);
+				});
+		}
 	};
 
 	const signOut = (msg = true) => {
@@ -356,6 +461,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 						: `https://images.unsplash.com/photo-1636955816868-fcb881e57954?q=80`
 				);
 				setIsDefaultBanner(response.record?.banner ? false : true);
+
+				// Grab the user's OAuth providers
+				pb.collection("users")
+					.listExternalAuths(response.record.id as string)
+					.then((res) => {
+						console.log(res);
+						if (res) {
+							setOauth({
+								github: res.find((r) => r.provider === "github") || null,
+								google: res.find((r) => r.provider === "google") || null,
+								discord: res.find((r) => r.provider === "discord") || null,
+							});
+						}
+					})
+					.catch((err) => {
+						console.error(err);
+					});
 			})
 			.catch((err: ClientError) => {
 				console.error(JSON.stringify(err, null, 2));
@@ -382,7 +504,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 					});
 				}
 			});
-	}, []);
+	}, [pb.authStore.model?.id]);
 
 	useEffect(() => {
 		// Once we are in the client, we can allow the provider to render children
@@ -392,6 +514,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 		if (pb.authStore.isValid) {
 			// Get the updated state from the server and update the context
 			update();
+
+			// Grab the user's OAuth providers
+			pb.collection("users")
+				.listExternalAuths(pb.authStore.model?.id as string)
+				.then((res) => {
+					console.log(res);
+					if (res) {
+						setOauth({
+							github: res.find((r) => r.provider === "github") || null,
+							google: res.find((r) => r.provider === "google") || null,
+							discord: res.find((r) => r.provider === "discord") || null,
+						});
+					}
+				})
+				.catch((err) => {
+					console.error(err);
+				});
 
 			// Subscribe to changes to the user's record
 			pb.collection("users").subscribe(pb.authStore.model?.id, (res) => {
@@ -430,7 +569,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 	const value = React.useMemo(
 		() => ({
 			authStore: pb.authStore,
-
+			oauth,
 			user,
 
 			avatar,
@@ -440,6 +579,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 			loggedIn,
 
 			signIn,
+			signInWithOAuth,
+			refreshOAuth,
 			signOut,
 
 			register,
