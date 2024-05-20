@@ -8,6 +8,7 @@ import { Eye, Mail, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import pb from "@/lib/pocketbase";
 import { Icons } from "../ui/icons";
+import PasskeyPrompt from "./passkey-popup";
 
 export default function ProtectedPage({
 	children,
@@ -28,56 +29,67 @@ export default function ProtectedPage({
 	const [confirmPassword, setConfirmPassword] = React.useState("");
 	const [showPassword, setShowPassword] = React.useState(false);
 
+	const [passkeyPromptOpen, setPasskeyPromptOpen] = React.useState(false);
+
+	const [loading, setLoading] = React.useState(false);
+
 	const togglePassword = () => setShowPassword(!showPassword);
 
-	// TODO: Change this to use <form> instead
-	React.useEffect(() => {
-		const down = (e: KeyboardEvent) => {
-			if (e.key === "Enter" && !user) {
-				e.preventDefault();
-				switch (mode) {
-					case "signin": {
-						signIn(email, password);
-						break;
-					}
+	const reset = () => {
+		setName("");
+		setEmail("");
+		setUsername("");
+		setPassword("");
+		setConfirmPassword("");
 
-					case "register": {
-						register(name, username, email, password, confirmPassword);
-						break;
-					}
+		setLoading(false);
+	};
 
-					case "reset": {
-						resetPassword(email);
-						changeMode("signin");
-						break;
-					}
+	const onSignIn = async () => {
+		setLoading(true);
+
+		await signIn(email, password).then((res) => {
+			if (res) {
+				reset();
+			} else {
+				setLoading(false);
+			}
+		});
+	};
+
+	const onOAuthSignIn = async (provider: "github" | "google" | "discord") => {
+		setLoading(true);
+
+		await signInWithOAuth(provider).then((res) => {
+			if (res) {
+				reset();
+			} else {
+				setLoading(false);
+			}
+		});
+	};
+
+	const onRegister = async () => {
+		await register(name, username, email, password, confirmPassword).then(
+			(res) => {
+				if (res) {
+					reset();
+				} else {
+					setLoading(false);
 				}
 			}
-		};
+		);
+	};
 
-		document.addEventListener("keydown", down);
-		return () => document.removeEventListener("keydown", down);
-	}, [
-		confirmPassword,
-		email,
-		signIn,
-		mode,
-		name,
-		password,
-		register,
-		resetPassword,
-		username,
-		user,
-	]);
+	const onReset = async () => {
+		await resetPassword(email).then(() => {
+			reset();
+		});
+	};
 
 	const changeMode = (mode: "signin" | "register" | "reset") => {
 		setMode(mode);
-		setName("");
-		setUsername("");
-		setEmail("");
-		setPassword("");
-		setConfirmPassword("");
-		setShowPassword(false);
+		reset();
 	};
 
 	return (
@@ -146,6 +158,17 @@ export default function ProtectedPage({
 								{mode === "signin" && (
 									<>
 										<div className="flex flex-col gap-4 w-full">
+											<PasskeyPrompt
+												open={passkeyPromptOpen}
+												setOpen={setPasskeyPromptOpen}
+											/>
+											<Button
+												variant="outline"
+												onClick={() => setPasskeyPromptOpen(!passkeyPromptOpen)}
+											>
+												<Icons.Passkey className="w-4 h-4 mr-2" />
+												Sign in with Passkey
+											</Button>
 											<div className="w-full flex flex-row gap-4 items-center justify-center">
 												<Button
 													className="w-full"
@@ -184,11 +207,12 @@ export default function ProtectedPage({
 								{mode === "signin" && (
 									<>
 										<Input
-											id="email"
-											type="email"
 											placeholder="Email"
+											type="email"
 											value={email}
+											autoComplete="email"
 											onChange={(e) => setEmail(e.target.value)}
+											disabled={loading}
 										/>
 										<div className="flex w-full flex-row items-center gap-2">
 											<Input

@@ -113,6 +113,39 @@ export default function Nav() {
 									</NavigationMenuItem>
 								</NavigationMenuList>
 							</NavigationMenu>
+							<NavigationMenu>
+								<NavigationMenuList>
+									<NavigationMenuItem>
+										<NavigationMenuTrigger>Anime</NavigationMenuTrigger>
+										<NavigationMenuContent>
+											<ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
+												<li className="row-span-3">
+													<NavigationMenuLink asChild>
+														<a
+															className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
+															href="/anime"
+														>
+															<Library />
+															<div className="mb-2 mt-4 text-lg font-medium">
+																All Anime
+															</div>
+															<p className="text-sm leading-tight text-muted-foreground">
+																The complete list of anime on Katarogu.
+															</p>
+														</a>
+													</NavigationMenuLink>
+												</li>
+												<ListItem href="/anime/top" title="Top Anime">
+													A list of the most popular anime on Katarogu.
+												</ListItem>
+												<ListItem href="/anime/search" title="Search">
+													Fully featured search for all anime.
+												</ListItem>
+											</ul>
+										</NavigationMenuContent>
+									</NavigationMenuItem>
+								</NavigationMenuList>
+							</NavigationMenu>
 						</div>
 					</div>
 					<div className="flex flex-row items-center gap-3">

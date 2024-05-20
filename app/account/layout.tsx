@@ -71,8 +71,7 @@ export default function AccountLayout({
 											}`
 										)}
 									>
-										<span>OAuth</span>
-										<Badge variant="default">Beta</Badge>
+										Providers
 									</Button>
 								</Link>
 								<Link href="/account/danger" className="w-full">

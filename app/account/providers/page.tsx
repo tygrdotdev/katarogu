@@ -4,14 +4,21 @@ import { useAuth } from "@/components/auth/provider";
 import AccountCard from "@/components/account/card";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/ui/icons";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useState } from "react";
 import pb from "@/lib/pocketbase";
 import { toast } from "sonner";
 import Spinner from "@/components/spinner";
 import Alert from "@/components/alert";
 
 export default function AccountPrivacyPage() {
-	const { user, oauth, refreshOAuth, unlinkOAuth } = useAuth();
+	const {
+		user,
+		oauth,
+		refreshOAuth,
+		unlinkOAuth,
+		createPasskey,
+		deletePasskey,
+	} = useAuth();
 	const [unlinkGithub, setUnlinkGithub] = useState(false);
 	const [unlinkGoogle, setUnlinkGoogle] = useState(false);
 	const [unlinkDiscord, setUnlinkDiscord] = useState(false);
@@ -153,17 +160,38 @@ export default function AccountPrivacyPage() {
 						</div>
 					</AccountCard>
 
-					{/* <AccountCard
+					<AccountCard
 						title="Passkeys"
 						description="Create a passkey to use as an alternative to your password."
 						footer={`Note: Passkeys are in beta and may not be available to all users.`}
+						beta
 					>
 						<div className="flex flex-row gap-4">
-							<Button className="w-fit" variant="outline">
-								<Icons.Passkey className="w-4 h-4 mr-2" /> Create Passkey
-							</Button>
+							{user.passkey_id ? (
+								<>
+									<Button
+										className="w-fit"
+										variant="destructive"
+										onClick={async () => {
+											await deletePasskey();
+										}}
+									>
+										<Icons.Passkey className="w-4 h-4 mr-2" /> Remove Passkey
+									</Button>
+								</>
+							) : (
+								<Button
+									className="w-fit"
+									variant="outline"
+									onClick={async () => {
+										await createPasskey(user.username);
+									}}
+								>
+									<Icons.Passkey className="w-4 h-4 mr-2" /> Create Passkey
+								</Button>
+							)}
 						</div>
-					</AccountCard> */}
+					</AccountCard>
 				</div>
 			)}
 		</>

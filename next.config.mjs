@@ -8,8 +8,6 @@ const nextConfig = {
 			{ hostname: "images.unsplash.com" },
 			{ hostname: "db.katarogu.tygr.dev" },
 			{ hostname: "placehold.co" },
-			// Canary instance of the database
-			{ hostname: "db.canary.katarogu.tygr.dev" },
 		],
 	},
 	headers() {

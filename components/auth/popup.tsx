@@ -20,16 +20,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import React, { useState } from "react";
+import React from "react";
 import { useAuth } from "./provider";
 import Spinner from "../spinner";
 import { Eye, EyeOff } from "lucide-react";
 import { Icons } from "../ui/icons";
-import pb from "@/lib/pocketbase";
+import PasskeyPrompt from "./passkey-popup";
 
 export default function AuthPopup() {
-	const [open, setOpen] = useState(false);
-	const [mode, setMode] = useState("signin");
+	const [open, setOpen] = React.useState(false);
+	const [mode, setMode] = React.useState("signin");
 	const isDesktop = useMediaQuery("(min-width: 768px)");
 
 	const [name, setName] = React.useState("");
@@ -38,6 +38,8 @@ export default function AuthPopup() {
 	const [password, setPassword] = React.useState("");
 	const [passwordConfirm, setPasswordConfirm] = React.useState("");
 	const [showPassword, setShowPassword] = React.useState(false);
+
+	const [passkeyPromptOpen, setPasskeyPromptOpen] = React.useState(false);
 
 	const togglePassword = () => setShowPassword(!showPassword);
 
@@ -132,6 +134,17 @@ export default function AuthPopup() {
 								{mode === "signin" && (
 									<>
 										<div className="flex flex-col gap-4">
+											<PasskeyPrompt
+												open={passkeyPromptOpen}
+												setOpen={setPasskeyPromptOpen}
+											/>
+											<Button
+												variant="outline"
+												onClick={() => setPasskeyPromptOpen(!passkeyPromptOpen)}
+											>
+												<Icons.Passkey className="w-4 h-4 mr-2" />
+												Sign in with Passkey
+											</Button>
 											<div className="w-full flex flex-row gap-4 items-center justify-center">
 												<Button
 													className="w-full"
@@ -409,6 +422,17 @@ export default function AuthPopup() {
 								{mode === "signin" && (
 									<>
 										<div className="flex flex-col gap-4">
+											<PasskeyPrompt
+												open={passkeyPromptOpen}
+												setOpen={setPasskeyPromptOpen}
+											/>
+											<Button
+												variant="outline"
+												onClick={() => setPasskeyPromptOpen(!passkeyPromptOpen)}
+											>
+												<Icons.Passkey className="w-4 h-4 mr-2" />
+												Sign in with Passkey
+											</Button>
 											<div className="w-full flex flex-row gap-4 items-center justify-center">
 												<Button
 													className="w-full"

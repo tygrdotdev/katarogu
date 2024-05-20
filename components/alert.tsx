@@ -25,6 +25,8 @@ export default function Alert({
 	footer,
 	onSubmit,
 	onCancel,
+	submitButtonProps,
+	cancelButtonProps,
 	...props
 }: {
 	open: boolean;
@@ -34,6 +36,8 @@ export default function Alert({
 	footer?: string;
 	onSubmit?: () => void;
 	onCancel?: () => void;
+	submitButtonProps?: any;
+	cancelButtonProps?: any;
 }) {
 	const isDesktop = useMediaQuery("(min-width: 768px)");
 
@@ -62,17 +66,29 @@ export default function Alert({
 									{footer}
 								</span>
 							) : (
-								<Button variant="outline" onClick={cancel}>
+								<Button
+									variant="outline"
+									onClick={cancel}
+									{...cancelButtonProps}
+								>
 									Cancel
 								</Button>
 							)}
 							<div className="flex flex-row gap-4">
 								{footer && (
-									<Button variant="outline" onClick={cancel}>
+									<Button
+										variant="outline"
+										onClick={cancel}
+										{...cancelButtonProps}
+									>
 										Cancel
 									</Button>
 								)}
-								<Button variant="destructive" onClick={submit}>
+								<Button
+									variant="destructive"
+									onClick={submit}
+									{...submitButtonProps}
+								>
 									Confirm
 								</Button>
 							</div>
@@ -92,10 +108,14 @@ export default function Alert({
 						<DrawerDescription>{description}</DrawerDescription>
 					</DrawerHeader>
 					<div className="flex w-full flex-row justify-between gap-2 border-t p-4">
-						<Button variant="outline" onClick={cancel}>
+						<Button variant="outline" onClick={cancel} {...cancelButtonProps}>
 							Cancel
 						</Button>
-						<Button variant="destructive" onClick={submit}>
+						<Button
+							variant="destructive"
+							onClick={submit}
+							{...submitButtonProps}
+						>
 							Confirm
 						</Button>
 					</div>

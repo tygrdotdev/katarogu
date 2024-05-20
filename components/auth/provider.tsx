@@ -1,7 +1,14 @@
 "use client";
 
 import pb, { ClientError } from "@/lib/pocketbase";
-import { AuthProviderInfo, ExternalAuthModel } from "pocketbase";
+import { PasskeyData } from "@/types/passkey/data";
+import {
+	create,
+	get,
+	parseCreationOptionsFromJSON,
+	parseRequestOptionsFromJSON,
+} from "@github/webauthn-json/browser-ponyfill";
+import { ExternalAuthModel } from "pocketbase";
 import React, { useCallback, useEffect } from "react";
 import { toast } from "sonner";
 
@@ -9,11 +16,13 @@ export interface AuthSession {
 	authStore: typeof pb.authStore;
 
 	user: typeof pb.authStore.model;
+
 	oauth: {
 		github: ExternalAuthModel | null;
 		google: ExternalAuthModel | null;
 		discord: ExternalAuthModel | null;
 	};
+
 	loggedIn: typeof pb.authStore.isValid;
 
 	avatar: string;
@@ -30,6 +39,10 @@ export interface AuthSession {
 	) => Promise<boolean>;
 	unlinkOAuth: (provider: "github" | "google" | "discord") => Promise<void>;
 	refreshOAuth: () => Promise<void>;
+
+	signInWithPasskey: (username: string) => Promise<string | number | undefined>;
+	createPasskey: (username: string) => Promise<void>;
+	deletePasskey: () => Promise<void>;
 
 	register: (
 		name: string,
@@ -60,6 +73,7 @@ export const AuthContext = React.createContext<AuthSession>({
 		google: null,
 		discord: null,
 	},
+
 	loggedIn: pb.authStore.isValid,
 
 	avatar: pb.authStore.model?.avatar
@@ -80,6 +94,12 @@ export const AuthContext = React.createContext<AuthSession>({
 	signInWithOAuth: async () => false,
 	refreshOAuth: async () => {},
 	unlinkOAuth: async () => {},
+
+	signInWithPasskey: async () => {
+		return 0;
+	},
+	createPasskey: async () => {},
+	deletePasskey: async () => {},
 
 	register: async () => false,
 	resetPassword: async () => {},
@@ -179,6 +199,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 		return res;
 	};
 
+	const signOut = (msg = true) => {
+		setUser(null);
+		setLoggedIn(false);
+		setAvatar("");
+		setBanner("");
+		setIsDefaultAvatar(false);
+		setIsDefaultBanner(false);
+
+		pb.authStore.clear();
+		if (msg) toast.success("Logged out. See you soon!");
+	};
+
 	const signInWithOAuth = async (provider: "github" | "google" | "discord") => {
 		let res = false;
 		await pb
@@ -250,16 +282,111 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 			});
 	};
 
-	const signOut = (msg = true) => {
-		setUser(null);
-		setLoggedIn(false);
-		setAvatar("");
-		setBanner("");
-		setIsDefaultAvatar(false);
-		setIsDefaultBanner(false);
+	const createPasskey = async (username: string) => {
+		const publicKeyCredentialCreationOptions = await pb.send(
+			`/passkey/register/${btoa(username)}`,
+			{
+				method: "POST",
+			}
+		);
 
-		pb.authStore.clear();
-		if (msg) toast.success("Logged out. See you soon!");
+		console.log(publicKeyCredentialCreationOptions);
+
+		const credential = await create(
+			parseCreationOptionsFromJSON(publicKeyCredentialCreationOptions)
+		);
+
+		console.log(credential.toJSON());
+
+		const finalResult = await pb
+			.send(`/passkey/register/verify/${btoa(username)}`, {
+				method: "POST",
+				body: credential,
+			})
+			.then((res) => {
+				toast.success("Passkey created successfully!");
+				return res;
+			})
+			.catch((err) => {
+				toast.error(err);
+				return err;
+			});
+
+		console.log(finalResult);
+
+		return finalResult;
+	};
+
+	const signInWithPasskey = async (username: string) => {
+		if (!username)
+			return toast.error("Missing required field!", {
+				description: "Please enter a valid username.",
+			});
+
+		const publicKeyCredentialRequestOptions = await pb
+			.send(`/passkey/login/${btoa(username)}`, {
+				method: "POST",
+			})
+			.then((res) => res)
+			.catch((err) => {
+				console.error(err);
+				toast.error("Failed to authenticate with Passkey.", {
+					description: err,
+				});
+				return false;
+			});
+
+		if (publicKeyCredentialRequestOptions === false) return;
+
+		console.log(publicKeyCredentialRequestOptions);
+
+		const assertion = await get(
+			parseRequestOptionsFromJSON(publicKeyCredentialRequestOptions)
+		);
+
+		console.log(assertion);
+
+		const finalResult = await pb
+			.send(`/passkey/login/verify/${btoa(username)}`, {
+				method: "POST",
+				body: JSON.stringify(assertion.toJSON()),
+			})
+			.then((res) => res)
+			.catch((err) => {
+				toast.error("Failed to authenticate with Passkey.", {
+					description: err,
+				});
+				return;
+			});
+
+		console.log(finalResult);
+
+		pb.authStore.save(finalResult.token, finalResult.user);
+		await update();
+		toast.success("Success!", {
+			description: `Welcome back, ${pb.authStore.model?.username}`,
+		});
+	};
+
+	const deletePasskey = async () => {
+		toast.promise(
+			pb.collection("users").update(pb.authStore.model?.id as string, {
+				passkey_id: "",
+				passkey_credentials: {},
+			}),
+			{
+				loading: "Deleting your Passkey...",
+				success: (data) => {
+					console.log(data);
+					return "Successfully deleted your passkey.";
+				},
+				error: (err) => {
+					return "Failed to delete your Passkey. Please try again.";
+				},
+			}
+		);
+
+		return;
 	};
 
 	const register = async (
@@ -519,23 +646,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 			// Get the updated state from the server and update the context
 			update();
 
-			// Grab the user's OAuth providers
-			pb.collection("users")
-				.listExternalAuths(pb.authStore.model?.id as string)
-				.then((res) => {
-					console.log(res);
-					if (res) {
-						setOauth({
-							github: res.find((r) => r.provider === "github") || null,
-							google: res.find((r) => r.provider === "google") || null,
-							discord: res.find((r) => r.provider === "discord") || null,
-						});
-					}
-				})
-				.catch((err) => {
-					console.error(err);
-				});
-
 			// Subscribe to changes to the user's record
 			pb.collection("users").subscribe(pb.authStore.model?.id, (res) => {
 				switch (res.action.toLowerCase()) {
@@ -588,6 +698,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 			signInWithOAuth,
 			refreshOAuth,
 			unlinkOAuth,
+
+			signInWithPasskey,
+			createPasskey,
+			deletePasskey,
 
 			register,
 			resetPassword,
