@@ -183,7 +183,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 		let res = false;
 		await pb
 			.collection("users")
-			.authWithOAuth2({ provider })
+			.authWithOAuth2({
+				provider,
+				createData: {
+					visibility: "public",
+					name: "Katarogu User",
+				},
+			})
 			.then(async (record) => {
 				setLoggedIn(true);
 				setUser(pb.authStore.model);
