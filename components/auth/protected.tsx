@@ -3,11 +3,10 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/auth/provider";
-import React from "react";
-import { Eye, Mail, EyeOff } from "lucide-react";
-import { toast } from "sonner";
-import pb from "@/lib/pocketbase";
+import React, { FormEvent } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import { Icons } from "../ui/icons";
+import Spinner from "../spinner";
 
 export default function ProtectedPage({
 	children,
@@ -19,6 +18,7 @@ export default function ProtectedPage({
 	const [mode, setMode] = React.useState<"signin" | "register" | "reset">(
 		"signin"
 	);
+	const [loading, setLoading] = React.useState(false);
 
 	const [name, setName] = React.useState("");
 	const [username, setUsername] = React.useState("");
@@ -30,47 +30,8 @@ export default function ProtectedPage({
 
 	const togglePassword = () => setShowPassword(!showPassword);
 
-	// TODO: Change this to use <form> instead
-	React.useEffect(() => {
-		const down = (e: KeyboardEvent) => {
-			if (e.key === "Enter" && !user) {
-				e.preventDefault();
-				switch (mode) {
-					case "signin": {
-						signIn(email, password);
-						break;
-					}
-
-					case "register": {
-						register(name, username, email, password, confirmPassword);
-						break;
-					}
-
-					case "reset": {
-						resetPassword(email);
-						changeMode("signin");
-						break;
-					}
-				}
-			}
-		};
-
-		document.addEventListener("keydown", down);
-		return () => document.removeEventListener("keydown", down);
-	}, [
-		confirmPassword,
-		email,
-		signIn,
-		mode,
-		name,
-		password,
-		register,
-		resetPassword,
-		username,
-		user,
-	]);
-
 	const changeMode = (mode: "signin" | "register" | "reset") => {
+		if (loading === true) return;
 		setMode(mode);
 		setName("");
 		setUsername("");
@@ -80,47 +41,48 @@ export default function ProtectedPage({
 		setShowPassword(false);
 	};
 
+	const onSubmit = async (e: FormEvent) => {
+		e.preventDefault();
+		setLoading(true);
+
+		switch (mode) {
+			case "signin": {
+				await signIn(email, password).then((res) => {
+					if (res === true) {
+						// Reset values
+						changeMode("signin");
+					}
+				});
+
+				setLoading(false);
+				break;
+			}
+			case "register": {
+				await register(name, email, username, password, confirmPassword).then(
+					(res) => {
+						if (res === true) {
+							// Reset values
+							changeMode("register");
+						}
+					}
+				);
+
+				setLoading(false);
+				break;
+			}
+			case "reset": {
+				await resetPassword(email);
+
+				setLoading(false);
+				break;
+			}
+		}
+	};
+
 	return (
 		<>
 			{user ? (
-				<>
-					{user.verified ? (
-						<>{children}</>
-					) : (
-						<>
-							{/* If user is not verified */}
-							<div className="absolute left-1/2 top-1/2 w-3/4 -translate-x-1/2 -translate-y-1/2 sm:w-3/4">
-								<div className="flex flex-col items-center justify-center gap-6 text-center">
-									<div className="flex w-full flex-col items-center justify-center gap-2">
-										<h1 className="text-center font-display text-3xl font-bold sm:text-4xl">
-											Verification required
-										</h1>
-										<p className="text-sm text-neutral-500 sm:text-base">
-											To continue, please check your email for a verification
-											link.
-										</p>
-									</div>
-									<Button
-										onClick={() => {
-											toast.promise(
-												pb.collection("users").requestVerification(user.email),
-												{
-													loading: "Sending verification email...",
-													success: "Verification email sent!",
-													error: "Failed to send verification email.",
-												}
-											);
-										}}
-										className="flex flex-row items-center"
-									>
-										<Mail className="mr-2 h-4 w-4" />
-										Resend verification email
-									</Button>
-								</div>
-							</div>
-						</>
-					)}
-				</>
+				<>{children}</>
 			) : (
 				<>
 					{/* If not authenticated */}
@@ -151,8 +113,9 @@ export default function ProtectedPage({
 													className="w-full"
 													variant="outline"
 													onClick={async () => await signInWithOAuth("github")}
+													disabled={loading}
 												>
-													<Icons.Github className="w-4 h-4 mr-2" />
+													<Icons.Github className="w-4 h-4 xs:mr-2" />
 													<span className="hidden xs:block">GitHub</span>
 												</Button>
 
@@ -160,8 +123,9 @@ export default function ProtectedPage({
 													className="w-full"
 													variant="outline"
 													onClick={async () => await signInWithOAuth("google")}
+													disabled={loading}
 												>
-													<Icons.Google className="w-4 h-4 mr-2" />
+													<Icons.Google className="w-4 h-4 xs:mr-2" />
 													<span className="hidden xs:block">Google</span>
 												</Button>
 
@@ -169,8 +133,9 @@ export default function ProtectedPage({
 													className="w-full"
 													variant="outline"
 													onClick={async () => await signInWithOAuth("discord")}
+													disabled={loading}
 												>
-													<Icons.Discord className="w-4 h-4 mr-2" />
+													<Icons.Discord className="w-4 h-4 xs:mr-2" />
 													<span className="hidden xs:block">Discord</span>
 												</Button>
 											</div>
@@ -183,119 +148,125 @@ export default function ProtectedPage({
 
 								{mode === "signin" && (
 									<>
-										<Input
-											id="email"
-											type="email"
-											placeholder="Email"
-											value={email}
-											onChange={(e) => setEmail(e.target.value)}
-										/>
-										<div className="flex w-full flex-row items-center gap-2">
-											<Input
-												id="password"
-												type={showPassword ? "text" : "password"}
-												placeholder="Password"
-												value={password}
-												onChange={(e) => setPassword(e.target.value)}
-											/>
-											<Button
-												variant="outline"
-												size="icon"
-												className="p-2"
-												onClick={togglePassword}
-											>
-												{showPassword ? (
-													<EyeOff size={22} />
-												) : (
-													<Eye size={22} />
-												)}
-											</Button>
-										</div>
-										<Button
-											className="text-md w-full"
-											onClick={() => signIn(email, password)}
+										<form
+											className="flex flex-col gap-4 w-full"
+											onSubmit={(e) => onSubmit(e)}
 										>
-											Submit
-										</Button>
-										<small className="px-2 pt-2 text-center text-neutral-500 dark:text-neutral-400">
-											By continuing, you agree to our{" "}
-											<a className="text-blue-500" href="/tos">
-												Terms of Service
-											</a>{" "}
-											and{" "}
-											<a className="text-blue-500" href="/privacy">
-												Privacy Policy
-											</a>
-											.
-										</small>
+											<Input
+												id="email"
+												type="email"
+												placeholder="Email"
+												value={email}
+												onChange={(e) => setEmail(e.target.value)}
+												disabled={loading}
+											/>
+											<div className="flex w-full flex-row items-center gap-2">
+												<Input
+													id="password"
+													type={showPassword ? "text" : "password"}
+													placeholder="Password"
+													value={password}
+													onChange={(e) => setPassword(e.target.value)}
+													disabled={loading}
+												/>
+												<Button
+													variant="outline"
+													size="icon"
+													className="p-2"
+													onClick={togglePassword}
+													type="button"
+													disabled={loading}
+												>
+													{showPassword ? (
+														<EyeOff size={22} />
+													) : (
+														<Eye size={22} />
+													)}
+												</Button>
+											</div>
+											<Button className="text-md w-full" disabled={loading}>
+												{loading ? <Spinner size={24} /> : "Submit"}
+											</Button>
+											<small className="px-2 pt-2 text-center text-neutral-500 dark:text-neutral-400">
+												By continuing, you agree to our{" "}
+												<a className="text-blue-500" href="/tos">
+													Terms of Service
+												</a>{" "}
+												and{" "}
+												<a className="text-blue-500" href="/privacy">
+													Privacy Policy
+												</a>
+												.
+											</small>
+										</form>
 									</>
 								)}
 								{mode === "register" && (
 									<>
-										<Input
-											id="name"
-											type="text"
-											placeholder="Full Name"
-											value={name}
-											onChange={(e) => setName(e.target.value)}
-										/>
-										<Input
-											id="username"
-											type="text"
-											placeholder="Username"
-											value={username}
-											onChange={(e) => setUsername(e.target.value)}
-										/>
-										<Input
-											id="email"
-											type="email"
-											placeholder="Email"
-											value={email}
-											onChange={(e) => setEmail(e.target.value)}
-										/>
-										<div className="flex w-full flex-row items-center gap-2">
-											<Input
-												id="password"
-												type={showPassword ? "text" : "password"}
-												placeholder="Password"
-												value={password}
-												onChange={(e) => setPassword(e.target.value)}
-											/>
-											<Button
-												variant="outline"
-												size="icon"
-												className="p-2"
-												onClick={togglePassword}
-											>
-												{showPassword ? (
-													<EyeOff size={22} />
-												) : (
-													<Eye size={22} />
-												)}
-											</Button>
-										</div>
-										<Input
-											id="passwordConfirm"
-											type={showPassword ? "text" : "password"}
-											placeholder="Password Confirmation"
-											value={confirmPassword}
-											onChange={(e) => setConfirmPassword(e.target.value)}
-										/>
-										<Button
-											className="text-md w-full"
-											onClick={() => {
-												register(
-													name,
-													username,
-													email,
-													password,
-													confirmPassword
-												);
-												changeMode("signin");
-											}}
+										<form
+											className="flex flex-col gap-4 w-full"
+											onSubmit={(e) => onSubmit(e)}
 										>
-											Create Account
-										</Button>
+											<Input
+												id="name"
+												type="text"
+												placeholder="Full Name"
+												value={name}
+												onChange={(e) => setName(e.target.value)}
+												disabled={loading}
+											/>
+											<Input
+												id="username"
+												type="text"
+												placeholder="Username"
+												value={username}
+												onChange={(e) => setUsername(e.target.value)}
+												disabled={loading}
+											/>
+											<Input
+												id="email"
+												type="email"
+												placeholder="Email"
+												value={email}
+												onChange={(e) => setEmail(e.target.value)}
+												disabled={loading}
+											/>
+											<div className="flex w-full flex-row items-center gap-2">
+												<Input
+													id="password"
+													type={showPassword ? "text" : "password"}
+													placeholder="Password"
+													value={password}
+													onChange={(e) => setPassword(e.target.value)}
+												/>
+												<Button
+													variant="outline"
+													size="icon"
+													className="p-2"
+													onClick={togglePassword}
+													disabled={loading}
+													type="button"
+												>
+													{showPassword ? (
+														<EyeOff size={22} />
+													) : (
+														<Eye size={22} />
+													)}
+												</Button>
+											</div>
+											<Input
+												id="passwordConfirm"
+												type={showPassword ? "text" : "password"}
+												placeholder="Password Confirmation"
+												value={confirmPassword}
+												onChange={(e) => setConfirmPassword(e.target.value)}
+												disabled={loading}
+											/>
+											<Button className="text-md w-full" disabled={loading}>
+												Create Account
+											</Button>
+										</form>
+
 										<small className="px-2 pt-2 text-center text-neutral-500 dark:text-neutral-400">
 											By continuing, you agree to our{" "}
 											<a className="text-blue-500" href="/tos">
@@ -311,22 +282,22 @@ export default function ProtectedPage({
 								)}
 								{mode === "reset" && (
 									<>
-										<Input
-											id="email"
-											type="email"
-											placeholder="Email"
-											value={email}
-											onChange={(e) => setEmail(e.target.value)}
-										/>
-										<Button
-											className="text-md w-full"
-											onClick={() => {
-												resetPassword(email);
-												changeMode("signin");
-											}}
+										<form
+											className="flex flex-col gap-4 w-full"
+											onSubmit={(e) => onSubmit(e)}
 										>
-											Send
-										</Button>
+											<Input
+												id="email"
+												type="email"
+												placeholder="Email"
+												value={email}
+												onChange={(e) => setEmail(e.target.value)}
+												disabled={loading}
+											/>
+											<Button className="text-md w-full" disabled={loading}>
+												Send
+											</Button>
+										</form>
 									</>
 								)}
 							</div>
