@@ -47,7 +47,7 @@ export default function AccountPage() {
 									</p>
 								</div>
 								<div className="flex flex-row items-center gap-6 pr-4">
-									<Avatar className="h-16 w-16 sm:h-20 sm:w-20 md:h-28 md:w-28">
+									<Avatar className="h-16 w-16 sm:h-20 sm:w-20 md:h-28 md:w-28 border">
 										<AvatarImage src={avatar} alt={user.username} />
 										<AvatarFallback>
 											{(user.username ?? "A").slice(0, 1).toUpperCase()}

@@ -49,17 +49,17 @@ export default function AvatarRemove(props: ButtonProps) {
 					<div className="flex flex-row items-center justify-between px-6 pb-4">
 						<img
 							src={avatar}
-							className="h-32 w-32 rounded-full"
+							className="h-32 w-32 rounded-full border"
 							alt="Current Avatar"
 						/>
 						<ArrowRight className="mx-4 h-8 w-8 text-neutral-500" />
 						<img
 							src={`https://api.dicebear.com/7.x/lorelei-neutral/png?seed=${user?.username}&radius=50`}
-							className="h-32 w-32 rounded-full"
+							className="h-32 w-32 rounded-full border"
 							alt="New Avatar"
 						/>
 					</div>
-					<div className="flex flex-row items-center justify-between gap-4 border-t bg-neutral-900/50 p-4">
+					<div className="flex flex-row items-center justify-between gap-4 border-t bg-neutral-50/50 dark:bg-neutral-900/50 p-4">
 						<span className="text-sm text-neutral-600 dark:text-neutral-400">
 							This action is not reversible.
 						</span>
