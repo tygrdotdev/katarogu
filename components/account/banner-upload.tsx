@@ -167,7 +167,7 @@ export default function BannerUpload(props: ButtonProps) {
 					onChange={onSelectFile}
 				/>
 				<Dialog open={open} onOpenChange={onOpenChange}>
-					<DialogContent className="w-fit gap-0 p-0">
+					<DialogContent className="w-full max-w-[80vw] lg:max-w-fit gap-0 p-0">
 						<ReactCrop
 							crop={crop}
 							onChange={(_, p) => setCrop(p)}
@@ -181,7 +181,7 @@ export default function BannerUpload(props: ButtonProps) {
 								src={src}
 								onLoad={onImageLoad}
 								ref={imageRef}
-								className="rounded-t-lg"
+								className="rounded-t-lg w-full"
 							/>
 						</ReactCrop>
 						<div className="flex w-full flex-row justify-between gap-2 border-t p-4">
