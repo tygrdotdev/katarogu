@@ -34,7 +34,5 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-.env
 
-/db/*.exe
-/db/pb_data
+.env
