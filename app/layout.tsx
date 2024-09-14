@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   description: "A free, open-source and community driven manga and anime tracking service.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

@@ -1,16 +1,23 @@
-import {
-	Collection,
-	MongoClient,
-} from "mongodb";
+import { Collection, MongoClient, MongoClientOptions } from "mongodb";
 
 if (!process.env.DATABASE_URI) {
-	throw new Error("Please add your Mongo URI to .env.local");
+	throw new Error('Invalid/Missing environment variable: "DATABASE_URI"');
 }
+
+const uri = process.env.DATABASE_URI;
+const options: MongoClientOptions = {
+	appName: "katarogu",
+};
 
 interface UserDoc {
 	_id: string;
+	name: string;
 	username: string;
-	github_id: number;
+	email: string;
+	email_verified: boolean;
+	avatar: string;
+	banner: string;
+	two_factor_secret: string;
 }
 
 interface SessionDoc {
@@ -20,7 +27,6 @@ interface SessionDoc {
 }
 
 let client: MongoClient;
-let clientPromise: Promise<MongoClient>;
 export let userCollection: Collection<UserDoc>;
 export let sessionCollection: Collection<SessionDoc>;
 
@@ -28,29 +34,37 @@ if (process.env.NODE_ENV === "development") {
 	// In development mode, use a global variable so that the value
 	// is preserved across module reloads caused by HMR (Hot Module Replacement).
 	let globalWithMongo = global as typeof globalThis & {
-		_mongoClientPromise: Promise<MongoClient>;
+		_mongoClient?: MongoClient;
 		_mongoUsersCollection: Collection<UserDoc>;
 		_mongoSessionsCollection: Collection<SessionDoc>;
 	};
 
-	if (!globalWithMongo._mongoClientPromise) {
-		client = new MongoClient(process.env.DATABASE_URI);
-		globalWithMongo._mongoClientPromise = client.connect();
+	if (!globalWithMongo._mongoClient) {
+		globalWithMongo._mongoClient = new MongoClient(uri, options);
+	}
+
+	client = globalWithMongo._mongoClient;
+	await client.connect();
+
+	if (!globalWithMongo._mongoUsersCollection) {
 		globalWithMongo._mongoUsersCollection = client.db().collection("users");
+	}
+
+	userCollection = globalWithMongo._mongoUsersCollection;
+
+	if (!globalWithMongo._mongoSessionsCollection) {
 		globalWithMongo._mongoSessionsCollection = client.db().collection("sessions");
 	}
 
-	clientPromise = globalWithMongo._mongoClientPromise;
 	sessionCollection = globalWithMongo._mongoSessionsCollection;
-	userCollection = globalWithMongo._mongoUsersCollection;
 } else {
 	// In production mode, it's best to not use a global variable.
-	client = new MongoClient(process.env.DATABASE_URI);
-	clientPromise = client.connect();
+	client = new MongoClient(uri, options);
+	await client.connect();
 	userCollection = client.db().collection("users");
 	sessionCollection = client.db().collection("sessions");
 }
 
-// Export a module-scoped MongoClient promise. By doing this in a
+// Export a module-scoped MongoClient. By doing this in a
 // separate module, the client can be shared across functions.
-export default clientPromise;
+export default client;

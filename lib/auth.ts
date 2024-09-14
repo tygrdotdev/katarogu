@@ -1,9 +1,7 @@
-import { Lucia, type Session, type User } from "lucia";
-import { GitHub } from "arctic";
+import { Lucia, Session, User } from "lucia";
 
 import { MongodbAdapter } from "@lucia-auth/adapter-mongodb";
 import { sessionCollection, userCollection } from "./mongodb";
-
 import { cookies } from "next/headers";
 import { cache } from "react";
 
@@ -19,13 +17,16 @@ export const lucia = new Lucia(adapter, {
 	},
 	getUserAttributes: (attributes) => {
 		return {
+			name: attributes.name,
 			username: attributes.username,
-			github_id: attributes.github_id
+			email: attributes.email,
+			email_verified: attributes.email_verified,
+			avatar: attributes.avatar,
+			banner: attributes.banner,
+			two_factor_secret: attributes.two_factor_secret
 		}
 	}
 });
-
-export const github = new GitHub(process.env.GITHUB_CLIENT_ID!, process.env.GITHUB_CLIENT_SECRET!);
 
 export const validateRequest = cache(
 	async (): Promise<{ user: User; session: Session } | { user: null; session: null }> => {
@@ -56,11 +57,17 @@ export const validateRequest = cache(
 declare module "lucia" {
 	interface Register {
 		Lucia: typeof lucia;
+		UserId: string;
 		DatabaseUserAttributes: DatabaseUserAttributes;
 	}
 }
 
 interface DatabaseUserAttributes {
+	name: string;
 	username: string;
-	github_id: number;
+	email: string;
+	email_verified: boolean;
+	avatar: string;
+	banner: string;
+	two_factor_secret: string;
 }
