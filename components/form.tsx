@@ -10,7 +10,7 @@ export function Form({
 }: {
 	children: React.ReactNode;
 	className?: React.FormHTMLAttributes<HTMLFormElement>["className"];
-	action: (prevState: any, formData: FormData) => Promise<ActionResult>;
+	action: (prevState: unknown, formData: FormData) => Promise<ActionResult>;
 }) {
 	const [state, formAction] = useFormState(action, {
 		error: null

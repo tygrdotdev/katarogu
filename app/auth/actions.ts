@@ -10,7 +10,7 @@ import { isValidEmail } from "@/lib/utils";
 import { lucia, validateRequest } from "@/lib/auth";
 import { ObjectId } from "mongodb";
 
-export async function register(_: any, formData: FormData): Promise<ActionResult> {
+export async function register(_: unknown, formData: FormData): Promise<ActionResult> {
 	"use server";
 	const username = formData.get("username");
 	// username must be between 4 ~ 31 characters, and only consists of lowercase letters, 0-9, -, and _
@@ -71,7 +71,7 @@ export async function register(_: any, formData: FormData): Promise<ActionResult
 	return redirect("/");
 }
 
-export async function login(_: any, formData: FormData): Promise<ActionResult> {
+export async function login(_: unknown, formData: FormData): Promise<ActionResult> {
 	"use server";
 	const email = formData.get("email");
 
