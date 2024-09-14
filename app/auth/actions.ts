@@ -1,41 +1,70 @@
 "use server"
 
 import { ActionResult } from "@/components/form";
-import client from "@/lib/mongodb";
+import client, { userCollection } from "@/lib/mongodb";
 import { hash, verify } from "@node-rs/argon2";
 import { generateIdFromEntropySize } from "lucia";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { isValidEmail } from "@/lib/utils";
 import { lucia, validateRequest } from "@/lib/auth";
-import { ObjectId } from "mongodb";
 
 export async function register(_: unknown, formData: FormData): Promise<ActionResult> {
 	"use server";
+	const name = formData.get("name");
+	if (typeof name !== "string" || name.length < 2 || name.length > 32) {
+		return {
+			error: "Please enter a valid name between 2 and 32."
+		};
+	}
+
 	const username = formData.get("username");
-	// username must be between 4 ~ 31 characters, and only consists of lowercase letters, 0-9, -, and _
 	if (
 		typeof username !== "string" ||
 		username.length < 3 ||
-		username.length > 31 ||
+		username.length > 24 ||
 		!/^[a-z0-9_-]+$/.test(username)
 	) {
 		return {
-			error: "Invalid username"
+			error: "Please enter a valid username between 3 and 24 characters."
 		};
 	}
 
 	const email = formData.get("email");
-	if (!email || !isValidEmail(email.toString())) {
+	if (typeof email !== "string" || !isValidEmail(email.toString())) {
 		return {
-			error: "Invalid email"
+			error: "Please enter a valid email."
 		};
 	}
 
+	await client.connect();
+
+	const existing = await client.db().collection("users").findOne({ $or: [{ username }, { email }] });
+
+	if (existing) {
+		if (existing.username === username) {
+			return {
+				error: "Username already in use."
+			};
+		}
+		if (existing.email === email) {
+			return {
+				error: "Email already in use."
+			};
+		} 
+	}
+
 	const password = formData.get("password");
-	if (typeof password !== "string" || password.length < 6 || password.length > 255) {
+	if (typeof password !== "string" || password.length < 8 || password.length > 255) {
 		return {
-			error: "Invalid password"
+			error: "Please enter a valid password between 8 and 255 characters long."
+		};
+	}
+
+	const passwordConfirm = formData.get("passwordConfirm");
+	if (password !== passwordConfirm) {
+		return {
+			error: "Passwords do not match."
 		};
 	}
 
@@ -56,12 +85,16 @@ export async function register(_: unknown, formData: FormData): Promise<ActionRe
 		};
 	})
 
-	client.db().collection("users").insertOne({
-		_id: new ObjectId(userId),
-		email: email,
+	userCollection.insertOne({
+		_id: userId,
+		name,
+		username,
+		email,
 		email_verified: false,
-		username: username,
-		password_hash: passwordHash
+		avatar: "",
+		banner: "",
+		password_hash: passwordHash,
+		two_factor_secret: null
 	});
 
 	const session = await lucia.createSession(userId, {});

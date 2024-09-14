@@ -16,12 +16,17 @@ export default async function Home() {
           </Form>
         </div>
       ) : (
-        <div>
+          <div className="flex flex-row gap-3">
           <Link href="/auth/login">
             <button>
               Log in
             </button>
-          </Link>
+            </Link>
+            <Link href="/auth/register">
+              <button>
+                Register
+              </button>
+            </Link>
         </div>
       )}
     </div>
