@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Form } from "@/components/form"
 import Link from "next/link";
 import { useFormStatus } from "react-dom";
-import { register } from "@/app/auth/actions";
+import { register } from "@/lib/auth/actions";
 import React from "react";
 import { Eye, EyeOff } from "lucide-react";
 

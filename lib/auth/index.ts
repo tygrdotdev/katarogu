@@ -1,7 +1,7 @@
 import { Lucia, Session, User } from "lucia";
 
 import { MongodbAdapter } from "@lucia-auth/adapter-mongodb";
-import { sessionCollection, userCollection } from "./mongodb";
+import { sessionCollection, userCollection } from "../mongodb";
 import { cookies } from "next/headers";
 import { cache } from "react";
 
@@ -54,6 +54,14 @@ export const validateRequest = cache(
 	}
 );
 
+export const getUser = cache(
+	async (): Promise<User | null> => {
+		"use server";
+		const { user } = await validateRequest();
+		return user;
+	}
+);
+
 declare module "lucia" {
 	interface Register {
 		Lucia: typeof lucia;
@@ -69,5 +77,5 @@ interface DatabaseUserAttributes {
 	email_verified: boolean;
 	avatar: string;
 	banner: string;
-	two_factor_secret: string;
+	two_factor_secret: string | null;
 }

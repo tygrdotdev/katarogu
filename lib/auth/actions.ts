@@ -1,7 +1,7 @@
 "use server"
 
 import { ActionResult } from "@/components/form";
-import client, { userCollection } from "@/lib/mongodb";
+import client from "@/lib/mongodb";
 import { hash, verify } from "@node-rs/argon2";
 import { generateIdFromEntropySize } from "lucia";
 import { cookies } from "next/headers";
@@ -51,7 +51,7 @@ export async function register(_: unknown, formData: FormData): Promise<ActionRe
 			return {
 				error: "Email already in use."
 			};
-		} 
+		}
 	}
 
 	const password = formData.get("password");
@@ -85,7 +85,8 @@ export async function register(_: unknown, formData: FormData): Promise<ActionRe
 		};
 	})
 
-	userCollection.insertOne({
+	client.db().collection("users").insertOne({
+		// @ts-expect-error _id refers to userId, which is a string, but the type expects an ObjectId. It works regardless.
 		_id: userId,
 		name,
 		username,
@@ -101,7 +102,7 @@ export async function register(_: unknown, formData: FormData): Promise<ActionRe
 	const sessionCookie = lucia.createSessionCookie(session.id);
 	cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 
-	return redirect("/");
+	return redirect("/auth/verify");
 }
 
 export async function login(_: unknown, formData: FormData): Promise<ActionResult> {

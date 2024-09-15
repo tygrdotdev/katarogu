@@ -17,7 +17,6 @@ interface UserDoc {
 	email_verified: boolean;
 	avatar: string;
 	banner: string;
-	password_hash: string;
 	two_factor_secret: string | null;
 }
 
