@@ -5,7 +5,6 @@ import { validateRequest } from "@/lib/auth"
 import { verifyAccount } from "@/lib/auth/actions";
 import { redirect } from "next/navigation";
 import ResendCodeButton from "./resend-button";
-import { generateEmailVerificationCode, sendVerificationEmail } from "@/lib/auth/email";
 
 export default async function VerifyAccountPage() {
 	const { user } = await validateRequest();
@@ -17,8 +16,6 @@ export default async function VerifyAccountPage() {
 	if (user.email_verified) {
 		return redirect("/auth/verify/success")
 	}
-
-
 
 	return (
 		<>
@@ -46,7 +43,7 @@ export default async function VerifyAccountPage() {
 						</InputOTPGroup>
 					</InputOTP>
 					<div className="flex flex-row gap-2">
-
+						<ResendCodeButton />
 						<Button type="submit">
 							Submit
 						</Button>

@@ -9,7 +9,6 @@ import { redirect } from "next/navigation";
 import { isValidEmail } from "@/lib/utils";
 import { lucia, validateRequest } from "@/lib/auth";
 import { generateEmailVerificationCode, sendVerificationEmail } from "./email";
-import { toast } from "sonner";
 
 export async function register(_: unknown, formData: FormData): Promise<ActionResult> {
 	"use server";
@@ -216,4 +215,25 @@ export async function verifyAccount(_: unknown, formData: FormData): Promise<Act
 
 	cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 	return redirect("/auth/verify/success");
+}
+
+export async function resendVerificationEmail() {
+	"use server";
+	const { user } = await validateRequest();
+
+	if (!user) {
+		return {
+			error: "Unauthorized"
+		}
+	};
+
+	if (user.email_verified) {
+		return {
+			error: "Your account is already verified"
+		}
+	}
+
+	const code = await generateEmailVerificationCode(user.id, user.email);
+
+	await sendVerificationEmail(user.email, code);
 }

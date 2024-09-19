@@ -1,14 +1,29 @@
-import { generateEmailVerificationCode, sendVerificationEmail } from "@/lib/auth/email"
-import { Button } from "@react-email/components"
+"use client"
 
-export default async function ResendCodeButton() {
+import { resendVerificationEmail } from "@/lib/auth/actions"
+import { Button } from "@/components/ui/button"
+import { toast } from "sonner"
+import { useState } from "react";
+
+export default function ResendCodeButton() {
+	const [loading, setLoading] = useState(false);
+
 	return (
-		<form onClick={() => {
-			resendAction()
+		<Button variant="outline" type="button" disabled={loading} onClick={async () => {
+			setLoading(true);
+			await resendVerificationEmail().then(() => {
+				toast("Success!", {
+					description: "Please check your email for a new verification code."
+				});
+			}).catch((err) => {
+				toast.error("Something went wrong!", {
+					description: err.error
+				});
+			}).finally(() => {
+				setLoading(false);
+			});
 		}}>
-			<Button>
-				Resend Code
-			</Button>
-		</form>
+			Resend Code
+		</Button>
 	)
 }
