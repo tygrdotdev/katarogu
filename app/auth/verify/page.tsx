@@ -6,7 +6,13 @@ import { verifyAccount } from "@/auth/actions/verify";
 import { redirect } from "next/navigation";
 import ResendCodeButton from "./resend-button";
 
-export default async function VerifyAccountPage() {
+export default async function VerifyAccountPage({
+	searchParams
+}: {
+	searchParams: {
+		code: string | undefined
+	}
+}) {
 	const { user } = await validateRequest();
 
 	if (!user) {
@@ -29,7 +35,7 @@ export default async function VerifyAccountPage() {
 					</p>
 				</div>
 				<Form action={verifyAccount} className="w-full flex flex-col items-center gap-4">
-					<InputOTP maxLength={6} className="w-full" id="code" name="code">
+					<InputOTP maxLength={6} value={searchParams.code} className="w-full" id="code" name="code">
 						<InputOTPGroup>
 							<InputOTPSlot index={0} />
 							<InputOTPSlot index={1} />

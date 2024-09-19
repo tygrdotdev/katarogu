@@ -20,11 +20,13 @@ export default function ResetPasswordPage({
 							Please provide the email associated with your account to request a password reset.
 						</p>
 					</div>
-					<Form action={requestPasswordReset} className="w-full flex flex-row justify-center items-center gap-4">
+					<Form action={requestPasswordReset} className="w-full flex flex-col justify-center items-center gap-4">
+						<div className="flex flex-row gap-4 justify-center items-center">
 						<Input type="email" name="email" placeholder="Email" required className="w-fit" />
 						<Button type="submit">
 							Submit
 						</Button>
+						</div>
 					</Form>
 				</div>
 			) : (

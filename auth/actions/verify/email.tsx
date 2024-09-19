@@ -18,9 +18,9 @@ interface VerifyAccountEmailProps {
 	verificationCode: string;
 }
 
-const baseUrl = process.env.VERCEL_URL
-	? `https://${process.env.VERCEL_URL}`
-	: "https://beta.katarogu.tygr.dev";
+const baseUrl = process.env.NODE_ENV === "production" ?
+	"https://katarogu.tygr.dev" :
+	"http://localhost:3000";
 
 export const VerifyAccountEmail = ({
 	verificationCode,
