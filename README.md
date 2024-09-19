@@ -6,7 +6,9 @@ Katarogu is a free, open-source and community driven manga and anime tracking se
 
 > [!WARNING]  
 > Katarogu is currently in alpha stages of development, breaking changes, bugs and missing features are to be expected.  
-> You can keep track of the progress over at our [Trello board](https://trello.com/b/lV6bhodT/katarogu).
+
+> [!NOTE]
+> This is a complete rewrite from the original version of Katarogu which depended on PocketBase. You can find the original's source under the [old](https://github.com/tygrdotdev/katarogu/tree/old) branch. Once Katarogu reaches beta stages, this branch will be deleted.
 
 # Tech stack
 
@@ -15,6 +17,7 @@ Katarogu is a free, open-source and community driven manga and anime tracking se
 - UI: [shadcn/ui](https://ui.shadcn.com/)
 - Styling: [TailwindCSS](https://tailwindcss.com/)
 - Database: [MongoDB](https://www.mongodb.com/)
+- Authentication: [Lucia](https://lucia-auth.com/)
 
 # Running locally
 
@@ -27,14 +30,14 @@ Since MongoDB is schemaless, you do not need to run any migrations on the databa
 
 ### Mail
 
-Since Katarogu handles authentication using Lucia, a mail server is required to send verification codes, notifications, etc.  
+Since Katarogu handles authentication using [Lucia](https://lucia-auth.com/), a mail server is required to send verification codes, notifications, etc.  
 Update the SMTP values inside the `.env` file to setup mail.
 
-During development, I tend to use a service called Resend.  
+During development, I tend to use a service called Resend and it's the service I'll most likely use in production.  
 Keep in mind that it is a paid service, but should get you up and running in no time.
 
-However, any SMTP server should work fine.
+TLDR; any SMTP server should work fine, just update the `.env` values.
 
 # Contact
 
-If you need to contact me, please send inquires via email: [hi@tygr.dev](mailto:hi@tygr.dev).
+If you need to contact me, please send inquires via email: **hi at tygr dot dev**.
