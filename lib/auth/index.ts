@@ -1,7 +1,7 @@
 import { Lucia, Session, User } from "lucia";
 
 import { MongodbAdapter } from "@lucia-auth/adapter-mongodb";
-import { sessionCollection, userCollection } from "../mongodb";
+import client, { sessionCollection, userCollection } from "../mongodb";
 import { cookies } from "next/headers";
 import { cache } from "react";
 
@@ -38,6 +38,8 @@ export const validateRequest = cache(
 			};
 		}
 
+		await client.connect();
+
 		const result = await lucia.validateSession(sessionId);
 		// next.js throws when you attempt to set cookie when rendering page
 		try {
@@ -50,6 +52,7 @@ export const validateRequest = cache(
 				cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 			}
 		} catch { }
+
 		return result;
 	}
 );

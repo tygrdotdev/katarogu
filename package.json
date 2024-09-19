@@ -7,7 +7,7 @@
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
-		"mail:dev": "email dev"
+		"mail:dev": "email dev --port 3001 --dir ./lib/auth/emails"
 	},
 	"dependencies": {
 		"@aptabase/react": "^0.3.4",
@@ -24,6 +24,7 @@
 		"arctic": "^1.9.2",
 		"class-variance-authority": "^0.7.0",
 		"clsx": "^2.1.1",
+		"es-toolkit": "^1.19.0",
 		"input-otp": "^1.2.4",
 		"lucia": "^3.2.0",
 		"lucide-react": "^0.441.0",
@@ -31,6 +32,7 @@
 		"next": "14.2.11",
 		"next-themes": "^0.3.0",
 		"nodemailer": "^6.9.15",
+		"nuqs": "^1.19.1",
 		"oslo": "^1.2.1",
 		"react": "^18.3.1",
 		"react-dom": "^18.3.1",
@@ -38,10 +40,12 @@
 		"swr": "^2.2.5",
 		"tailwind-merge": "^2.5.2",
 		"tailwindcss-animate": "^1.0.7",
-		"vaul": "^0.9.3"
+		"vaul": "^0.9.3",
+		"zod": "^3.23.8"
 	},
 	"devDependencies": {
 		"@types/node": "^20.16.5",
+		"@types/nodemailer": "^6.4.15",
 		"@types/react": "^18.3.5",
 		"@types/react-dom": "^18.3.0",
 		"eslint": "^8.57.0",

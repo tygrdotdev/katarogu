@@ -14,35 +14,26 @@ Katarogu is a free, open-source and community driven manga and anime tracking se
 - Deployment: [Vercel](https://vercel.com/home) / [Hetzner](https://www.hetzner.com/cloud/)
 - UI: [shadcn/ui](https://ui.shadcn.com/)
 - Styling: [TailwindCSS](https://tailwindcss.com/)
-- Database: [PocketBase](https://pocketbase.io/)
+- Database: [MongoDB](https://www.mongodb.com/)
 
 # Running locally
 
-### Database Setup
+### Database
 
-1. To get started, download the latest version of [PocketBase](https://pocketbase.io/docs/) for your system.
-2. You will also need to download the [schema](https://raw.githubusercontent.com/tygerxqt/katarogu/canary/public/schema.json).
-3. Extract the `.zip` file and run `./pocketbase serve` to start the database.
-4. Open your prefered web browser and navigate to `localhost:8090/_`.
-5. Once you've created your admin account and have logged in, head to `Settings > Import collections`.
-6. From here, you can either copy and paste the schema into to the text input or upload the .json file.
-7. Confirm the changes.
+Katarogu offers a `docker-compose.yaml` file which provides a starting point for setting up some required services.  
+Make sure you have Docker and the compose plugin installed on your system.
 
-### App Setup
+Since MongoDB is schemaless, you do not need to run any migrations on the database. Just make sure that the database is running and that Katarogu can connect to it.
 
-Run the following commands to clone the repository, download the app's packages, and start the server.
+### Mail
 
-```bash
-git clone https://github.com/tygerxqt/katarogu -b canary
-cd katarogu
-pnpm install # you can also use yarn install or npm install
+Since Katarogu handles authentication using Lucia, a mail server is required to send verification codes, notifications, etc.  
+Update the SMTP values inside the `.env` file to setup mail.
 
-# Start a development server
-pnpm dev
+During development, I tend to use a service called Resend.  
+Keep in mind that it is a paid service, but should get you up and running in no time.
 
-# Build and start the app.
-pnpm build ; pnpm start
-```
+However, any SMTP server should work fine.
 
 # Contact
 

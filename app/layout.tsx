@@ -12,7 +12,6 @@ import Navbar from "@/components/navbar";
 
 // import "react-image-crop/dist/ReactCrop.css";
 import "./globals.css";
-import { AuthProvider } from "@/components/auth/provider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -59,16 +58,14 @@ export default function RootLayout({
           >
             <main
               vaul-drawer-wrapper=""
-              className="min-h-screen bg-neutral-50 antialiased dark:bg-neutral-950"
+              className="min-h-screen bg-neutral-50 mx-auto antialiased dark:bg-neutral-950"
             >
               <div className="container">
-                <AuthProvider>
-                  <TooltipProvider>
-                    <Toaster />
-                    <Navbar />
-                    {children}
-                  </TooltipProvider>
-                </AuthProvider>
+                <TooltipProvider>
+                  <Toaster />
+                  <Navbar />
+                  {children}
+                </TooltipProvider>
               </div>
             </main>
           </ThemeProvider>

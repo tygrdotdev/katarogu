@@ -8,6 +8,8 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { isValidEmail } from "@/lib/utils";
 import { lucia, validateRequest } from "@/lib/auth";
+import { generateEmailVerificationCode, sendVerificationEmail } from "./email";
+import { toast } from "sonner";
 
 export async function register(_: unknown, formData: FormData): Promise<ActionResult> {
 	"use server";
@@ -78,13 +80,6 @@ export async function register(_: unknown, formData: FormData): Promise<ActionRe
 
 	const userId = generateIdFromEntropySize(10);
 
-	await client.connect().catch(err => {
-		console.error(err);
-		return {
-			error: "Failed to connect to database"
-		};
-	})
-
 	client.db().collection("users").insertOne({
 		// @ts-expect-error _id refers to userId, which is a string, but the type expects an ObjectId. It works regardless.
 		_id: userId,
@@ -101,6 +96,10 @@ export async function register(_: unknown, formData: FormData): Promise<ActionRe
 	const session = await lucia.createSession(userId, {});
 	const sessionCookie = lucia.createSessionCookie(session.id);
 	cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+
+	const code = await generateEmailVerificationCode(userId, email);
+
+	await sendVerificationEmail(email, code);
 
 	return redirect("/auth/verify");
 }
@@ -165,4 +164,56 @@ export async function logout(): Promise<ActionResult> {
 	const sessionCookie = lucia.createBlankSessionCookie();
 	cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 	return redirect("/");
+}
+
+export async function verifyAccount(_: unknown, formData: FormData): Promise<ActionResult> {
+	"use server";
+	const { user } = await validateRequest();
+
+	if (!user) {
+		return {
+			error: "Unauthorized"
+		};
+	}
+
+	const code = formData.get("code");
+	console.log(code)
+	if (typeof code !== "string" || code.length !== 6) {
+		return {
+			error: "Invalid code"
+		};
+	}
+
+	// Find a code that matches the user's email or the user's ID
+	const validCode = await client.db().collection("verification_codes").findOne({ $or: [{ email: user.email }, { user_id: user.id }] });
+	console.log(validCode)
+
+	if (!validCode) {
+		return {
+			error: "Invalid code"
+		};
+	}
+
+	// check if the validCode hasn't expired
+	if (validCode.expires_at < new Date()) {
+		return {
+			error: "Code has expired. Please request a new one."
+		};
+	}
+
+	if (validCode.code !== code) {
+		return {
+			error: "Invalid code"
+		};
+	}
+
+	await lucia.invalidateUserSessions(user.id);
+	// @ts-expect-error _id refers to userId, which is a string, but the type expects an ObjectId. It works regardless.
+	await client.db().collection("users").updateOne({ _id: user.id }, { $set: { email_verified: true } });
+
+	const session = await lucia.createSession(user.id, {});
+	const sessionCookie = lucia.createSessionCookie(session.id);
+
+	cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+	return redirect("/auth/verify/success");
 }

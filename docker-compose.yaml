@@ -9,7 +9,7 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: VerySecurePassword
       MONGO_INITDB_DATABASE: katarogu
     volumes:
-      - ./db-data:/data/db
+      - ./docker/db:/data/db
 
   mongo-express:
     image: mongo-express
@@ -19,5 +19,24 @@ services:
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: VerySecurePassword
-      ME_CONFIG_MONGODB_URL: mongodb://root:VerySecurePassword@mongo:27017/katarogu
+      ME_CONFIG_MONGODB_URL: mongodb://root:VerySecurePassword@mongo:27017/
       ME_CONFIG_BASICAUTH: false
+
+  mail:
+    container_name: mail
+    image: stalwartlabs/mail-server:latest
+    tty: true
+    stdin_open: true
+    ports:
+        - 443:443
+        - 8080:8080
+        - 25:25
+        - 587:587
+        - 465:465
+        - 143:143
+        - 993:993
+        - 4190:4190
+        - 110:110
+        - 995:995
+    volumes:
+        - ./docker/mail:/opt/stalwart-mail
