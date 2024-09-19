@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/drawer";
 import Alert from "@/components/alert";
 import { User } from "lucia";
-import { logout } from "@/lib/auth/actions";
+import { logout } from "@/auth/actions/logout";
 import useSWR from "swr"
 import Error from "@/app/error";
 import { useRouter } from "next/navigation";

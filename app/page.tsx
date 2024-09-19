@@ -1,4 +1,4 @@
-import { validateRequest } from "@/lib/auth";
+import { validateRequest } from "@/auth";
 import DashboardPage from "./dashboard/page";
 import HomePage from "./home/page";
 

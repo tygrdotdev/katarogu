@@ -1,7 +1,7 @@
 import { Lucia, Session, User } from "lucia";
 
 import { MongodbAdapter } from "@lucia-auth/adapter-mongodb";
-import client, { sessionCollection, userCollection } from "../mongodb";
+import client, { sessionCollection, userCollection } from "../lib/mongodb";
 import { cookies } from "next/headers";
 import { cache } from "react";
 
@@ -54,14 +54,6 @@ export const validateRequest = cache(
 		} catch { }
 
 		return result;
-	}
-);
-
-export const getUser = cache(
-	async (): Promise<User | null> => {
-		"use server";
-		const { user } = await validateRequest();
-		return user;
 	}
 );
 

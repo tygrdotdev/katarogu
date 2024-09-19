@@ -13,16 +13,18 @@ export function Form({
 	action: (prevState: unknown, formData: FormData) => Promise<ActionResult>;
 }) {
 	const [state, formAction] = useFormState(action, {
-		error: null
+		error: false,
+		message: ""
 	});
 	return (
 		<form action={formAction} className={cn("w-full", className)}>
-			<p>{state.error}</p>
+			<p>{typeof state.message !== "undefined" && state.message}</p>
 			{children}
 		</form>
 	);
 }
 
 export interface ActionResult {
-	error: string | null;
+	error: boolean;
+	message: string | null;
 }

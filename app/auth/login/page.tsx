@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Form } from "@/components/form"
 import Link from "next/link";
-import { login } from "../../../lib/auth/actions";
+import { login } from "@/auth/actions/login";
 import React from "react";
 import { Eye, EyeOff } from "lucide-react";
 

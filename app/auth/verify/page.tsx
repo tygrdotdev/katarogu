@@ -1,8 +1,8 @@
 import { Form } from "@/components/form";
 import { Button } from "@/components/ui/button";
 import { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator } from "@/components/ui/input-otp";
-import { validateRequest } from "@/lib/auth"
-import { verifyAccount } from "@/lib/auth/actions";
+import { validateRequest } from "@/auth"
+import { verifyAccount } from "@/auth/actions/verify";
 import { redirect } from "next/navigation";
 import ResendCodeButton from "./resend-button";
 

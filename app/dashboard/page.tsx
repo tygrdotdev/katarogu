@@ -1,7 +1,7 @@
 import { Form } from "@/components/form";
-import { validateRequest } from "@/lib/auth";
+import { validateRequest } from "@/auth";
 import Link from "next/link";
-import { logout } from "@/lib/auth/actions";
+import { logout } from "@/auth/actions/logout";
 
 export default async function DashboardPage() {
 	const { user } = await validateRequest();

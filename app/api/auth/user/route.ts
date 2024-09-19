@@ -1,4 +1,4 @@
-import { validateRequest } from "@/lib/auth";
+import { validateRequest } from "@/auth";
 
 export async function GET() {
 	const { user } = await validateRequest();

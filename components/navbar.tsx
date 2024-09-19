@@ -3,7 +3,7 @@ import { ThemeToggle } from "./theme/toggle";
 import UserPopup from "@/components/auth/user-menu";
 import React from "react";
 import { Button } from "./ui/button";
-import { validateRequest } from "@/lib/auth";
+import { validateRequest } from "@/auth";
 import AuthMenu from "./auth/auth-menu";
 
 export default async function Navbar() {

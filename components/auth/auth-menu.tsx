@@ -21,12 +21,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import useMediaQuery from "@/hooks/use-media-query";
 import React, { useState } from "react";
-import { useAuth } from "./provider";
 import Spinner from "@/components/ui/spinner";
 import { Eye, EyeOff } from "lucide-react";
 // import { Icons } from "@/components/ui/icons";
-import { login, register } from "@/lib/auth/actions";
 import { Form } from "../form";
+import { login } from "@/auth/actions/login";
+import { register } from "@/auth/actions/register";
+import { requestPasswordReset } from "@/auth/actions/reset";
 
 export default function AuthMenu() {
 	const [open, setOpen] = useState(false);
@@ -227,8 +228,8 @@ export default function AuthMenu() {
 								)}
 								{mode === "reset" && (
 									<>
-										{/* <Form
-											action={reset}
+										<Form
+											action={requestPasswordReset}
 											className="flex w-full flex-col items-center gap-4"
 										>
 											<Input
@@ -245,7 +246,7 @@ export default function AuthMenu() {
 											>
 												{loading ? <Spinner size={16} /> : "Submit"}
 											</Button>
-										</Form> */}
+										</Form>
 									</>
 								)}
 							</div>
@@ -457,8 +458,8 @@ export default function AuthMenu() {
 								)}
 								{mode === "reset" && (
 									<>
-										{/* <Form
-											action={reset}
+										<Form
+											action={requestPasswordReset}
 											className="flex w-full flex-col items-center gap-4"
 										>
 											<Input
@@ -474,7 +475,7 @@ export default function AuthMenu() {
 											>
 												{loading ? <Spinner size={16} /> : "Submit"}
 											</Button>
-										</Form> */}
+										</Form>
 									</>
 								)}
 							</div>
