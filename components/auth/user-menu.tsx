@@ -70,7 +70,7 @@ export default function UserMenu() {
 									<Avatar className="border border-black/10 dark:border dark:border-white/10">
 										<AvatarImage src={user.avatar} alt="Avatar" aria-label="Avatar" />
 										<AvatarFallback>
-											{(user.username ?? "A").slice(0, 1).toUpperCase()}
+											{(user.username ?? "T").slice(0, 1).toUpperCase()}
 										</AvatarFallback>
 									</Avatar>
 								</DropdownMenuTrigger>

@@ -1,24 +1,32 @@
-"use client";
+"use client"
 
 import { useFormState } from "react-dom";
 import { cn } from "@/lib/utils";
 
-export function Form({
+export default function Form({
 	children,
 	className,
 	action
 }: {
 	children: React.ReactNode;
 	className?: React.FormHTMLAttributes<HTMLFormElement>["className"];
-	action: (prevState: unknown, formData: FormData) => Promise<ActionResult>;
+		action: (prevState: ActionResult, formData: FormData) => Promise<ActionResult>;
 }) {
 	const [state, formAction] = useFormState(action, {
 		error: false,
 		message: ""
 	});
+
 	return (
-		<form action={formAction} className={cn("w-full", className)}>
-			<p>{typeof state.message !== "undefined" && state.message}</p>
+		<form
+			action={formAction}
+			className="flex w-full flex-col items-center gap-4"
+		>
+			{state.error && (
+				<p className="text-center">
+					{state.message}
+				</p>
+			)}
 			{children}
 		</form>
 	);

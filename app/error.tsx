@@ -23,7 +23,7 @@ export default function Error({
 
 	return (
 		<>
-			<main className="flex min-h-screen-no-nav w-full flex-col items-center justify-center gap-4">
+			<main className="flex min-h-snug w-full flex-col items-center justify-center gap-4">
 				<h1 className="text-3xl font-black">(╥﹏╥)</h1>
 				<h2 className="text-center text-lg text-neutral-500 dark:text-neutral-400">
 					Oops! Something went wrong while loading this page.

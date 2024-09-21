@@ -1,7 +1,7 @@
 "use server";
 
 import { ActionResult } from "@/components/form";
-import { lucia, validateRequest } from "..";
+import { lucia, validateRequest } from "../..";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 

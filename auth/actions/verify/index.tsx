@@ -102,6 +102,9 @@ export async function verifyAccount(_: unknown, formData: FormData): Promise<Act
 		};
 	}
 
+	// Delete the code
+	await client.db().collection("verification_codes").deleteOne({ _id: validCode._id });
+
 	await lucia.invalidateUserSessions(user.id);
 	// @ts-expect-error _id refers to userId, which is a string, but the type expects an ObjectId. It works regardless.
 	await client.db().collection("users").updateOne({ _id: user.id }, { $set: { email_verified: true } });

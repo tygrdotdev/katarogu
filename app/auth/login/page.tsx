@@ -1,16 +1,9 @@
-"use client";
-
+import LoginForm from "@/auth/actions/login/form";
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Form } from "@/components/form"
 import Link from "next/link";
-import { login } from "@/auth/actions/login";
 import React from "react";
-import { Eye, EyeOff } from "lucide-react";
 
 export default function LoginPage() {
-	const [showPassword, setShowPassword] = React.useState(false);
-	const togglePassword = () => setShowPassword((prev) => !prev);
 	return (
 		<>
 			<div className="absolute left-1/2 top-1/2 w-3/4 -translate-x-1/2 -translate-y-1/2 sm:w-1/2 md:w-auto">
@@ -61,52 +54,7 @@ export default function LoginPage() {
 								<div className="w-full py-2 flex items-center">
 									<hr className="w-full border-t border-black/10 dark:border-white/10" />
 								</div> */}
-						<Form
-							className="flex flex-col gap-4 w-full"
-							action={login}
-						>
-							<Input
-								id="email"
-								name="email"
-								type="email"
-								placeholder="Email"
-							/>
-							<div className="flex w-full flex-row items-center gap-2">
-								<Input
-									id="password"
-									name="password"
-									type={showPassword ? "text" : "password"}
-									placeholder="Password"
-								/>
-								<Button
-									variant="outline"
-									size="icon"
-									className="p-2"
-									onClick={togglePassword}
-									type="button"
-								>
-									{showPassword ? (
-										<EyeOff size={22} />
-									) : (
-										<Eye size={22} />
-									)}
-								</Button>
-							</div>
-							<Button className="text-md w-full">
-								Submit
-							</Button>
-							<small className="px-2 pt-2 text-center text-neutral-500 dark:text-neutral-400">
-								By continuing, you agree to our{" "}
-								<a className="text-blue-500" href="/tos">
-									Terms of Service
-								</a>{" "}
-								and{" "}
-								<a className="text-blue-500" href="/privacy">
-									Privacy Policy
-								</a>
-								.
-							</small>
-						</Form>
+						<LoginForm />
 					</div>
 					<hr className="w-full border border-black/10 dark:border-white/10" />
 					<div className="flex w-full flex-col items-center">

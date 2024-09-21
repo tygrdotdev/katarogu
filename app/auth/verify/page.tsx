@@ -1,10 +1,6 @@
-import { Form } from "@/components/form";
-import { Button } from "@/components/ui/button";
-import { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator } from "@/components/ui/input-otp";
 import { validateRequest } from "@/auth"
-import { verifyAccount } from "@/auth/actions/verify";
 import { redirect } from "next/navigation";
-import ResendCodeButton from "./resend-button";
+import VerifyAccountForm from "@/auth/actions/verify/form";
 
 export default async function VerifyAccountPage({
 	searchParams
@@ -34,27 +30,7 @@ export default async function VerifyAccountPage({
 						Please check your email ({user?.email}) for a verification code and enter it below to verify your account.
 					</p>
 				</div>
-				<Form action={verifyAccount} className="w-full flex flex-col items-center gap-4">
-					<InputOTP maxLength={6} value={searchParams.code} className="w-full" id="code" name="code">
-						<InputOTPGroup>
-							<InputOTPSlot index={0} />
-							<InputOTPSlot index={1} />
-							<InputOTPSlot index={2} />
-						</InputOTPGroup>
-						<InputOTPSeparator />
-						<InputOTPGroup>
-							<InputOTPSlot index={3} />
-							<InputOTPSlot index={4} />
-							<InputOTPSlot index={5} />
-						</InputOTPGroup>
-					</InputOTP>
-					<div className="flex flex-row gap-2">
-						<ResendCodeButton />
-						<Button type="submit">
-							Submit
-						</Button>
-					</div>
-				</Form>
+				<VerifyAccountForm code={searchParams.code} />
 			</div>
 		</>
 	)

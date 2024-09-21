@@ -67,7 +67,7 @@ export async function sendResetPasswordEmail(email: string, token: string) {
 }
 
 // Server functions
-export async function requestPasswordReset(_: unknown, formData: FormData): Promise<ActionResult> {
+export async function requestPasswordReset(prevState: ActionResult, formData: FormData): Promise<ActionResult> {
 	"use server";
 
 	const email = formData.get("email");
@@ -173,8 +173,8 @@ export async function resetPassword(_: unknown, formData: FormData): Promise<Act
 		}
 	});
 
-	await client.db().collection("reset_password_tokens").deleteOne({
-		token
+	await client.db().collection("password_reset_tokens").deleteOne({
+		user_id: data.user_id
 	});
 
 	const session = await lucia.createSession(data.user_id, {});

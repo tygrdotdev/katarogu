@@ -1,16 +1,16 @@
 "use server";
 
-import client from "@/lib/mongodb";
-import { isValidEmail } from "@/lib/utils";
 import { hash } from "@node-rs/argon2";
 import { generateIdFromEntropySize } from "lucia";
-import { lucia } from "..";
 import { cookies } from "next/headers";
-import { generateEmailVerificationCode, sendVerificationEmail } from "@/auth/actions/verify";
 import { redirect } from "next/navigation";
 import { ActionResult } from "@/components/form";
+import { isValidEmail } from "@/lib/utils";
+import client from "@/lib/mongodb";
+import { lucia } from "@/auth";
+import { generateEmailVerificationCode, sendVerificationEmail } from "../verify";
 
-export async function register(_: unknown, formData: FormData): Promise<ActionResult> {
+export async function register(prevState: ActionResult, formData: FormData) {
 	"use server";
 	const name = formData.get("name");
 	if (typeof name !== "string" || name.length < 2 || name.length > 32) {

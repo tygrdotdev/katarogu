@@ -1,6 +1,5 @@
 import { validateRequest } from "@/auth";
 import Link from "next/link";
-import AvatarUpload from "@/components/auth/account/avatar-upload";
 
 export default async function DashboardPage() {
 	const { user } = await validateRequest();
@@ -10,9 +9,6 @@ export default async function DashboardPage() {
 			{user ? (
 				<div className="flex flex-col gap-4">
 					<h1>Welcome back, {user.username} ({user.id})</h1>
-					<AvatarUpload>
-						Upload
-					</AvatarUpload>
 					<code>
 						{JSON.stringify(user, null, 2)}
 					</code>

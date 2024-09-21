@@ -18,35 +18,20 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import useMediaQuery from "@/hooks/use-media-query";
 import React, { useState } from "react";
-import Spinner from "@/components/ui/spinner";
-import { Eye, EyeOff } from "lucide-react";
 // import { Icons } from "@/components/ui/icons";
-import { Form } from "../form";
-import { login } from "@/auth/actions/login";
-import { register } from "@/auth/actions/register";
-import { requestPasswordReset } from "@/auth/actions/reset";
+import LoginForm from "@/auth/actions/login/form";
+import RegisterForm from "@/auth/actions/register/form";
+import { RequestPasswordResetForm } from "@/auth/actions/reset/form";
 
 export default function AuthMenu() {
 	const [open, setOpen] = useState(false);
 	const [mode, setMode] = useState<"login" | "register" | "reset">("login");
 	const isDesktop = useMediaQuery("(min-width: 768px)");
 
-	const [loading, setLoading] = React.useState(false);
-	const [showPassword, setShowPassword] = React.useState(false);
-
-	const togglePassword = () => setShowPassword(!showPassword);
-
-	const reset = () => {
-		setShowPassword(false)
-		setLoading(false);
-	};
-
 	const changeMode = (mode: "login" | "register" | "reset") => {
 		setMode(mode);
-		reset();
 	};
 
 	if (isDesktop) {
@@ -112,142 +97,13 @@ export default function AuthMenu() {
 								)}
 
 								{mode === "login" && (
-									<>
-										<Form
-											action={login}
-											className="flex w-full flex-col items-center gap-4"
-										>
-											<Input
-												id="email"
-												name="email"
-												placeholder="Email"
-												type="email"
-												autoComplete="email"
-												disabled={loading}
-											/>
-											<div className="flex w-full flex-row items-center gap-2">
-												<Input
-													id="password"
-													name="password"
-													type={showPassword ? "text" : "password"}
-													placeholder="Password"
-													autoComplete="current-password"
-													disabled={loading}
-												/>
-												<Button
-													variant="outline"
-													size="icon"
-													type="button"
-													className="p-2"
-													onClick={togglePassword}
-												>
-													{showPassword ? (
-														<EyeOff size={22} />
-													) : (
-														<Eye size={22} />
-													)}
-												</Button>
-											</div>
-											<Button
-												type="submit"
-												className="w-full data-[loading=true]:cursor-not-allowed"
-												disabled={loading}
-												data-loading={loading}
-											>
-												{loading ? <Spinner size={16} /> : "Submit"}
-											</Button>
-										</Form>
-									</>
+									<LoginForm />
 								)}
 								{mode === "register" && (
-									<>
-										<Form
-											action={register}
-											className="flex w-full flex-col items-center gap-4"
-										>
-											<Input
-												id="name"
-												name="name"
-												placeholder="Name"
-												type="text"
-												autoComplete="name"
-											/>
-											<Input
-												id="email"
-												name="email"
-												placeholder="Email"
-												type="email"
-												autoComplete="email"
-											/>
-											<Input
-												id="username"
-												name="username"
-												placeholder="Username"
-												type="text"
-												autoComplete="username"
-											/>
-											<div className="flex w-full flex-row items-center gap-2">
-												<Input
-													id="password"
-													name="password"
-													type={showPassword ? "text" : "password"}
-													placeholder="Password"
-													autoComplete="new-password"
-												/>
-												<Button
-													variant="outline"
-													size="icon"
-													type="button"
-													className="p-2"
-													onClick={togglePassword}
-												>
-													{showPassword ? (
-														<EyeOff size={22} />
-													) : (
-														<Eye size={22} />
-													)}
-												</Button>
-											</div>
-											<Input
-												id="passwordConfirm"
-												name="passwordConfirm"
-												placeholder="Confirm Password"
-												type={showPassword ? "text" : "password"}
-												autoComplete="new-password"
-											/>
-											<Button
-												type="submit"
-												className="w-full data-[loading=true]:cursor-not-allowed"
-												disabled={loading}
-												data-loading={loading}
-											>
-												{loading ? <Spinner size={16} /> : "Submit"}
-											</Button>
-										</Form>
-									</>
+									<RegisterForm />
 								)}
 								{mode === "reset" && (
-									<>
-										<Form
-											action={requestPasswordReset}
-											className="flex w-full flex-col items-center gap-4"
-										>
-											<Input
-												id="email"
-												name="email"
-												placeholder="Email"
-												autoComplete="email"
-											/>
-											<Button
-												type="submit"
-												className="w-full data-[loading=true]:cursor-not-allowed"
-												disabled={loading}
-												data-loading={loading}
-											>
-												{loading ? <Spinner size={16} /> : "Submit"}
-											</Button>
-										</Form>
-									</>
+									<RequestPasswordResetForm />
 								)}
 							</div>
 							<div className="px-6 pt-3 text-center">
@@ -381,102 +237,13 @@ export default function AuthMenu() {
 									</>
 								)}
 								{mode === "login" && (
-									<>
-										<Form
-											action={login}
-											className="flex w-full flex-col items-center gap-4"
-										>
-											<Input
-												id="email"
-												name="email"
-												placeholder="Email"
-												type="email"
-											/>
-											<Input
-												id="password"
-												name="password"
-												placeholder="Password"
-												type="password"
-											/>
-											<Button
-												type="submit"
-												className="w-full data-[loading=true]:cursor-not-allowed"
-												disabled={loading}
-												data-loading={loading}
-											>
-												{loading ? <Spinner size={16} /> : "Submit"}
-											</Button>
-										</Form>
-									</>
+									<LoginForm />
 								)}
 								{mode === "register" && (
-									<>
-										<Form
-											action={register}
-											className="flex w-full flex-col items-center gap-4"
-										>
-											<Input
-												id="name"
-												name="name"
-												placeholder="Name"
-												type="text"
-											/>
-											<Input
-												id="email"
-												name="email"
-												placeholder="Email"
-												type="email"
-											/>
-											<Input
-												id="username"
-												name="username"
-												placeholder="Username"
-												type="text"
-											/>
-											<Input
-												id="password"
-												name="password"
-												placeholder="Password"
-												type="password"
-											/>
-											<Input
-												id="passwordConfirm"
-												name="passwordConfirm"
-												placeholder="Confirm Password"
-												type="password"
-											/>
-											<Button
-												type="submit"
-												className="w-full data-[loading=true]:cursor-not-allowed"
-												disabled={loading}
-												data-loading={loading}
-											>
-												{loading ? <Spinner size={16} /> : "Submit"}
-											</Button>
-										</Form>
-									</>
+									<RegisterForm />
 								)}
 								{mode === "reset" && (
-									<>
-										<Form
-											action={requestPasswordReset}
-											className="flex w-full flex-col items-center gap-4"
-										>
-											<Input
-												id="email"
-												name="email"
-												placeholder="Email"
-											/>
-											<Button
-												type="submit"
-												className="w-full data-[loading=true]:cursor-not-allowed"
-												disabled={loading}
-												data-loading={loading}
-											>
-												{loading ? <Spinner size={16} /> : "Submit"}
-											</Button>
-										</Form>
-									</>
+									<RequestPasswordResetForm />
 								)}
 							</div>
 							<div className="px-6 py-4 text-center">

@@ -1,23 +1,20 @@
-"use client";
+"use client"
 
 /* eslint-disable @next/next/no-img-element */
 // Disabled eslint for img element because images are loaded from local storage, not from the web.
 import * as React from "react";
 
+import useMediaQuery from "@/hooks/use-media-query";
 import { Button, ButtonProps } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Drawer, DrawerContent } from "@/components/ui/drawer";
 import ReactCrop, { Crop, centerCrop, makeAspectCrop } from "react-image-crop";
 import { randomUUID } from "crypto";
 import { toast } from "sonner";
+import { MAX_FILE_SIZE } from "@/lib/utils";
 import useSWR from "swr";
-import { uploadAvatar } from "@/auth/assets";
-import useMediaQuery from "@/hooks/use-media-query";
-import { User } from "lucia";
 
-const MAX_FILE_SIZE = 12582912; // 12 MB
-
-export default function AvatarUpload(props: ButtonProps) {
+export default function BannerUpload(props: ButtonProps) {
 	const [open, setOpen] = React.useState(false);
 	const isDesktop = useMediaQuery("(min-width: 768px)");
 
@@ -68,7 +65,7 @@ export default function AvatarUpload(props: ButtonProps) {
 					unit: "%",
 					width: 90,
 				},
-				1 / 1,
+				4 / 1,
 				width,
 				height
 			),
@@ -91,22 +88,14 @@ export default function AvatarUpload(props: ButtonProps) {
 			);
 			reader.readAsDataURL(e.target.files[0]);
 
+			// if the file is not at least 600x150 pixels, don't allow it
 			const image = new Image();
-			const type = e.target.files[0].type;
 			image.src = URL.createObjectURL(e.target.files[0]);
 			image.onload = () => {
-				if (image.width < 256 || image.height < 256) {
+				if (image.width < 600 || image.height < 150) {
 					resetCrop();
 					return toast.error(
-						"Please use an image that is at least 256x256 pixels."
-					);
-				}
-				if (
-					!["image/jpeg", "image/png", "image/gif", "image/webp"].includes(type)
-				) {
-					resetCrop();
-					return toast.error(
-						"Images must be in either JPEG, PNG, GIF, or WEBP format."
+						"Please use an image that is at least 600x150 pixels."
 					);
 				} else {
 					setOpen(true);
@@ -159,28 +148,27 @@ export default function AvatarUpload(props: ButtonProps) {
 						base64Image.replace(/^data:image\/\w+;base64,/, ""),
 						"base64"
 					);
-
-					const file = new File([buffer], user?.id, {
+					const file = new File([buffer], user.id, {
 						type: fileType,
 					});
 
 					const formData = new FormData();
 					formData.append("file", file);
 
-					await fetch("/api/assets/avatars/upload", {
+					await fetch("/api/assets/banners/upload", {
 						method: "POST",
-						body: formData
+						body: formData,
 					}).then(async (res) => {
 						const json = await res.json();
 						if (res.ok) {
-							toast.success("Successfully uploaded avatar");
+							toast.success("Banner uploaded successfully.");
 						} else {
-							toast.error("Failed to upload avatar", {
+							toast.error("Failed to upload banner.", {
 								description: json.message
 							});
 						}
 					}).catch((err) => {
-						toast.error("Failed to upload avatar");
+						toast.error("Failed to upload banner.");
 						console.error(err);
 					}).finally(() => {
 						setLoading(false);
@@ -204,14 +192,13 @@ export default function AvatarUpload(props: ButtonProps) {
 					onChange={onSelectFile}
 				/>
 				<Dialog open={open} onOpenChange={onOpenChange}>
-					<DialogContent className="w-fit gap-0 p-0">
+					<DialogContent className="w-full max-w-[80vw] lg:max-w-fit gap-0 p-0">
 						<ReactCrop
 							crop={crop}
 							onChange={(_, p) => setCrop(p)}
 							onComplete={(c, _) => setCompletedCrop(c)}
-							aspect={1 / 1}
+							aspect={4 / 1}
 							minHeight={100}
-							circularCrop
 							keepSelection
 						>
 							<img
@@ -219,17 +206,14 @@ export default function AvatarUpload(props: ButtonProps) {
 								src={src}
 								onLoad={onImageLoad}
 								ref={imageRef}
-								className="rounded-t-lg"
+								className="rounded-t-lg w-full"
 							/>
 						</ReactCrop>
 						<div className="flex w-full flex-row justify-between gap-2 border-t p-4">
 							<Button variant="outline" onClick={onOpenChange} disabled={loading}>
 								Cancel
 							</Button>
-							<Button onClick={() => {
-								setLoading(true);
-								onSubmitCrop();
-							}} disabled={loading}>Save</Button>
+							<Button onClick={onSubmitCrop} disabled={loading}>Save</Button>
 						</div>
 					</DialogContent>
 				</Dialog>
@@ -248,14 +232,13 @@ export default function AvatarUpload(props: ButtonProps) {
 				onChange={onSelectFile}
 			/>
 			<Drawer open={open} dismissible={false}>
-				<DrawerContent>
+				<DrawerContent handle={false}>
 					<ReactCrop
 						crop={crop}
 						onChange={(_, p) => setCrop(p)}
 						onComplete={(c, _) => setCompletedCrop(c)}
-						aspect={1 / 1}
-						minHeight={256}
-						circularCrop
+						aspect={3 / 1}
+						minHeight={50}
 						keepSelection
 					>
 						<img
@@ -270,10 +253,7 @@ export default function AvatarUpload(props: ButtonProps) {
 						<Button variant="outline" onClick={onOpenChange} disabled={loading}>
 							Cancel
 						</Button>
-						<Button onClick={() => {
-							setLoading(true);
-							onSubmitCrop();
-						}} disabled={loading}>Save</Button>
+						<Button onClick={onSubmitCrop} disabled={loading}>Save</Button>
 					</div>
 				</DrawerContent>
 			</Drawer>

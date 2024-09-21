@@ -2,12 +2,12 @@ import Link from "next/link";
 import { ThemeToggle } from "./theme/toggle";
 import UserPopup from "@/components/auth/user-menu";
 import React from "react";
-import { Button } from "./ui/button";
 import { validateRequest } from "@/auth";
 import AuthMenu from "./auth/auth-menu";
 
 export default async function Navbar() {
 	const { user } = await validateRequest();
+
 	return (
 		<>
 			<nav className="flex w-full flex-col items-center">
@@ -46,18 +46,9 @@ export default async function Navbar() {
 					<div className="flex flex-row items-center gap-3">
 						<ThemeToggle />
 						{user ? (
-							<>
-								<UserPopup />
-							</>
+							<UserPopup />
 						) : (
-							<>
-								{/* <Link href="/auth/login">
-									<Button>
-										Log in
-									</Button>
-								</Link> */}
 								<AuthMenu />
-							</>
 						)}
 					</div>
 				</div>

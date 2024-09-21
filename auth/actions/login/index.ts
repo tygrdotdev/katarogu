@@ -4,11 +4,11 @@ import { ActionResult } from "@/components/form";
 import client from "@/lib/mongodb";
 import { isValidEmail } from "@/lib/utils";
 import { verify } from "@node-rs/argon2";
-import { lucia } from "..";
+import { lucia } from "../..";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-export async function login(_: unknown, formData: FormData): Promise<ActionResult> {
+export async function login(prevState: ActionResult, formData: FormData) {
 	"use server";
 	const email = formData.get("email");
 
@@ -57,4 +57,3 @@ export async function login(_: unknown, formData: FormData): Promise<ActionResul
 	cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 	return redirect("/");
 }
-
