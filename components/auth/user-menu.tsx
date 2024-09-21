@@ -80,14 +80,21 @@ export default function UserMenu() {
 								>
 									<AspectRatio ratio={3 / 1}>
 										{!user.email_verified && (
+											<Link href="/auth/verify">
 											<div className="absolute top-0 z-[51] h-[32px] w-full bg-[#EBCB8B] text-black dark:text-black">
 												<div className="flex max-h-[32px] flex-row items-center justify-start gap-2 p-2">
-													<AlertTriangle className="h-4 w-4" />
-													<p className="text-sm font-semibold">
-														Please check your email for a verification link.
-													</p>
+														<div className="flex flex-row items-center w-full gap-2">
+															<AlertTriangle className="h-4 w-4" />
+															<p className="text-sm font-semibold">
+																Your account isn't verified.
+															</p>
+														</div>
+														<span>
+															&rarr;
+														</span>
+													</div>
 												</div>
-											</div>
+											</Link>
 										)}
 										<Image
 											src={user.banner}
@@ -100,7 +107,7 @@ export default function UserMenu() {
 									<DropdownMenuLabel className="flex h-20 min-h-20 -translate-y-16 flex-col px-3 text-xl font-semibold">
 										<Avatar className="mb-2 h-20 w-20 border-2 border-black/10 dark:border-white/10">
 											<AvatarImage
-												src={user.banner}
+												src={user.avatar}
 												aria-label="User Avatar"
 												alt="Avatar"
 											/>

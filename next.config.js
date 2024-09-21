@@ -15,6 +15,16 @@ const nextConfig = {
 		// config.experiments.topLevelAwait = true
 		return config;
 	},
+	images: {
+		remotePatterns: [
+			{
+				hostname: "localhost",
+			},
+			{
+				hostname: "images.unsplash.com",
+			},
+		],
+	},
 };
 
 module.exports = nextConfig;

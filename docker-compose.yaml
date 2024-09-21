@@ -26,7 +26,7 @@ services:
 
   mail:
     container_name: mail
-    image: stalwartlabs/mail-server:latest
+    image: stalwartlabs/mail-server
     tty: true
     stdin_open: true
     ports:
@@ -42,3 +42,16 @@ services:
         - 995:995
     volumes:
         - ./docker/mail:/opt/stalwart-mail
+
+  minio:
+    container_name: minio
+    image: bitnami/minio
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    volumes:
+      - ./docker/minio/data:/bitnami/minio/data
+    environment:
+      - MINIO_ROOT_USER=katarogu
+      - MINIO_ROOT_PASSWORD=VerySecurePassword
+      - MINIO_DEFAULT_BUCKETS=public

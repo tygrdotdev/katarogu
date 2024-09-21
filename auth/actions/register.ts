@@ -93,8 +93,8 @@ export async function register(_: unknown, formData: FormData): Promise<ActionRe
 		username,
 		email,
 		email_verified: false,
-		avatar: "",
-		banner: "",
+		avatar: `https://api.dicebear.com/7.x/lorelei-neutral/png?seed=${username}`,
+		banner: "https://images.unsplash.com/photo-1636955816868-fcb881e57954?q=20",
 		password_hash: passwordHash,
 		two_factor_secret: null
 	});

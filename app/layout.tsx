@@ -10,7 +10,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 
 import Navbar from "@/components/navbar";
 
-// import "react-image-crop/dist/ReactCrop.css";
+import "react-image-crop/dist/ReactCrop.css";
 import "./globals.css";
 
 const inter = Inter({

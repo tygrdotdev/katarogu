@@ -11,7 +11,7 @@ import {
 	Preview,
 	Section,
 	Text,
-} from "@react-email/components";
+} from "jsx-email";
 import * as React from "react";
 
 interface VerifyAccountEmailProps {

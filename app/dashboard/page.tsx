@@ -1,7 +1,6 @@
-import { Form } from "@/components/form";
 import { validateRequest } from "@/auth";
 import Link from "next/link";
-import { logout } from "@/auth/actions/logout";
+import AvatarUpload from "@/components/auth/account/avatar-upload";
 
 export default async function DashboardPage() {
 	const { user } = await validateRequest();
@@ -9,11 +8,14 @@ export default async function DashboardPage() {
 	return (
 		<div className="flex flex-col w-full">
 			{user ? (
-				<div>
+				<div className="flex flex-col gap-4">
 					<h1>Welcome back, {user.username} ({user.id})</h1>
-					<Form action={logout}>
-						<button>Log out</button>
-					</Form>
+					<AvatarUpload>
+						Upload
+					</AvatarUpload>
+					<code>
+						{JSON.stringify(user, null, 2)}
+					</code>
 				</div>
 			) : (
 				<div className="flex flex-row gap-3">

@@ -5,10 +5,10 @@ import { lucia, validateRequest } from "../..";
 import client from "@/lib/mongodb";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { render } from "@react-email/components";
-import { createTransport } from "nodemailer";
+import { render } from "jsx-email";
 import { alphabet, generateRandomString } from "oslo/crypto";
 import VerifyAccountEmail from "./email";
+import Plunk from "@plunk/node";
 
 // Email actions
 export async function generateEmailVerificationCode(userId: string, email: string): Promise<string> {
@@ -38,31 +38,21 @@ export async function generateEmailVerificationCode(userId: string, email: strin
 }
 
 export async function sendVerificationEmail(email: string, code: string) {
-	const transporter = createTransport({
-		host: process.env.SMTP_HOST,
-		secure: process.env.SMTP_SECURE === "true",
-		port: parseInt(process.env.SMTP_PORT!),
-		auth: {
-			user: process.env.SMTP_USER,
-			pass: process.env.SMTP_PASSWORD
-		},
-		debug: process.env.NODE_ENV === "development"
-	});
+	const plunk = new Plunk(process.env.PLUNK_API_KEY!);
 
-	const emailHTML = await render(<VerifyAccountEmail verificationCode={code} />);
+	const body = await render(<VerifyAccountEmail verificationCode={code} />);
 
-	const info = await transporter.sendMail({
-		from: process.env.SMTP_FROM,
+	await plunk.emails.send({
 		to: email,
 		subject: "Verify your account",
-		html: emailHTML
-	});
-
-	await transporter.sendMail(info).then((res) => {
-		console.log(res);
+		body,
+		type: "html"
+	}).then((res) => {
+		return res.success;
 	}).catch((err) => {
 		console.error(err);
-	})
+		return false;
+	});
 }
 
 // Server actions
