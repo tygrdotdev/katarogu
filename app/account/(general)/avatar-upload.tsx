@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 /* eslint-disable @next/next/no-img-element */
 // Disabled eslint for img element because images are loaded from local storage, not from the web.
