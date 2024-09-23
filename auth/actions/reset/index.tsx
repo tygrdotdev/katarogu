@@ -12,7 +12,7 @@ import { hash } from "@node-rs/argon2";
 import { redirect } from "next/navigation";
 import { lucia } from "@/auth";
 import { cookies } from "next/headers";
-import Plunk from "@plunk/node";
+import { createTransport } from "nodemailer";
 
 // Email functions
 export async function generateResetPasswordToken(userId: string, email: string): Promise<string> {
@@ -49,20 +49,28 @@ export async function sendResetPasswordEmail(email: string, token: string) {
 		return;
 	}
 
-	const plunk = new Plunk(process.env.PLUNK_API_KEY!);
+	const transporter = createTransport({
+		host: process.env.SMTP_HOST,
+		secure: process.env.SMTP_SECURE === "true",
+		port: parseInt(process.env.SMTP_PORT!),
+		auth: {
+			user: process.env.SMTP_USER,
+			pass: process.env.SMTP_PASSWORD
+		},
+		debug: process.env.NODE_ENV === "development"
+	});
 
 	const body = await render(<ResetPasswordEmail resetToken={token} />);
 
-	await plunk.emails.send({
-		to: user.email,
-		subject: "Password reset request",
-		body,
-		type: "html"
-	}).then((res) => {
-		return res.success;
-	}).catch((err) => {
+	const info = await transporter.sendMail({
+		from: process.env.SMTP_FROM,
+		to: email,
+		subject: "Rest password request",
+		html: body
+	});
+
+	await transporter.sendMail(info).catch((err) => {
 		console.error(err);
-		return false;
 	});
 }
 

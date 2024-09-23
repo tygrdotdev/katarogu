@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 import { render } from "jsx-email";
 import { alphabet, generateRandomString } from "oslo/crypto";
 import VerifyAccountEmail from "./email";
-import Plunk from "@plunk/node";
+import { createTransport } from "nodemailer";
 
 // Email actions
 export async function generateEmailVerificationCode(userId: string, email: string): Promise<string> {
@@ -38,20 +38,28 @@ export async function generateEmailVerificationCode(userId: string, email: strin
 }
 
 export async function sendVerificationEmail(email: string, code: string) {
-	const plunk = new Plunk(process.env.PLUNK_API_KEY!);
+	const transporter = createTransport({
+		host: process.env.SMTP_HOST,
+		secure: process.env.SMTP_SECURE === "true",
+		port: parseInt(process.env.SMTP_PORT!),
+		auth: {
+			user: process.env.SMTP_USER,
+			pass: process.env.SMTP_PASSWORD
+		},
+		debug: process.env.NODE_ENV === "development"
+	});
 
 	const body = await render(<VerifyAccountEmail verificationCode={code} />);
 
-	await plunk.emails.send({
+	const info = await transporter.sendMail({
+		from: process.env.SMTP_FROM,
 		to: email,
 		subject: "Verify your account",
-		body,
-		type: "html"
-	}).then((res) => {
-		return res.success;
-	}).catch((err) => {
+		html: body
+	});
+
+	await transporter.sendMail(info).catch((err) => {
 		console.error(err);
-		return false;
 	});
 }
 

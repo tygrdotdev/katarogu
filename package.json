@@ -15,7 +15,6 @@
 		"@dicebear/lorelei-neutral": "^9.2.2",
 		"@lucia-auth/adapter-mongodb": "^1.0.3",
 		"@node-rs/argon2": "^1.8.3",
-		"@plunk/node": "^3.0.2",
 		"@radix-ui/react-aspect-ratio": "^1.1.0",
 		"@radix-ui/react-avatar": "^1.1.0",
 		"@radix-ui/react-dialog": "^1.1.1",
@@ -37,6 +36,7 @@
 		"mongodb": "^6.9.0",
 		"next": "14.2.13",
 		"next-themes": "^0.3.0",
+		"nodemailer": "^6.9.15",
 		"nuqs": "^1.19.1",
 		"oslo": "^1.2.1",
 		"react": "^18.3.1",
@@ -51,6 +51,7 @@
 	},
 	"devDependencies": {
 		"@types/node": "^22.5.5",
+		"@types/nodemailer": "^6.4.16",
 		"@types/react": "^18.3.8",
 		"@types/react-dom": "^18.3.0",
 		"eslint": "8.57.1",
