@@ -1,13 +1,17 @@
 import { validateRequest } from "@/auth";
-import minio from "@/lib/minio";
+import minio, { publicBucketExists } from "@/lib/minio";
 import client from "@/lib/mongodb";
 import { MAX_FILE_SIZE } from "@/lib/utils";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
 	const { user } = await validateRequest();
 
 	if (!user) {
-		return new Response("Unauthorized", {
+		return NextResponse.json({
+			error: true,
+			message: "Unauthorized"
+		}, {
 			status: 401
 		});
 	}
@@ -16,50 +20,44 @@ export async function POST(request: Request) {
 	const file = form.get("file") as File;
 
 	if (!file) {
-		return new Response(JSON.stringify({
+		return NextResponse.json({
 			error: true,
 			message: "No file was selected"
-		}), {
+		}, {
 			status: 400
 		});
 	}
 
 	if (file.size > MAX_FILE_SIZE) {
-		return new Response(JSON.stringify({
+		return NextResponse.json({
 			error: true,
 			message: "Please upload a file smaller than 12MB"
-		}), {
+		}, {
 			status: 400
 		});
 	}
 
-	const extension = file.name.split(".").pop();
-	const bucket = "public";
-	const path = `avatars/${user.id}.${extension}`;
+	if (process.env.USE_S3 === "true") {
+		await publicBucketExists();
 
-	const exists = await minio.bucketExists(bucket);
+		await minio.putObject("public", `avatars/${user.id}`, Buffer.from(await file.arrayBuffer()), file.size, {
+			"Content-Type": file.type
+		});
+	} else {
+		await client.connect();
 
-	if (!exists) {
-		await minio.makeBucket(bucket);
+		client.db().collection("avatars").insertOne({
+			user_id: user.id,
+			type: file.type,
+			size: file.size,
+			data: Buffer.from(await file.arrayBuffer())
+		});
 	}
 
-	await minio.putObject(bucket, path, Buffer.from(await file.arrayBuffer()), file.size, {
-		"Content-Type": file.type
-	});
-
-	await client.connect();
-
-	// @ts-expect-error _id refers to userId, which is a string, but the type expects an ObjectId. It works regardless.
-	client.db().collection("users").updateOne({ _id: user.id }, {
-		$set: {
-			avatar: `/api/assets/avatars/${user.id}.${extension}`
-		}
-	});
-
-	return new Response(JSON.stringify({
+	return NextResponse.json({
 		error: false,
 		message: "Avatar uploaded successfully"
-	}), {
+	}, {
 		status: 200
 	});
 }

@@ -1,14 +1,8 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Metadata } from "next";
-import Link from "next/link";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { useEffect } from "react";
-
-export const metadata: Metadata = {
-	title: "Oops",
-	description: "Something went wrong while loading this page",
-};
 
 export default function Error({
 	error,
@@ -23,20 +17,13 @@ export default function Error({
 
 	return (
 		<>
-			<main className="flex min-h-snug w-full flex-col items-center justify-center gap-4">
-				<h1 className="text-3xl font-black">(╥﹏╥)</h1>
-				<h2 className="text-center text-lg text-neutral-500 dark:text-neutral-400">
-					Oops! Something went wrong while loading this page.
-				</h2>
-				<code className="overflow-scroll max-w-2xl rounded-lg bg-neutral-200 p-2 text-sm dark:bg-neutral-800">
+			<Alert variant="destructive">
+				<ExclamationTriangleIcon className="h-4 w-4" />
+				<AlertTitle>Something went wrong!</AlertTitle>
+				<AlertDescription>
 					{error.message}
-				</code>
-				<Link href="/" passHref>
-					<Button variant="outline" onClick={() => reset()}>
-						Try again
-					</Button>
-				</Link>
-			</main>
+				</AlertDescription>
+			</Alert>
 		</>
 	);
 }

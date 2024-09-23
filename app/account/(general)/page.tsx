@@ -27,7 +27,7 @@ export default async function AccountPage() {
 								</div>
 								<div className="flex flex-row items-center gap-6 pr-4">
 									<Avatar className="h-16 w-16 sm:h-20 sm:w-20 md:h-28 md:w-28 border">
-										<AvatarImage src={user.avatar} alt={user.username} />
+										<AvatarImage src={`/api/assets/avatars/${user.id}`} alt={user.username} />
 										<AvatarFallback>
 											{(user.username ?? "A").slice(0, 1).toUpperCase()}
 										</AvatarFallback>
@@ -58,7 +58,7 @@ export default async function AccountPage() {
 								<div className="flex flex-col items-center gap-4 sm:flex-row">
 									<AspectRatio ratio={4 / 1}>
 										<Image
-											src={user.banner}
+											src={`/api/assets/banners/${user.id}`}
 											priority
 											width={1400}
 											height={250}
@@ -92,7 +92,6 @@ export default async function AccountPage() {
 						>
 							<Input
 								placeholder={user.username}
-								value={user.username}
 							/>
 						</AccountCard>
 						<AccountCard
@@ -109,7 +108,6 @@ export default async function AccountPage() {
 						>
 							<Input
 								placeholder={user.name}
-								value={user.name}
 							/>
 						</AccountCard>
 					</div>

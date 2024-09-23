@@ -24,25 +24,6 @@ services:
       ME_CONFIG_MONGODB_URL: mongodb://root:VerySecurePassword@mongo:27017/
       ME_CONFIG_BASICAUTH: false
 
-  mail:
-    container_name: mail
-    image: stalwartlabs/mail-server
-    tty: true
-    stdin_open: true
-    ports:
-        - 443:443
-        - 8080:8080
-        - 25:25
-        - 587:587
-        - 465:465
-        - 143:143
-        - 993:993
-        - 4190:4190
-        - 110:110
-        - 995:995
-    volumes:
-        - ./docker/mail:/opt/stalwart-mail
-
   minio:
     container_name: minio
     image: bitnami/minio

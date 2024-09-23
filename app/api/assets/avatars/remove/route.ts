@@ -1,23 +1,34 @@
 import { validateRequest } from "@/auth";
+import minio from "@/lib/minio";
 import client from "@/lib/mongodb";
+import { NextResponse } from "next/server";
 
 export async function DELETE() {
 	const { user } = await validateRequest();
 
 	if (!user) {
-		return new Response(JSON.stringify({
+		return NextResponse.json({
 			error: true,
 			message: "Unauthorized"
-		}));
+		}, {
+			status: 401
+		});
 	}
 
-	await client.connect();
+	if (process.env.USE_S3 === "true") {
+		await minio.removeObject("public", `avatars/${user.id}.png`);
+	} else {
+		await client.connect();
 
-	// @ts-expect-error _id refers to userId, which is a string, but the type expects an ObjectId. It works regardless.
-	client.db().collection("users").updateOne({ _id: user.id }, { $set: { avatar: `https://api.dicebear.com/7.x/lorelei-neutral/png?seed=${user.username}&radius=50` } });
+		client.db().collection("avatars").deleteOne({
+			user_id: user.id
+		});
+	}
 
-	return new Response(JSON.stringify({
+	return NextResponse.json({
 		error: false,
-		message: "Successfully removed avatar"
-	}));
+		message: "Avatar removed successfully"
+	}, {
+		status: 200
+	});
 }

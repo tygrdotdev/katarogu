@@ -1,24 +1,56 @@
-import { validateRequest } from "@/auth";
 import minio from "@/lib/minio";
+import client from "@/lib/mongodb";
+import { readFileSync } from "fs";
 
 export async function GET(
-	request: Request,
+	_: Request,
 	{ params }: { params: { id: string } }
 ) {
-	const { user } = await validateRequest();
+	if (process.env.USE_S3 === "true") {
+		const res = await minio.getObject("public", `banners/${params.id}`).then(async (res) => {
+			let buffer = Buffer.from("");
 
-	if (!user) {
-		return new Response("Unauthorized", {
-			status: 401
+			for await (const chunk of res) {
+				buffer = Buffer.concat([buffer, chunk]);
+			}
+
+			return new Response(buffer, {
+				headers: {
+					"Content-Type": "image/jpeg"
+				}
+			});
+		}).catch((_) => {
+			const banner = readFileSync("public/assets/default-banner.jpg");
+
+			return new Response(banner.buffer, {
+				headers: {
+					"Content-Type": "image/jpeg"
+				}
+			});
+		});
+
+		return res;
+	} else {
+		await client.connect();
+
+		const banner = await client.db().collection("banners").findOne({
+			user_id: params.id
+		});
+
+		if (!banner) {
+			const banner = readFileSync("public/assets/default-banner.jpg");
+
+			return new Response(banner.buffer, {
+				headers: {
+					"Content-Type": "image/jpeg"
+				}
+			});
+		}
+
+		return new Response(banner.data.buffer, {
+			headers: {
+				"Content-Type": "image/png"
+			}
 		});
 	}
-
-	const banner = await minio.presignedGetObject("public", `banners/${params.id}`);
-
-	return new Response(null, {
-		status: 302,
-		headers: {
-			Location: banner
-		}
-	});
 }

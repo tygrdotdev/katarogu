@@ -1,7 +1,6 @@
 import { Inter, Sora } from "next/font/google";
 
 import type { Metadata } from "next";
-import Script from "next/script";
 import { Toaster } from "sonner";
 
 import { cn } from "@/lib/utils";
@@ -45,11 +44,6 @@ export default function RootLayout({
             sora.variable
           )}
         >
-          <Script
-            async
-            src="https://analytics.tygr.dev/script.js"
-            data-website-id="b77fbcb1-45fe-44b5-b08d-7f6b5d775451"
-          />
           <ThemeProvider
             attribute="class"
             defaultTheme="system"

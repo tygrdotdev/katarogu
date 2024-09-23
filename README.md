@@ -10,7 +10,7 @@ Katarogu is a free, open-source and community driven manga and anime tracking se
 > [!NOTE]
 > This is a complete rewrite from the original version of Katarogu which depended on PocketBase. You can find the original's source under the [old](https://github.com/tygrdotdev/katarogu/tree/old) branch. Once Katarogu reaches beta stages, this branch will be deleted.
 
-# Tech stack
+## Tech stack
 
 - Framework: [NextJS](https://nextjs.org/)
 - Deployment: [Vercel](https://vercel.com/home) / [Hetzner](https://www.hetzner.com/cloud/)
@@ -19,7 +19,7 @@ Katarogu is a free, open-source and community driven manga and anime tracking se
 - Database: [MongoDB](https://www.mongodb.com/)
 - Authentication: [Lucia](https://lucia-auth.com/)
 
-# Running locally
+## Running locally
 
 ### Database
 
@@ -33,11 +33,25 @@ Since MongoDB is schemaless, you do not need to run any migrations on the databa
 Since Katarogu handles authentication using [Lucia](https://lucia-auth.com/), a mail server is required to send verification codes, notifications, etc.  
 Update the SMTP values inside the `.env` file to setup mail.
 
-During development, I tend to use a service called Resend and it's the service I'll most likely use in production.  
-Keep in mind that it is a paid service, but should get you up and running in no time.
+I personally use a service called [Plunk](https://www.useplunk.com/).
 
 TLDR; any SMTP server should work fine, just update the `.env` values.
 
-# Contact
+### S3
+
+When hosting Katarogu, you can either store assets (such as avatars, banners, etc) in an S3 bucket, or directly inside the Mongo Database.  
+To enable storing assets inside an S3 bucket, add the following properties to your environment variables:  
+
+```bash
+# This will tell Katarogu to use S3 instead of MongoDB.
+USE_S3=true
+S3_ENDPOINT=127.0.0.1
+S3_PORT=9000
+S3_SECURE=false
+S3_ACCESS_KEY=katarogu
+S3_SECRET_KEY=VerySecurePassword
+```
+
+## Contact
 
 If you need to contact me, please send inquires via email: **hi at tygr dot dev**.

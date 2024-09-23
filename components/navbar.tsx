@@ -38,7 +38,7 @@ export default async function Navbar() {
 									strokeWidth="72"
 								/>
 							</svg>
-							<span className="relative -top-1/2 text-xl font-bold">
+							<span className="relative top-[2px] text-xl font-bold font-display">
 								Katarogu
 							</span>
 						</Link>

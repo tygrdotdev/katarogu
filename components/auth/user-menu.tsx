@@ -68,7 +68,7 @@ export default function UserMenu() {
 							<DropdownMenu open={open} onOpenChange={setOpen}>
 								<DropdownMenuTrigger asChild className="cursor-pointer">
 									<Avatar className="border border-black/10 dark:border dark:border-white/10">
-										<AvatarImage src={user.avatar} alt="Avatar" aria-label="Avatar" />
+										<AvatarImage src={`/api/assets/avatars/${user.id}`} alt="Avatar" aria-label="Avatar" />
 										<AvatarFallback>
 											{(user.username ?? "T").slice(0, 1).toUpperCase()}
 										</AvatarFallback>
@@ -86,7 +86,7 @@ export default function UserMenu() {
 														<div className="flex flex-row items-center w-full gap-2">
 															<AlertTriangle className="h-4 w-4" />
 															<p className="text-sm font-semibold">
-																Your account isn't verified.
+																Your account isn&apos;t verified.
 															</p>
 														</div>
 														<span>
@@ -97,7 +97,7 @@ export default function UserMenu() {
 											</Link>
 										)}
 										<Image
-											src={user.banner}
+											src={`/api/assets/banners/${user.id}`}
 											width={1050}
 											height={450}
 											alt="banner"
@@ -107,7 +107,7 @@ export default function UserMenu() {
 									<DropdownMenuLabel className="flex h-20 min-h-20 -translate-y-16 flex-col px-3 text-xl font-semibold">
 										<Avatar className="mb-2 h-20 w-20 border-2 border-black/10 dark:border-white/10">
 											<AvatarImage
-												src={user.avatar}
+												src={`/api/assets/avatars/${user.id}`}
 												aria-label="User Avatar"
 												alt="Avatar"
 											/>
@@ -184,7 +184,7 @@ export default function UserMenu() {
 							<Drawer open={open} onOpenChange={setOpen}>
 								<DrawerTrigger asChild className="cursor-pointer">
 									<Avatar className="border border-black/10 dark:border dark:border-white/10">
-										<AvatarImage src={user.avatar} alt="Avatar" aria-label="Avatar" />
+											<AvatarImage src={`/api/assets/avatars/${user.id}`} alt="Avatar" aria-label="Avatar" />
 										<AvatarFallback>
 											{(user.username ?? "A").slice(0, 1).toUpperCase()}
 										</AvatarFallback>
@@ -203,7 +203,7 @@ export default function UserMenu() {
 											</div>
 										)}
 										<Image
-											src={user.banner}
+												src={`/api/assets/banners/${user.id}`}
 											width={1050}
 											height={450}
 											alt="banner"
@@ -213,7 +213,7 @@ export default function UserMenu() {
 									<div className="flex h-24 min-h-24 -translate-y-12 flex-col px-3 text-xl font-semibold">
 										<Avatar className="mb-2 h-20 w-20 border-2 border-black/10 dark:border-white/10">
 											<AvatarImage
-												src={user.avatar}
+													src={`/api/assets/avatars/${user.id}`}
 												aria-label="User Avatar"
 												alt="Avatar"
 											/>

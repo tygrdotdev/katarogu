@@ -1,9 +1,6 @@
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from "next/image";
-import { EyeOff, Lock } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
-import useSWR from "swr";
 import { validateRequest } from "@/auth";
 
 function Badges() {
@@ -25,7 +22,7 @@ export default async function ProfileHeader({
 					<div className="flex h-full w-full flex-col gap-3">
 						<AspectRatio ratio={4 / 1}>
 							<Image
-								src={user.banner}
+								src={`/api/assets/banners/${user.id}`}
 								priority
 								width={1400}
 								height={250}
@@ -38,7 +35,7 @@ export default async function ProfileHeader({
 						<div className="flex h-20 min-h-20 w-full -translate-y-14 flex-col px-2 text-xl font-semibold sm:-translate-y-10 sm:flex-row sm:px-4 md:-translate-y-14 md:px-6">
 							<Avatar className="mb-2 h-24 w-24 border-2 border-black/10 dark:border-white/10 sm:h-28 sm:w-28 md:h-32 md:w-32">
 								<AvatarImage
-									src={user.avatar}
+									src={`/api/assets/avatars/${user.id}`}
 									aria-label="User Avatar"
 									alt="Avatar"
 								/>
