@@ -1,7 +1,7 @@
-import { validateRequest } from "@/auth";
+import { getCurrentSession } from "@/auth/sessions";
 
 export async function GET() {
-	const { user } = await validateRequest();
+	const { user } = await getCurrentSession();
 
 	if (!user) return new Response(JSON.stringify(null), { status: 401 });
 

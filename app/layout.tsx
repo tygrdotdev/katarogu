@@ -1,22 +1,19 @@
+import type { Metadata } from "next";
 import { Inter, Sora } from "next/font/google";
 
-import type { Metadata } from "next";
-import { Toaster } from "sonner";
+import "./globals.css";
+import "react-image-crop/dist/ReactCrop.css";
 
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme/provider";
-import { TooltipProvider } from "@/components/ui/tooltip";
-
-import Navbar from "@/components/navbar";
-
-import "react-image-crop/dist/ReactCrop.css";
-import "./globals.css";
+import Navbar from "@/components/nav";
 
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-inter",
 });
+
 const sora = Sora({
   subsets: ["latin"],
   display: "swap",
@@ -25,7 +22,7 @@ const sora = Sora({
 
 export const metadata: Metadata = {
   title: "Katarogu",
-  description: "An Anime and Manga tracker.",
+  description: "A free, open-source and community driven manga and anime tracking service",
 };
 
 export default function RootLayout({
@@ -34,37 +31,31 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
-      <html lang="en" suppressHydrationWarning>
-        <head />
-        <body
-          className={cn(
-            "min-h-screen bg-background font-sans antialiased",
-            inter.variable,
-            sora.variable
-          )}
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={cn(
+          "min-h-screen bg-background font-sans antialiased",
+          inter.variable,
+          sora.variable
+        )}
+      >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
         >
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
+          <main
+            vaul-drawer-wrapper=""
+            className="min-h-screen bg-neutral-50 mx-auto antialiased dark:bg-neutral-950"
           >
-            <main
-              vaul-drawer-wrapper=""
-              className="min-h-screen bg-neutral-50 mx-auto antialiased dark:bg-neutral-950"
-            >
-              <div className="container">
-                <TooltipProvider>
-                  <Toaster />
-                  <Navbar />
-                  {children}
-                </TooltipProvider>
-              </div>
-            </main>
-          </ThemeProvider>
-        </body>
-      </html>
-    </>
+            <div className="container">
+              <Navbar />
+              {children}
+            </div>
+          </main>
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }

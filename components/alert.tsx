@@ -15,7 +15,7 @@ import {
 	DrawerHeader,
 	DrawerTitle,
 } from "@/components/ui/drawer";
-import useMediaQuery from "@/hooks/use-media-query";
+import { useMediaQuery } from "usehooks-ts"
 
 export default function Alert({
 	open,

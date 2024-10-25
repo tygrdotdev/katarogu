@@ -1,8 +1,5 @@
 import minio from "@/lib/minio";
 import client from "@/lib/mongodb";
-import { createAvatar } from "@dicebear/core";
-import * as lorelei from "@dicebear/lorelei-neutral";
-import { toPng } from "@dicebear/converter";
 
 export async function GET(
 	_: Request,
@@ -23,16 +20,8 @@ export async function GET(
 				}
 			});
 		}).catch(async (err) => {
-			const png = await toPng(createAvatar(lorelei, {
-				seed: params.id,
-				radius: 50,
-				size: 128
-			})).toArrayBuffer();
-
-			return new Response(png, {
-				headers: {
-					"Content-Type": "image/png"
-				}
+			return new Response("Failed to find avatar", {
+				status: 404
 			});
 		});
 
@@ -45,17 +34,9 @@ export async function GET(
 			user_id: params.id
 		});
 
-		if (!avatar) {
-			const avatar = createAvatar(lorelei, {
-				seed: params.id,
-				radius: 50,
-				size: 256
-			}).toDataUri();
-
-			return new Response(avatar, {
-				headers: {
-					"Content-Type": "image/png"
-				}
+		if (avatar === null) {
+			return new Response("Failed to find avatar", {
+				status: 404
 			});
 		}
 

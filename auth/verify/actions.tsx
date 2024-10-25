@@ -1,14 +1,14 @@
 "use server";
 
 import { ActionResult } from "@/components/form";
-import { lucia, validateRequest } from "../..";
 import client from "@/lib/mongodb";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { render } from "jsx-email";
 import { alphabet, generateRandomString } from "oslo/crypto";
-import VerifyAccountEmail from "./email";
+import VerifyAccountEmail from "@/auth/verify/email";
 import { createTransport } from "nodemailer";
+import { createSession, generateSessionToken, getCurrentSession, invalidateSession, UsersCollection } from "../sessions";
+import { setSessionTokenCookie } from "../cookies";
 
 // Email actions
 export async function generateEmailVerificationCode(userId: string, email: string): Promise<string> {
@@ -66,7 +66,7 @@ export async function sendVerificationEmail(email: string, code: string) {
 // Server actions
 export async function verifyAccount(_: unknown, formData: FormData): Promise<ActionResult> {
 	"use server";
-	const { user } = await validateRequest();
+	const { user } = await getCurrentSession();
 
 	if (!user) {
 		return {
@@ -113,20 +113,19 @@ export async function verifyAccount(_: unknown, formData: FormData): Promise<Act
 	// Delete the code
 	await client.db().collection("verification_codes").deleteOne({ _id: validCode._id });
 
-	await lucia.invalidateUserSessions(user.id);
-	// @ts-expect-error _id refers to userId, which is a string, but the type expects an ObjectId. It works regardless.
-	await client.db().collection("users").updateOne({ _id: user.id }, { $set: { email_verified: true } });
+	await invalidateSession(user.id);
+	await client.db().collection<UsersCollection>("users").updateOne({ _id: user.id }, { $set: { email_verified: true } });
 
-	const session = await lucia.createSession(user.id, {});
-	const sessionCookie = lucia.createSessionCookie(session.id);
+	const sessionToken = generateSessionToken();
+	const session = await createSession(sessionToken, user.id);
+	setSessionTokenCookie(sessionToken, session.expires_at);
 
-	cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 	return redirect("/auth/verify/success");
 }
 
 export async function resendVerificationEmail() {
 	"use server";
-	const { user } = await validateRequest();
+	const { user } = await getCurrentSession();
 
 	if (!user) {
 		return {
@@ -144,4 +143,3 @@ export async function resendVerificationEmail() {
 
 	await sendVerificationEmail(user.email, code);
 }
-

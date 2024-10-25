@@ -1,10 +1,10 @@
-import { validateRequest } from "@/auth";
+import { getCurrentSession, UsersCollection } from "@/auth/sessions";
 import minio from "@/lib/minio";
 import client from "@/lib/mongodb";
 import { NextResponse } from "next/server";
 
 export async function DELETE() {
-	const { user } = await validateRequest();
+	const { user } = await getCurrentSession();
 
 	if (!user) {
 		return NextResponse.json({
@@ -24,6 +24,14 @@ export async function DELETE() {
 			user_id: user.id
 		});
 	}
+
+	await client.db().collection<UsersCollection>("users").updateOne({
+		_id: user.id
+	}, {
+		$set: {
+			avatar: `https://api.dicebear.com/7.x/lorelei-neutral/png?seed=${user.username}`
+		}
+	});
 
 	return NextResponse.json({
 		error: false,

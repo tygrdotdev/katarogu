@@ -1,18 +1,18 @@
 "use server";
 
 import { ActionResult } from "@/components/form";
+import { verifyEmailInput } from "../email";
 import client from "@/lib/mongodb";
-import { isValidEmail } from "@/lib/utils";
-import { verify } from "@node-rs/argon2";
-import { lucia } from "../..";
-import { cookies } from "next/headers";
+import { verify } from "@node-rs/argon2"
+import { createSession, generateSessionToken, UsersCollection } from "../sessions";
+import { setSessionTokenCookie } from "../cookies";
 import { redirect } from "next/navigation";
 
 export async function login(prevState: ActionResult, formData: FormData) {
 	"use server";
 	const email = formData.get("email");
 
-	if (!email || !isValidEmail(email.toString())) {
+	if (!email || !verifyEmailInput(email.toString())) {
 		return {
 			error: true,
 			message: "Invalid email"
@@ -29,7 +29,7 @@ export async function login(prevState: ActionResult, formData: FormData) {
 
 	await client.connect();
 
-	const existing = await client.db().collection("users").findOne({ email: email });
+	const existing = await client.db().collection<UsersCollection>("users").findOne({ email: email });
 
 	if (!existing) {
 		return {
@@ -52,8 +52,8 @@ export async function login(prevState: ActionResult, formData: FormData) {
 		};
 	}
 
-	const session = await lucia.createSession(existing._id.toString(), {});
-	const sessionCookie = lucia.createSessionCookie(session.id);
-	cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
-	return redirect("/");
+	const sessionToken = generateSessionToken();
+	const session = await createSession(sessionToken, existing._id);
+	setSessionTokenCookie(sessionToken, session.expires_at);
+	redirect("/");
 }

@@ -1,50 +1,64 @@
 "use client"
 
 import { Input } from "@/components/ui/input";
-import { login } from ".";
+import { register } from "@/auth/register/actions";
 import { useFormState, useFormStatus } from "react-dom";
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Eye, EyeOff } from "lucide-react";
 import Spinner from "@/components/ui/spinner";
 
-export default function LoginForm() {
-	const [state, formAction] = useFormState(login, {
+export default function RegisterForm() {
+	const [state, formAction] = useFormState(register, {
 		error: false,
 		message: ""
 	});
 
 	return (
-		<>
-			<form
-				className="flex flex-col gap-4 w-full"
-				action={formAction}
-			>
-				{state.error &&
-					<p className="text-center">
-						{state.message}
-					</p>
-				}
-				{/* This is required to use the "useFormStatus" hook */}
-				<InnerForm />
-			</form>
-		</>
+		<form
+			action={formAction}
+			className="flex w-full flex-col items-center gap-4"
+		>
+			{state.error && (
+				<p className="text-center">
+					{state.message}
+				</p>
+			)}
+			<InnerForm />
+		</form>
 	)
 }
 
 function InnerForm() {
-	const { pending } = useFormStatus();
-
 	const [showPassword, setShowPassword] = React.useState(false);
 	const togglePassword = () => setShowPassword((prev) => !prev);
+
+	const { pending } = useFormStatus();
+
 	return (
 		<>
 			<Input
+				id="name"
+				name="name"
+				placeholder="Name"
+				type="text"
+				autoComplete="name"
+				disabled={pending}
+			/>
+			<Input
 				id="email"
 				name="email"
-				type="email"
 				placeholder="Email"
-				required
+				type="email"
+				autoComplete="email"
+				disabled={pending}
+			/>
+			<Input
+				id="username"
+				name="username"
+				placeholder="Username"
+				type="text"
+				autoComplete="username"
 				disabled={pending}
 			/>
 			<div className="flex w-full flex-row items-center gap-2">
@@ -53,15 +67,15 @@ function InnerForm() {
 					name="password"
 					type={showPassword ? "text" : "password"}
 					placeholder="Password"
-					required
+					autoComplete="new-password"
 					disabled={pending}
 				/>
 				<Button
 					variant="outline"
 					size="icon"
+					type="button"
 					className="p-2"
 					onClick={togglePassword}
-					type="button"
 					disabled={pending}
 				>
 					{showPassword ? (
@@ -71,7 +85,20 @@ function InnerForm() {
 					)}
 				</Button>
 			</div>
-			<Button className="w-full" disabled={pending}>
+			<Input
+				id="passwordConfirm"
+				name="passwordConfirm"
+				placeholder="Confirm Password"
+				type={showPassword ? "text" : "password"}
+				autoComplete="new-password"
+				disabled={pending}
+			/>
+			<Button
+				type="submit"
+				className="w-full data-[loading=true]:cursor-not-allowed"
+				disabled={pending}
+				data-loading={pending}
+			>
 				{pending ? <Spinner size={16} /> : "Submit"}
 			</Button>
 		</>

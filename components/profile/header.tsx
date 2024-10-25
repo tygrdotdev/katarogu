@@ -1,7 +1,7 @@
+import { getCurrentSession } from "@/auth/sessions";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from "next/image";
-import { validateRequest } from "@/auth";
 
 function Badges() {
 	return <></>;
@@ -12,8 +12,7 @@ export default async function ProfileHeader({
 }: {
 	children?: React.ReactNode;
 }) {
-	// const { data: user } = useSWR("/api/auth/user", (...args) => fetch(...args).then((res) => res.json()));
-	const { user } = await validateRequest();
+	const { user } = await getCurrentSession();
 
 	return (
 		<>

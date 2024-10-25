@@ -1,12 +1,12 @@
+import React from "react";
 import Link from "next/link";
 import { ThemeToggle } from "./theme/toggle";
+import { getCurrentSession } from "@/auth/sessions";
+import AuthMenu from "@/components/auth/auth-menu";
 import UserPopup from "@/components/auth/user-menu";
-import React from "react";
-import { validateRequest } from "@/auth";
-import AuthMenu from "./auth/auth-menu";
 
 export default async function Navbar() {
-	const { user } = await validateRequest();
+	const { user } = await getCurrentSession();
 
 	return (
 		<>
@@ -46,9 +46,9 @@ export default async function Navbar() {
 					<div className="flex flex-row items-center gap-3">
 						<ThemeToggle />
 						{user ? (
-							<UserPopup />
+							<UserPopup user={user} />
 						) : (
-								<AuthMenu />
+							<AuthMenu />
 						)}
 					</div>
 				</div>

@@ -18,7 +18,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import Image from "next/image";
 import Link from "next/link";
-import useMediaQuery from "@/hooks/use-media-query";
+import { useMediaQuery } from "usehooks-ts"
 import { useState } from "react";
 import {
 	Drawer,
@@ -27,13 +27,10 @@ import {
 	DrawerTrigger,
 } from "@/components/ui/drawer";
 import Alert from "@/components/alert";
-import { User } from "lucia";
-import { logout } from "@/auth/actions/logout";
-import useSWR from "swr"
-import Error from "@/app/error";
-import { useRouter } from "next/navigation";
+import { logout } from "@/auth/logout/actions";
+import { User } from "@/auth/sessions";
 
-export default function UserMenu() {
+export default function UserMenu({ user }: { user: User }) {
 	const [open, setOpen] = useState(false);
 	const [signOutOpen, setSignOutOpen] = useState(false);
 	const isDesktop = useMediaQuery("(min-width: 768px)");
@@ -53,13 +50,7 @@ export default function UserMenu() {
 		);
 	}
 
-	const router = useRouter();
-
-	// @ts-ignore
-	const { data: user, error } = useSWR<User>("/api/auth/user", (...args) => fetch(...args).then(res => res.json()))
-
-	if (error) return <Error error={error} reset={() => router.refresh()} />
-	else return (
+	return (
 		<>
 			{isDesktop ? (
 				<>
@@ -68,7 +59,7 @@ export default function UserMenu() {
 							<DropdownMenu open={open} onOpenChange={setOpen}>
 								<DropdownMenuTrigger asChild className="cursor-pointer">
 									<Avatar className="border border-black/10 dark:border dark:border-white/10">
-										<AvatarImage src={`/api/assets/avatars/${user.id}`} alt="Avatar" aria-label="Avatar" />
+										<AvatarImage src={user.avatar} alt="Avatar" aria-label="Avatar" />
 										<AvatarFallback>
 											{(user.username ?? "T").slice(0, 1).toUpperCase()}
 										</AvatarFallback>
@@ -97,7 +88,7 @@ export default function UserMenu() {
 											</Link>
 										)}
 										<Image
-											src={`/api/assets/banners/${user.id}`}
+											src={user.banner}
 											width={1050}
 											height={450}
 											alt="banner"
@@ -107,7 +98,7 @@ export default function UserMenu() {
 									<DropdownMenuLabel className="flex h-20 min-h-20 -translate-y-16 flex-col px-3 text-xl font-semibold">
 										<Avatar className="mb-2 h-20 w-20 border-2 border-black/10 dark:border-white/10">
 											<AvatarImage
-												src={`/api/assets/avatars/${user.id}`}
+												src={user.avatar}
 												aria-label="User Avatar"
 												alt="Avatar"
 											/>
@@ -184,7 +175,7 @@ export default function UserMenu() {
 							<Drawer open={open} onOpenChange={setOpen}>
 								<DrawerTrigger asChild className="cursor-pointer">
 									<Avatar className="border border-black/10 dark:border dark:border-white/10">
-											<AvatarImage src={`/api/assets/avatars/${user.id}`} alt="Avatar" aria-label="Avatar" />
+											<AvatarImage src={user.avatar} alt="Avatar" aria-label="Avatar" />
 										<AvatarFallback>
 											{(user.username ?? "A").slice(0, 1).toUpperCase()}
 										</AvatarFallback>
@@ -203,7 +194,7 @@ export default function UserMenu() {
 											</div>
 										)}
 										<Image
-												src={`/api/assets/banners/${user.id}`}
+												src={user.banner}
 											width={1050}
 											height={450}
 											alt="banner"
@@ -213,7 +204,7 @@ export default function UserMenu() {
 									<div className="flex h-24 min-h-24 -translate-y-12 flex-col px-3 text-xl font-semibold">
 										<Avatar className="mb-2 h-20 w-20 border-2 border-black/10 dark:border-white/10">
 											<AvatarImage
-													src={`/api/assets/avatars/${user.id}`}
+													src={user.avatar}
 												aria-label="User Avatar"
 												alt="Avatar"
 											/>

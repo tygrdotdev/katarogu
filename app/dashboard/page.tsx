@@ -1,8 +1,8 @@
-import { validateRequest } from "@/auth";
+import { getCurrentSession } from "@/auth/sessions";
 import Link from "next/link";
 
 export default async function DashboardPage() {
-	const { user } = await validateRequest();
+	const { user } = await getCurrentSession();
 
 	return (
 		<div className="flex flex-col w-full">

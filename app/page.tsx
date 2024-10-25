@@ -1,9 +1,9 @@
-import { validateRequest } from "@/auth";
+import { getCurrentSession } from "@/auth/sessions";
 import DashboardPage from "./dashboard/page";
 import HomePage from "./home/page";
 
 export default async function Home() {
-  const { user } = await validateRequest();
+  const { user } = await getCurrentSession();
 
   return (
     <>

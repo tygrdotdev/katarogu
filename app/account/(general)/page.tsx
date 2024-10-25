@@ -5,12 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
 
-import AvatarUpload from "@/app/account/(general)/avatar-upload";
-import BannerUpload from "@/app/account/(general)/banner-upload";
-import { validateRequest } from "@/auth";
+import AvatarUpload from "@/app/account/(general)/avatar/upload";
+import BannerUpload from "@/app/account/(general)/banner/upload";
+import { getCurrentSession } from "@/auth/sessions";
 
 export default async function AccountPage() {
-	const { user } = await validateRequest();
+	const { user } = await getCurrentSession();
 	return (
 		<>
 			{user && (
@@ -107,7 +107,7 @@ export default async function AccountPage() {
 							}
 						>
 							<Input
-								placeholder={user.name}
+								placeholder={user.name ?? "Name"}
 							/>
 						</AccountCard>
 					</div>
