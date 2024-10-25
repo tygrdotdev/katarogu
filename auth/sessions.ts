@@ -57,7 +57,8 @@ export async function validateSessionToken(token: string): Promise<SessionValida
 		email: userDoc.email,
 		email_verified: userDoc.email_verified,
 		avatar: userDoc.avatar,
-		banner: userDoc.banner
+		banner: userDoc.banner,
+		visibility: userDoc.visibility
 	};
 
 	if (Date.now() >= session.expires_at.getTime()) {
@@ -109,6 +110,7 @@ export type UsersCollection = {
 	avatar: string;
 	banner: string;
 	password_hash: string;
+	visibility: "public" | "unlisted" | "private";
 };
 
 export interface Session {
@@ -125,4 +127,5 @@ export interface User {
 	email_verified: boolean;
 	avatar: string;
 	banner: string;
+	visibility: "public" | "unlisted" | "private";
 }

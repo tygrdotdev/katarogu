@@ -3,6 +3,12 @@
 import client from "@/lib/mongodb";
 import { getCurrentSession, UsersCollection } from "../sessions";
 
+export async function getUser() {
+	const { user } = await getCurrentSession();
+
+	return user;
+}
+
 export async function updateUser(formData: FormData) {
 	"use server";
 	const { user } = await getCurrentSession();
@@ -30,10 +36,17 @@ export async function updateUser(formData: FormData) {
 		}
 	}
 
+	if (formData.has("visibility")) {
+		changes = {
+			...changes,
+			visibility: formData.get("visibility")
+		}
+	}
+
 	if (Object.keys(changes).length === 0) {
 		return {
 			error: false,
-			message: "No changes"
+			message: "Please make some changes before saving."
 		}
 	}
 
@@ -61,6 +74,25 @@ export async function updateUser(formData: FormData) {
 				const val = value.toString();
 
 				if (val === user.name) {
+					return {
+						error: true,
+						message: "Please make some changes before saving"
+					}
+				}
+				break;
+			}
+
+			case "visibility": {
+				const val = value.toString();
+
+				if (!["public", "unlisted", "private"].includes(val)) {
+					return {
+						error: true,
+						message: "Invalid value"
+					}
+				}
+
+				if (val === user.visibility) {
 					return {
 						error: true,
 						message: "Please make some changes before saving"

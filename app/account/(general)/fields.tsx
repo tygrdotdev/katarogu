@@ -1,7 +1,7 @@
 "use client";
 
 import { User } from "@/auth/sessions";
-import { updateUser } from "@/auth/update/actions";
+import { updateUser } from "@/auth/user/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import React from "react";

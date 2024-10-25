@@ -8,9 +8,15 @@ import { getCurrentSession } from "@/auth/sessions";
 import BannerRemove from "./banner/remove";
 import AvatarRemove from "./avatar/remove";
 import GeneralAccountFields from "./fields";
+import { redirect } from "next/navigation";
 
 export default async function AccountPage() {
 	const { user } = await getCurrentSession();
+
+	if (!user) {
+		return redirect("/auth/login");
+	}
+
 	return (
 		<>
 			{user && (
