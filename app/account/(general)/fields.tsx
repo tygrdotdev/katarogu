@@ -7,15 +7,18 @@ import { Input } from "@/components/ui/input";
 import React from "react";
 import { toast } from "sonner";
 import AccountCard from "../card";
+import { useRouter } from "next/navigation";
 
 export default function GeneralAccountFields({ user }: { user: User }) {
 	const [username, setUsername] = React.useState(user.username);
 	const [name, setName] = React.useState(user.name ?? "");
+	const router = useRouter();
 
 	const handleSave = (formData: FormData, message?: string) => {
 		toast.promise(updateUser(formData), {
 			loading: "Saving...",
-			success: (data) => {
+			success: (data) => {	
+				router.refresh();
 				return message ?? "Your changes have been saved.";
 			},
 			error: "Sorry, we failed to save your changes",
@@ -81,6 +84,7 @@ export default function GeneralAccountFields({ user }: { user: User }) {
 							const formData = new FormData();
 							formData.append("name", name);
 							handleSave(formData, "Your name has been updated.");
+
 						}}
 					>
 						Save

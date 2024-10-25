@@ -7,16 +7,19 @@ import React from "react";
 import { toast } from "sonner";
 import { updateUser } from "@/auth/user/actions";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useRouter } from "next/navigation";
 
 export default function PrivacyFields({ user }: { user: User }) {
 	const [visibility, setVisibility] = React.useState<string>(
 		user?.visibility ?? "public"
 	);
+	const router = useRouter();
 
 	const save = (formData: FormData, message?: string) => {
 		toast.promise(updateUser(formData), {
 			loading: "Saving...",
 			success: (data) => {
+				router.refresh();
 				return message ?? "Your changes have been saved.";
 			},
 			error: "Something went wrong. Your changes couldn't be saved",

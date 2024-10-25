@@ -31,6 +31,8 @@ export async function createSession(token: string, user_id: string): Promise<Ses
 }
 
 export async function validateSessionToken(token: string): Promise<SessionValidationResult> {
+	await client.connect();
+
 	const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
 	const sessionDoc = await client.db().collection<SessionCollection>("sessions").findOne({ _id: sessionId });
 

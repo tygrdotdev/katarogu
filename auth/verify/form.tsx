@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 import Spinner from "@/components/ui/spinner";
 
-export default function VerifyAccountForm({ code }: { code?: string | undefined }) {
+export default function VerifyAccountForm({ code, redirect }: { code?: string | undefined, redirect?: string }) {
 	const [state, formAction] = useFormState(verifyAccount, {
 		error: false,
 		message: ""
@@ -25,12 +25,12 @@ export default function VerifyAccountForm({ code }: { code?: string | undefined 
 					{state.message}
 				</p>
 			)}
-			<InnerForm code={code} />
+			<InnerForm code={code} redirect={redirect} />
 		</form>
 	)
 }
 
-function InnerForm({ code }: { code?: string | undefined }) {
+function InnerForm({ code, redirect }: { code?: string | undefined, redirect?: string }) {
 	const { pending } = useFormStatus();
 	const [loading, setLoading] = React.useState(false);
 
@@ -64,6 +64,9 @@ function InnerForm({ code }: { code?: string | undefined }) {
 					<InputOTPSlot index={5} />
 				</InputOTPGroup>
 			</InputOTP>
+			{typeof redirect !== null && redirect!.length > 0 && (
+				<input type="hidden" name="redirect" value={redirect} />
+			)}
 			<div className="flex flex-row gap-2">
 				<Button variant="outline" type="button" disabled={loading} onClick={resendCode}>
 					{loading ? (<div className="flex flex-row gap-2 items-center">Resend Code <Spinner size={16} /></div>) : "Resend Code"}

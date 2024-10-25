@@ -26,17 +26,20 @@ import { ArrowRight } from "lucide-react";
 import useSWR from "swr";
 import { User } from "@/auth/sessions";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function AvatarRemove(props: ButtonProps) {
 	const { data: user } = useSWR<User>("/api/auth/user", (url: string) => fetch(url).then((res) => res.json()));
 	const [open, setOpen] = React.useState(false);
 	const isDesktop = useMediaQuery("(min-width: 768px)");
+	const router = useRouter();
 
 	async function removeAvatar() {
 		await fetch("/api/assets/avatars/remove", {
 			method: "DELETE",
 		}).then(async (res) => {
 			if (res.ok) {
+				router.refresh();
 				toast.success("Success!", {
 					description: "Your avatar has been removed. It may take a few minutes to update.",
 				});

@@ -95,6 +95,7 @@ export async function register(prevState: ActionResult, formData: FormData) {
 		avatar: `https://api.dicebear.com/7.x/lorelei-neutral/png?seed=${username}`,
 		banner: "https://images.unsplash.com/photo-1636955816868-fcb881e57954?q=25",
 		password_hash: passwordHash,
+		visibility: "public"
 	});
 
 	const sessionToken = generateSessionToken();

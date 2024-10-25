@@ -27,12 +27,14 @@ import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 import { toast } from "sonner";
 import useSWR from "swr";
 import { User } from "@/auth/sessions";
+import { useRouter } from "next/navigation";
 
 export default function BannerRemove(props: ButtonProps) {
 	const { data: user } = useSWR<User>("/api/auth/user", (url: string) => fetch(url).then((res) => res.json()));
 
 	const [open, setOpen] = React.useState(false);
 	const isDesktop = useMediaQuery("(min-width: 768px)");
+	const router = useRouter();
 
 	async function removeBanner() {
 		await fetch("/api/assets/banners/remove", {
@@ -40,6 +42,7 @@ export default function BannerRemove(props: ButtonProps) {
 		}).then(async (res) => {
 			const json = await res.json();
 			if (res.ok) {
+				router.refresh();
 				toast.success("Success!", {
 					description: "Your banner has been removed. It may take a few minutes to update.",
 				});

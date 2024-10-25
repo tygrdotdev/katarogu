@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { MAX_FILE_SIZE } from "@/lib/utils";
 import useSWR from "swr";
 import Spinner from "@/components/ui/spinner";
+import { useRouter } from "next/navigation";
 
 export default function BannerUpload(props: ButtonProps) {
 	const [open, setOpen] = React.useState(false);
@@ -25,6 +26,7 @@ export default function BannerUpload(props: ButtonProps) {
 	const imageRef = React.useRef<HTMLImageElement>(null);
 
 	const [loading, setLoading] = React.useState(false);
+	const router = useRouter();
 
 	const { data: user } = useSWR("/api/auth/user", (...args) => fetch(...args).then((res) => res.json()));
 
@@ -161,6 +163,7 @@ export default function BannerUpload(props: ButtonProps) {
 					}).then(async (res) => {
 						const json = await res.json();
 						if (res.ok) {
+							router.refresh();
 							toast.success("Success!", {
 								description: "Your banner has been uploaded. It may take a few minutes to update."
 							});
@@ -215,7 +218,10 @@ export default function BannerUpload(props: ButtonProps) {
 							<Button variant="outline" onClick={onOpenChange} disabled={loading}>
 								Cancel
 							</Button>
-							<Button onClick={onSubmitCrop} disabled={loading}>Save {loading && <Spinner />}</Button>
+							<Button onClick={() => {
+								setLoading(true);
+								onSubmitCrop();
+							}} disabled={loading}>Save {loading && <Spinner />}</Button>
 						</div>
 					</DialogContent>
 				</Dialog>
@@ -255,7 +261,10 @@ export default function BannerUpload(props: ButtonProps) {
 						<Button variant="outline" onClick={onOpenChange} disabled={loading}>
 							Cancel
 						</Button>
-						<Button onClick={onSubmitCrop} disabled={loading}>Save {loading && <Spinner />}</Button>
+						<Button onClick={() => {
+							setLoading(true);
+							onSubmitCrop();
+						}} disabled={loading}>Save {loading && <Spinner />}</Button>
 					</div>
 				</DrawerContent>
 			</Drawer>

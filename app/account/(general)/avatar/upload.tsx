@@ -13,6 +13,7 @@ import useSWR from "swr";
 import { useMediaQuery } from "usehooks-ts";
 import { MAX_FILE_SIZE } from "@/lib/utils";
 import Spinner from "@/components/ui/spinner";
+import { useRouter } from "next/navigation";
 
 export default function AvatarUpload(props: ButtonProps) {
 	const [open, setOpen] = React.useState(false);
@@ -25,6 +26,7 @@ export default function AvatarUpload(props: ButtonProps) {
 	const imageRef = React.useRef<HTMLImageElement>(null);
 
 	const [loading, setLoading] = React.useState(false);
+	const router = useRouter();
 
 	const { data: user } = useSWR("/api/auth/user", (...args) => fetch(...args).then((res) => res.json()));
 
@@ -173,6 +175,7 @@ export default function AvatarUpload(props: ButtonProps) {
 							toast.success("Success!", {
 								description: "Your avatar has been uploaded! It may take a few minutes to update."
 							});
+							router.refresh();
 						} else {
 							toast.error("Failed to upload avatar", {
 								description: json.message

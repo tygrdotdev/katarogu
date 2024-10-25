@@ -1,9 +1,11 @@
 "use server";
 
 import client from "@/lib/mongodb";
-import { getCurrentSession, UsersCollection } from "../sessions";
+import { getCurrentSession, invalidateSession, SessionCollection, UsersCollection } from "../sessions";
+import { deleteSessionTokenCookie } from "../cookies";
 
 export async function getUser() {
+	"use server"
 	const { user } = await getCurrentSession();
 
 	return user;
@@ -112,5 +114,34 @@ export async function updateUser(formData: FormData) {
 	return {
 		error: false,
 		message: "Your changes have been saved"
+	}
+}
+
+export async function deleteUser() {
+	"use server";
+
+	const { user } = await getCurrentSession();
+
+	if (!user) {
+		return {
+			error: true,
+			message: "Unauthorized"
+		}
+	}
+
+	await client.connect();
+
+	if (process.env.USE_S3 === "false") {
+		await client.db().collection<{ _id: string }>("avatars").deleteOne({ _id: user.id });
+		await client.db().collection<{ _id: string }>("banners").deleteOne({ _id: user.id });
+	}
+
+	await client.db().collection<UsersCollection>("users").deleteOne({ _id: user.id });
+	await invalidateSession(user.id);
+	deleteSessionTokenCookie();
+
+	return {
+		error: false,
+		message: "Your account has been deleted"
 	}
 }

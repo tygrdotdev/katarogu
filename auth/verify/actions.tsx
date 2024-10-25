@@ -76,7 +76,6 @@ export async function verifyAccount(_: unknown, formData: FormData): Promise<Act
 	}
 
 	const code = formData.get("code");
-	console.log(code)
 	if (typeof code !== "string" || code.length !== 6) {
 		return {
 			error: true,
@@ -86,7 +85,6 @@ export async function verifyAccount(_: unknown, formData: FormData): Promise<Act
 
 	// Find a code that matches the user's email or the user's ID
 	const validCode = await client.db().collection("verification_codes").findOne({ $or: [{ email: user.email }, { user_id: user.id }] });
-	console.log(validCode)
 
 	if (!validCode) {
 		return {
@@ -120,7 +118,9 @@ export async function verifyAccount(_: unknown, formData: FormData): Promise<Act
 	const session = await createSession(sessionToken, user.id);
 	setSessionTokenCookie(sessionToken, session.expires_at);
 
-	return redirect("/auth/verify/success");
+	const redirectUrl = formData.has("redirect") ? formData.get("redirect")!.toString() : "/auth/verify/success";
+
+	return redirect(redirectUrl);
 }
 
 export async function resendVerificationEmail() {
