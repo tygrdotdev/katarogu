@@ -39,7 +39,7 @@ export const ResetPasswordEmail = ({
 				/>
 				<Heading style={heading}>Password reset request</Heading>
 				<Section style={buttonContainer}>
-					<Button style={button} width={250} height={250} href={`${baseUrl}/auth/reset?token=${resetToken}`}>
+					<Button style={button} height={25} width={100} href={`${baseUrl}/auth/reset?token=${resetToken}`}>
 						Reset your password
 					</Button>
 				</Section>
