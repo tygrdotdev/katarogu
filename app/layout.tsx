@@ -7,6 +7,7 @@ import "react-image-crop/dist/ReactCrop.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme/provider";
 import Navbar from "@/components/nav";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -52,6 +53,7 @@ export default function RootLayout({
             <div className="container">
               <Navbar />
               {children}
+              <Toaster />
             </div>
           </main>
         </ThemeProvider>

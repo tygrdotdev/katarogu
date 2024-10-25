@@ -12,6 +12,7 @@ import ReactCrop, { Crop, centerCrop, makeAspectCrop } from "react-image-crop";
 import { toast } from "sonner";
 import { MAX_FILE_SIZE } from "@/lib/utils";
 import useSWR from "swr";
+import Spinner from "@/components/ui/spinner";
 
 export default function BannerUpload(props: ButtonProps) {
 	const [open, setOpen] = React.useState(false);
@@ -160,7 +161,9 @@ export default function BannerUpload(props: ButtonProps) {
 					}).then(async (res) => {
 						const json = await res.json();
 						if (res.ok) {
-							toast.success("Banner uploaded successfully.");
+							toast.success("Success!", {
+								description: "Your banner has been uploaded. It may take a few minutes to update."
+							});
 						} else {
 							toast.error("Failed to upload banner.", {
 								description: json.message
@@ -191,7 +194,7 @@ export default function BannerUpload(props: ButtonProps) {
 					onChange={onSelectFile}
 				/>
 				<Dialog open={open} onOpenChange={onOpenChange}>
-					<DialogContent className="w-full max-w-[80vw] lg:max-w-fit gap-0 p-0">
+					<DialogContent className="w-full max-w-[70vw] gap-0 p-0">
 						<ReactCrop
 							crop={crop}
 							onChange={(_, p) => setCrop(p)}
@@ -212,7 +215,7 @@ export default function BannerUpload(props: ButtonProps) {
 							<Button variant="outline" onClick={onOpenChange} disabled={loading}>
 								Cancel
 							</Button>
-							<Button onClick={onSubmitCrop} disabled={loading}>Save</Button>
+							<Button onClick={onSubmitCrop} disabled={loading}>Save {loading && <Spinner />}</Button>
 						</div>
 					</DialogContent>
 				</Dialog>
@@ -252,7 +255,7 @@ export default function BannerUpload(props: ButtonProps) {
 						<Button variant="outline" onClick={onOpenChange} disabled={loading}>
 							Cancel
 						</Button>
-						<Button onClick={onSubmitCrop} disabled={loading}>Save</Button>
+						<Button onClick={onSubmitCrop} disabled={loading}>Save {loading && <Spinner />}</Button>
 					</div>
 				</DrawerContent>
 			</Drawer>

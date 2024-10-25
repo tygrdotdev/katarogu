@@ -20,8 +20,8 @@ export async function DELETE() {
 	} else {
 		await client.connect();
 
-		client.db().collection("avatars").deleteOne({
-			user_id: user.id
+		client.db().collection<{ _id: string }>("avatars").deleteOne({
+			_id: user.id
 		});
 	}
 

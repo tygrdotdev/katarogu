@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import useSWR from "swr";
 import { useMediaQuery } from "usehooks-ts";
 import { MAX_FILE_SIZE } from "@/lib/utils";
+import Spinner from "@/components/ui/spinner";
 
 export default function AvatarUpload(props: ButtonProps) {
 	const [open, setOpen] = React.useState(false);
@@ -169,7 +170,9 @@ export default function AvatarUpload(props: ButtonProps) {
 					}).then(async (res) => {
 						const json = await res.json();
 						if (res.ok) {
-							toast.success("Successfully uploaded avatar");
+							toast.success("Success!", {
+								description: "Your avatar has been uploaded! It may take a few minutes to update."
+							});
 						} else {
 							toast.error("Failed to upload avatar", {
 								description: json.message
@@ -200,7 +203,7 @@ export default function AvatarUpload(props: ButtonProps) {
 					onChange={onSelectFile}
 				/>
 				<Dialog open={open} onOpenChange={onOpenChange}>
-					<DialogContent className="w-fit gap-0 p-0">
+					<DialogContent className="w-1/2 gap-0 p-0">
 						<ReactCrop
 							crop={crop}
 							onChange={(_, p) => setCrop(p)}
@@ -225,7 +228,7 @@ export default function AvatarUpload(props: ButtonProps) {
 							<Button onClick={() => {
 								setLoading(true);
 								onSubmitCrop();
-							}} disabled={loading}>Save</Button>
+							}} disabled={loading}>Save {loading && <Spinner />}</Button>
 						</div>
 					</DialogContent>
 				</Dialog>
@@ -269,7 +272,7 @@ export default function AvatarUpload(props: ButtonProps) {
 						<Button onClick={() => {
 							setLoading(true);
 							onSubmitCrop();
-						}} disabled={loading}>Save</Button>
+						}} disabled={loading}>Save {loading && <Spinner />}</Button>
 					</div>
 				</DrawerContent>
 			</Drawer>

@@ -16,7 +16,8 @@ export async function GET(
 
 			return new Response(buffer, {
 				headers: {
-					"Content-Type": "image/jpeg"
+					"Content-Type": "image/jpeg",
+					"Cache-Control": "public, max-age=300"
 				}
 			});
 		}).catch((_) => {
@@ -24,7 +25,8 @@ export async function GET(
 
 			return new Response(banner.buffer, {
 				headers: {
-					"Content-Type": "image/jpeg"
+					"Content-Type": "image/jpeg",
+					"Cache-Control": "public, max-age=300"
 				}
 			});
 		});
@@ -33,8 +35,8 @@ export async function GET(
 	} else {
 		await client.connect();
 
-		const banner = await client.db().collection("banners").findOne({
-			user_id: params.id
+		const banner = await client.db().collection<{ _id: string, data: any }>("banners").findOne({
+			_id: params.id
 		});
 
 		if (!banner) {
@@ -42,14 +44,16 @@ export async function GET(
 
 			return new Response(banner.buffer, {
 				headers: {
-					"Content-Type": "image/jpeg"
+					"Content-Type": "image/jpeg",
+					"Cache-Control": "stale-while-revalidate"
 				}
 			});
 		}
 
 		return new Response(banner.data.buffer, {
 			headers: {
-				"Content-Type": "image/png"
+				"Content-Type": "image/png",
+				"Cache-Control": "stale-while-revalidate"
 			}
 		});
 	}

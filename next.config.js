@@ -8,7 +8,7 @@ const nextConfig = {
 	reactStrictMode: true,
 	poweredByHeader: false,
 	experimental: {
-		serverComponentsExternalPackages: ["@node-rs/argon2"],
+		serverComponentsExternalPackages: ["@node-rs/argon2", "jsx-email"],
 	},
 	images: {
 		remotePatterns: [

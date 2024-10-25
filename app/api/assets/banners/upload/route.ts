@@ -46,8 +46,8 @@ export async function POST(request: Request) {
 	} else {
 		await client.connect();
 
-		client.db().collection("banners").insertOne({
-			user_id: user.id,
+		client.db().collection<{ _id: string, type: string, size: number, data: any }>("banners").insertOne({
+			_id: user.id,
 			type: file.type,
 			size: file.size,
 			data: Buffer.from(await file.arrayBuffer())

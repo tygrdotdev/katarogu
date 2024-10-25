@@ -16,7 +16,8 @@ export async function GET(
 
 			return new Response(buffer, {
 				headers: {
-					"Content-Type": "image/png"
+					"Content-Type": "image/png",
+					"Cache-Control": "public, max-age=300",
 				}
 			});
 		}).catch(async (err) => {
@@ -30,8 +31,8 @@ export async function GET(
 		// MongoDB
 		await client.connect();
 
-		const avatar = await client.db().collection("avatars").findOne({
-			user_id: params.id
+		const avatar = await client.db().collection<{ _id: string, type: string, data: any }>("avatars").findOne({
+			_id: params.id
 		});
 
 		if (avatar === null) {
@@ -42,7 +43,8 @@ export async function GET(
 
 		return new Response(avatar.data.buffer, {
 			headers: {
-				"Content-Type": avatar.type
+				"Content-Type": avatar.type,
+				"Cache-Control": "public, max-age=300"
 			}
 		});
 	}

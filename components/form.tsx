@@ -2,15 +2,12 @@
 
 import { useFormState } from "react-dom";
 
-export default function Form({
-	children,
-	className,
-	action
-}: {
+interface FormProps extends React.FormHTMLAttributes<HTMLFormElement> {
 	children: React.ReactNode;
-	className?: React.FormHTMLAttributes<HTMLFormElement>["className"];
-		action: (prevState: ActionResult, formData: FormData) => Promise<ActionResult>;
-}) {
+	formAction: (prevState: ActionResult, formData: FormData) => Promise<ActionResult>;
+}
+
+export default function Form({ children, formAction: action, ...props }: FormProps) {
 	const [state, formAction] = useFormState(action, {
 		error: false,
 		message: ""
@@ -20,6 +17,7 @@ export default function Form({
 		<form
 			action={formAction}
 			className="flex w-full flex-col items-center gap-4"
+			{...props}
 		>
 			{state.error && (
 				<p className="text-center">

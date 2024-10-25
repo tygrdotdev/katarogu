@@ -1,13 +1,13 @@
-import AccountCard from "@/app/account/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import Image from "next/image";
 
 import AvatarUpload from "@/app/account/(general)/avatar/upload";
 import BannerUpload from "@/app/account/(general)/banner/upload";
 import { getCurrentSession } from "@/auth/sessions";
+import BannerRemove from "./banner/remove";
+import AvatarRemove from "./avatar/remove";
+import GeneralAccountFields from "./fields";
 
 export default async function AccountPage() {
 	const { user } = await getCurrentSession();
@@ -27,16 +27,16 @@ export default async function AccountPage() {
 								</div>
 								<div className="flex flex-row items-center gap-6 pr-4">
 									<Avatar className="h-16 w-16 sm:h-20 sm:w-20 md:h-28 md:w-28 border">
-										<AvatarImage src={`/api/assets/avatars/${user.id}`} alt={user.username} />
+										<AvatarImage src={user.avatar} alt={user.username} />
 										<AvatarFallback>
 											{(user.username ?? "A").slice(0, 1).toUpperCase()}
 										</AvatarFallback>
 									</Avatar>
 									<div className="my-2 flex flex-col gap-2">
 										<AvatarUpload size="sm">Upload</AvatarUpload>
-										{/* <AvatarRemove size="sm" variant="outline">
+										<AvatarRemove size="sm" variant="outline">
 											Remove
-										</AvatarRemove> */}
+										</AvatarRemove>
 									</div>
 								</div>
 							</div>
@@ -58,7 +58,7 @@ export default async function AccountPage() {
 								<div className="flex flex-col items-center gap-4 sm:flex-row">
 									<AspectRatio ratio={4 / 1}>
 										<Image
-											src={`/api/assets/banners/${user.id}`}
+											src={user.banner}
 											priority
 											width={1400}
 											height={250}
@@ -68,9 +68,9 @@ export default async function AccountPage() {
 									</AspectRatio>
 									<div className="flex flex-row gap-2 sm:flex-col">
 										<BannerUpload size="sm">Upload</BannerUpload>
-										{/* <BannerRemove size="sm" variant="outline">
+										<BannerRemove size="sm" variant="outline">
 											Remove
-										</BannerRemove> */}
+										</BannerRemove>
 									</div>
 								</div>
 							</div>
@@ -80,36 +80,7 @@ export default async function AccountPage() {
 								</span>
 							</div>
 						</div>
-						<AccountCard
-							title="Username"
-							description="This is your unique username that will be used to identify you publicly."
-							footer="Please use between 3 and 32 characters."
-							action={
-								<Button size="sm">
-									Save
-								</Button>
-							}
-						>
-							<Input
-								placeholder={user.username}
-							/>
-						</AccountCard>
-						<AccountCard
-							title="Display Name"
-							description="Please enter your full name, or a display name you are comfortable with."
-							footer="Please use 32 characters at maximum."
-							action={
-								<Button
-									size="sm"
-								>
-									Save
-								</Button>
-							}
-						>
-							<Input
-								placeholder={user.name ?? "Name"}
-							/>
-						</AccountCard>
+						<GeneralAccountFields user={user} />
 					</div>
 				</>
 			)}
