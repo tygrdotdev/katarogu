@@ -1,11 +1,11 @@
-import { validateRequest } from "@/auth";
+import { getCurrentSession, UsersCollection } from "@/auth/sessions";
 import minio, { publicBucketExists } from "@/lib/minio";
 import client from "@/lib/mongodb";
 import { MAX_FILE_SIZE } from "@/lib/utils";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
-	const { user } = await validateRequest();
+	const { user } = await getCurrentSession();
 
 	if (!user) {
 		return NextResponse.json({
@@ -53,6 +53,12 @@ export async function POST(request: NextRequest) {
 			data: Buffer.from(await file.arrayBuffer())
 		});
 	}
+
+	await client.db().collection<UsersCollection>("users").updateOne({ _id: user.id }, {
+		$set: {
+			avatar: `/api/assets/avatars/${user.id}`
+		}
+	});
 
 	return NextResponse.json({
 		error: false,

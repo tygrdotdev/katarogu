@@ -1,4 +1,4 @@
-import { PasswordResetForm, RequestPasswordResetForm } from "@/auth/actions/reset/form"
+import { PasswordResetForm, RequestPasswordResetForm } from "@/auth/reset/form"
 
 export default function ResetPasswordPage({
 	searchParams

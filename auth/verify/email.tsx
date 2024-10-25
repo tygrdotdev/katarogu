@@ -14,20 +14,20 @@ import {
 } from "jsx-email";
 import * as React from "react";
 
-interface ResetPasswordEmailProps {
-	resetToken: string;
+interface VerifyAccountEmailProps {
+	verificationCode: string;
 }
 
 const baseUrl = process.env.NODE_ENV === "production" ?
 	"https://katarogu.tygr.dev" :
 	"http://localhost:3000";
 
-export const ResetPasswordEmail = ({
-	resetToken,
-}: ResetPasswordEmailProps) => (
+export const VerifyAccountEmail = ({
+	verificationCode,
+}: VerifyAccountEmailProps) => (
 	<Html>
 		<Head />
-		<Preview>Password reset request</Preview>
+		<Preview>Welcome to Katarogu!</Preview>
 		<Body style={main}>
 			<Container style={container}>
 				<Img
@@ -37,33 +37,31 @@ export const ResetPasswordEmail = ({
 					alt="Katarogu"
 					style={logo}
 				/>
-				<Heading style={heading}>Password reset request</Heading>
+				<Heading style={heading}>Welcome to Katarogu!</Heading>
 				<Section style={buttonContainer}>
-					<Button style={button} href={`${baseUrl}/auth/reset?token=${resetToken}`}>
-						Reset your password
+					<Button style={button} height={25} width={100} href={`${baseUrl}/auth/verify?code=${verificationCode}`}>
+						Verify Account
 					</Button>
 				</Section>
 				<Text style={paragraph}>
-					This link will only be valid for the next hour. If you did not request this password reset, please ignore this email.
+					This link and code will only be valid for the next 15 minutes. If the
+					link does not work, you can use the login verification code directly:
 				</Text>
+				<code style={code}>{verificationCode}</code>
 				<Hr style={hr} />
-				<Text style={reportLink}>
-					If you are concerned about the security of your account, please contact us at
-					{" "}
-					<Link href="mailto:support@katarogu.tygr.dev">
-						support@katarogu.tygr.dev
-					</Link>
-				</Text>
+				<Link href="https://tygr.dev" style={reportLink}>
+					By @tygrdev
+				</Link>
 			</Container>
 		</Body>
 	</Html>
 );
 
-ResetPasswordEmail.PreviewProps = {
-	resetToken: "very-real-reset-token",
-} as ResetPasswordEmailProps;
+VerifyAccountEmail.PreviewProps = {
+	verificationCode: "123456",
+} as VerifyAccountEmailProps;
 
-export default ResetPasswordEmail;
+export default VerifyAccountEmail;
 
 const logo = {
 	width: 42,

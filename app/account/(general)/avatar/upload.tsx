@@ -10,7 +10,7 @@ import { Drawer, DrawerContent } from "@/components/ui/drawer";
 import ReactCrop, { Crop, centerCrop, makeAspectCrop } from "react-image-crop";
 import { toast } from "sonner";
 import useSWR from "swr";
-import useMediaQuery from "@/hooks/use-media-query";
+import { useMediaQuery } from "usehooks-ts";
 import { MAX_FILE_SIZE } from "@/lib/utils";
 
 export default function AvatarUpload(props: ButtonProps) {

@@ -1,6 +1,6 @@
-import { validateRequest } from "@/auth"
+import { getCurrentSession } from "@/auth/sessions"
 import { redirect } from "next/navigation";
-import VerifyAccountForm from "@/auth/actions/verify/form";
+import VerifyAccountForm from "@/auth/verify/form";
 
 export default async function VerifyAccountPage({
 	searchParams
@@ -9,7 +9,7 @@ export default async function VerifyAccountPage({
 		code: string | undefined
 	}
 }) {
-	const { user } = await validateRequest();
+	const { user } = await getCurrentSession();
 
 	if (!user) {
 		return redirect("/auth/login");
@@ -27,7 +27,7 @@ export default async function VerifyAccountPage({
 						Almost there!
 					</h1>
 					<p>
-						Please check your email ({user?.email}) for a verification code and enter it below to verify your account.
+						Please check your email for a verification code and enter it below to verify your account.
 					</p>
 				</div>
 				<VerifyAccountForm code={searchParams.code} />

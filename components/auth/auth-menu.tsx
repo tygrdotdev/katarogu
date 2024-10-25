@@ -18,12 +18,12 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import useMediaQuery from "@/hooks/use-media-query";
+import { useMediaQuery } from "usehooks-ts"
 import React, { useState } from "react";
 // import { Icons } from "@/components/ui/icons";
-import LoginForm from "@/auth/actions/login/form";
-import RegisterForm from "@/auth/actions/register/form";
-import { RequestPasswordResetForm } from "@/auth/actions/reset/form";
+import LoginForm from "@/auth/login/form";
+import RegisterForm from "@/auth/register/form";
+import { RequestPasswordResetForm } from "@/auth/reset/form";
 
 export default function AuthMenu() {
 	const [open, setOpen] = useState(false);

@@ -6,7 +6,7 @@ if (!process.env.DATABASE_URI) {
 
 const uri = process.env.DATABASE_URI;
 const options: MongoClientOptions = {
-	appName: "katarogu",
+	appName: "Katarogu"
 };
 
 interface UserDoc {
@@ -47,13 +47,15 @@ if (process.env.NODE_ENV === "development") {
 	await client.connect();
 
 	if (!globalWithMongo._mongoUsersCollection) {
-		globalWithMongo._mongoUsersCollection = client.db().collection("users");
+		const db = client.db();
+		globalWithMongo._mongoUsersCollection = db.collection<UserDoc>("users");
 	}
 
 	userCollection = globalWithMongo._mongoUsersCollection;
 
 	if (!globalWithMongo._mongoSessionsCollection) {
-		globalWithMongo._mongoSessionsCollection = client.db().collection("sessions");
+		const db = client.db();
+		globalWithMongo._mongoSessionsCollection = db.collection<SessionDoc>("sessions");
 	}
 
 	sessionCollection = globalWithMongo._mongoSessionsCollection;
@@ -61,8 +63,8 @@ if (process.env.NODE_ENV === "development") {
 	// In production mode, it's best to not use a global variable.
 	client = new MongoClient(uri, options);
 	await client.connect();
-	userCollection = client.db().collection("users");
-	sessionCollection = client.db().collection("sessions");
+	userCollection = client.db().collection<UserDoc>("users");
+	sessionCollection = client.db().collection<SessionDoc>("sessions");
 }
 
 // Export a module-scoped MongoClient. By doing this in a

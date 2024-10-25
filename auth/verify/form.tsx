@@ -3,7 +3,7 @@
 import { useFormState, useFormStatus } from "react-dom";
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { resendVerificationEmail, verifyAccount } from ".";
+import { resendVerificationEmail, verifyAccount } from "@/auth/verify/actions";
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/ui/input-otp";
 import { toast } from "sonner";
 import { REGEXP_ONLY_DIGITS } from "input-otp";

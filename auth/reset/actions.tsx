@@ -2,17 +2,17 @@
 
 import { ActionResult } from "@/components/form";
 import client from "@/lib/mongodb";
-import { isValidEmail } from "@/lib/utils";
 import { render } from "jsx-email";
 import { createDate, TimeSpan } from "oslo";
 import { alphabet, generateRandomString, sha256 } from "oslo/crypto";
 import { encodeHex } from "oslo/encoding";
-import ResetPasswordEmail from "./email";
 import { hash } from "@node-rs/argon2";
 import { redirect } from "next/navigation";
-import { lucia } from "@/auth";
-import { cookies } from "next/headers";
 import { createTransport } from "nodemailer";
+import ResetPasswordEmail from "./email";
+import { verifyEmailInput } from "../email";
+import { createSession, generateSessionToken, invalidateSession } from "../sessions";
+import { setSessionTokenCookie } from "../cookies";
 
 // Email functions
 export async function generateResetPasswordToken(userId: string, email: string): Promise<string> {
@@ -79,7 +79,7 @@ export async function requestPasswordReset(prevState: ActionResult, formData: Fo
 	"use server";
 
 	const email = formData.get("email");
-	if (!email || !isValidEmail(email.toString())) {
+	if (!email || !verifyEmailInput(email.toString())) {
 		return {
 			error: true,
 			message: "Invalid email"
@@ -164,7 +164,7 @@ export async function resetPassword(_: unknown, formData: FormData): Promise<Act
 		};
 	}
 
-	await lucia.invalidateUserSessions(data.user_id);
+	invalidateSession(data.user_id);
 
 	const passwordHash = await hash(password, {
 		memoryCost: 19456,
@@ -185,9 +185,9 @@ export async function resetPassword(_: unknown, formData: FormData): Promise<Act
 		user_id: data.user_id
 	});
 
-	const session = await lucia.createSession(data.user_id, {});
-	const sessionCookie = lucia.createSessionCookie(session.id);
-	cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+	const sessionToken = generateSessionToken();
+	const session = await createSession(sessionToken, data.user_id);
+	setSessionTokenCookie(sessionToken, session.expires_at);
 
 	return redirect("/");
 }

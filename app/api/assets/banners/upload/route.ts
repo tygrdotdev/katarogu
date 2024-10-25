@@ -1,11 +1,11 @@
-import { validateRequest } from "@/auth";
+import { getCurrentSession, UsersCollection } from "@/auth/sessions";
 import minio, { publicBucketExists } from "@/lib/minio";
 import client from "@/lib/mongodb";
 import { MAX_FILE_SIZE } from "@/lib/utils";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
-	const { user } = await validateRequest();
+	const { user } = await getCurrentSession();
 
 	if (!user) {
 		return NextResponse.json({
@@ -42,7 +42,7 @@ export async function POST(request: Request) {
 
 		await minio.putObject("public", `banners/${user.id}`, Buffer.from(await file.arrayBuffer()), file.size, {
 			"Content-Type": file.type
-		});	
+		});
 	} else {
 		await client.connect();
 
@@ -53,6 +53,12 @@ export async function POST(request: Request) {
 			data: Buffer.from(await file.arrayBuffer())
 		});
 	}
+
+	await client.db().collection<UsersCollection>("users").updateOne({ _id: user.id }, {
+		$set: {
+			banner: `/api/assets/banners/${user.id}`
+		}
+	});
 
 	return NextResponse.json({
 		error: false,

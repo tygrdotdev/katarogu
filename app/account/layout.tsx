@@ -1,16 +1,16 @@
 import ProfileHeader from "@/components/profile/header";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import AccountNavigation from "./nav";
-import { validateRequest } from "@/auth";
 import { redirect } from "next/navigation";
+import { getCurrentSession } from "@/auth/sessions";
+import AccountNavigation from "./nav";
 
 export default async function AccountLayout({
 	children,
 }: {
 	children: React.ReactNode;
 }) {
-	const { user } = await validateRequest();
+	const { user } = await getCurrentSession();
 
 	if (!user) {
 		redirect("/auth/login");

@@ -1,5 +1,5 @@
-import LoginForm from "@/auth/actions/login/form";
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
+import LoginForm from "../../../auth/login/form";
 import Link from "next/link";
 import React from "react";
 
@@ -86,4 +86,3 @@ export default function LoginPage() {
 		</>
 	)
 }
-

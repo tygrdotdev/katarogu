@@ -1,14 +1,14 @@
 "use server";
 
 import { hash } from "@node-rs/argon2";
-import { generateIdFromEntropySize } from "lucia";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { ActionResult } from "@/components/form";
-import { isValidEmail } from "@/lib/utils";
 import client from "@/lib/mongodb";
-import { lucia } from "@/auth";
-import { generateEmailVerificationCode, sendVerificationEmail } from "../verify";
+import { verifyEmailInput } from "../email";
+import { generateIdFromEntropySize } from "../crypto";
+import { createSession, generateSessionToken, UsersCollection } from "../sessions";
+import { setSessionTokenCookie } from "../cookies";
+import { generateEmailVerificationCode, sendVerificationEmail } from "../verify/actions";
 
 export async function register(prevState: ActionResult, formData: FormData) {
 	"use server";
@@ -34,7 +34,7 @@ export async function register(prevState: ActionResult, formData: FormData) {
 	}
 
 	const email = formData.get("email");
-	if (typeof email !== "string" || !isValidEmail(email.toString())) {
+	if (typeof email !== "string" || !verifyEmailInput(email.toString())) {
 		return {
 			error: true,
 			message: "Please enter a valid email."
@@ -86,8 +86,7 @@ export async function register(prevState: ActionResult, formData: FormData) {
 
 	const userId = generateIdFromEntropySize(10);
 
-	client.db().collection("users").insertOne({
-		// @ts-expect-error _id refers to userId, which is a string, but the type expects an ObjectId. It works regardless.
+	client.db().collection<UsersCollection>("users").insertOne({
 		_id: userId,
 		name,
 		username,
@@ -96,12 +95,11 @@ export async function register(prevState: ActionResult, formData: FormData) {
 		avatar: `https://api.dicebear.com/7.x/lorelei-neutral/png?seed=${username}`,
 		banner: "https://images.unsplash.com/photo-1636955816868-fcb881e57954?q=25",
 		password_hash: passwordHash,
-		two_factor_secret: null
 	});
 
-	const session = await lucia.createSession(userId, {});
-	const sessionCookie = lucia.createSessionCookie(session.id);
-	cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+	const sessionToken = generateSessionToken();
+	const session = await createSession(sessionToken, userId);
+	setSessionTokenCookie(sessionToken, session.expires_at);
 
 	const code = await generateEmailVerificationCode(userId, email);
 

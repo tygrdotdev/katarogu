@@ -4,12 +4,11 @@
 // Disabled eslint for img element because images are loaded from local storage, not from the web.
 import * as React from "react";
 
-import useMediaQuery from "@/hooks/use-media-query";
+import { useMediaQuery } from "usehooks-ts";
 import { Button, ButtonProps } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Drawer, DrawerContent } from "@/components/ui/drawer";
 import ReactCrop, { Crop, centerCrop, makeAspectCrop } from "react-image-crop";
-import { randomUUID } from "crypto";
 import { toast } from "sonner";
 import { MAX_FILE_SIZE } from "@/lib/utils";
 import useSWR from "swr";
