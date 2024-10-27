@@ -17,7 +17,7 @@ export async function GET(
 			return new Response(buffer, {
 				headers: {
 					"Content-Type": "image/jpeg",
-					"Cache-Control": "public, max-age=300"
+					"Cache-Control": "stale-while-revalidate"
 				}
 			});
 		}).catch((_) => {
@@ -26,7 +26,7 @@ export async function GET(
 			return new Response(banner.buffer, {
 				headers: {
 					"Content-Type": "image/jpeg",
-					"Cache-Control": "public, max-age=300"
+					"Cache-Control": "stale-while-revalidate"
 				}
 			});
 		});

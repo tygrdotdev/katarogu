@@ -4,7 +4,6 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCurrentSession } from "@/auth/sessions";
 import AccountNavigation from "./nav";
-import VerifyAccountForm from "@/auth/verify/form";
 
 export default async function AccountLayout({
 	children,
@@ -17,33 +16,21 @@ export default async function AccountLayout({
 		redirect("/auth/login");
 	}
 
+	if (!user.email_verified) {
+		redirect("/auth/verify");
+	}
+
 	return (
 		<>
-			{user.email_verified ? (
-				<>
-					<ProfileHeader>
-						<Link href="/profile">
-							<Button size="sm">View Profile</Button>
-						</Link>
-					</ProfileHeader>
-					<div className="flex flex-col gap-4 py-0 sm:flex-row sm:py-4">
-						<AccountNavigation />
-						<div className="w-full sm:w-3/4">{children}</div>
-					</div>
-				</>
-			) : (
-				<div className="flex flex-col gap-4 items-center w-full h-snug justify-center">
-					<div className="text-center">
-						<h1 className="text-3xl font-bold">
-							Almost there!
-						</h1>
-						<p>
-							Before you can edit your account, you need to verify your email address.
-						</p>
-					</div>
-					<VerifyAccountForm redirect="/account" />
-				</div>
-			)}
+			<ProfileHeader>
+				<Link href="/profile">
+					<Button size="sm">View Profile</Button>
+				</Link>
+			</ProfileHeader>
+			<div className="flex flex-col gap-4 py-0 sm:flex-row sm:py-4">
+				<AccountNavigation />
+				<div className="w-full sm:w-3/4">{children}</div>
+			</div>
 		</>
 	);
 }

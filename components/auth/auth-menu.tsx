@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import {
 	Drawer,
@@ -20,10 +20,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { useMediaQuery } from "usehooks-ts"
 import React, { useState } from "react";
-// import { Icons } from "@/components/ui/icons";
 import LoginForm from "@/auth/login/form";
 import RegisterForm from "@/auth/register/form";
 import { RequestPasswordResetForm } from "@/auth/reset/form";
+import OAuthProviders from "./oauth-providers";
 
 export default function AuthMenu() {
 	const [open, setOpen] = useState(false);
@@ -59,40 +59,12 @@ export default function AuthMenu() {
 							<div className="flex w-full flex-col gap-3 px-4">
 								{mode === "login" && (
 									<>
-										{/* <div className="flex flex-col gap-4">
-											<div className="w-full flex flex-row gap-4 items-center justify-center">
-												<Button
-													className="w-full"
-													variant="outline"
-													onClick={async () => await onOAuthSignIn("github")}
-												>
-													<Icons.Github className="w-4 h-4 mr-2" />
-													GitHub
-												</Button>
-
-												<Button
-													className="w-full"
-													variant="outline"
-													onClick={async () => await onOAuthSignIn("google")}
-												>
-													<Icons.Google className="w-4 h-4 mr-2" />
-													Google
-												</Button>
-
-												<Button
-													className="w-full"
-													variant="outline"
-													onClick={async () => await onOAuthSignIn("discord")}
-												>
-													<Icons.Discord className="w-4 h-4 mr-2" />
-													Discord
-												</Button>
-											</div>
+										<div className="flex flex-col gap-4">
+											<OAuthProviders />
 										</div> 
 										<div className="w-full py-2 flex items-center">
 											<hr className="w-full border-t border-black/10 dark:border-white/10" />
 										</div>
-										*/}
 									</>
 								)}
 

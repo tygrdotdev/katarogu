@@ -60,7 +60,10 @@ export async function validateSessionToken(token: string): Promise<SessionValida
 		email_verified: userDoc.email_verified,
 		avatar: userDoc.avatar,
 		banner: userDoc.banner,
-		visibility: userDoc.visibility
+		visibility: userDoc.visibility,
+		oauth_auto_link: userDoc.oauth_auto_link,
+		github_id: userDoc.github_id,
+		google_id: userDoc.google_id
 	};
 
 	if (Date.now() >= session.expires_at.getTime()) {
@@ -111,8 +114,11 @@ export type UsersCollection = {
 	email_verified: boolean;
 	avatar: string;
 	banner: string;
-	password_hash: string;
+	password_hash: string | null;
 	visibility: "public" | "unlisted" | "private";
+	oauth_auto_link: boolean;
+	github_id: string | null;
+	google_id: string | null;
 };
 
 export interface Session {
@@ -130,4 +136,7 @@ export interface User {
 	avatar: string;
 	banner: string;
 	visibility: "public" | "unlisted" | "private";
+	oauth_auto_link: boolean;
+	github_id: string | null;
+	google_id: string | null;
 }

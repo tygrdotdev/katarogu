@@ -3,6 +3,7 @@
 import client from "@/lib/mongodb";
 import { getCurrentSession, invalidateSession, SessionCollection, UsersCollection } from "../sessions";
 import { deleteSessionTokenCookie } from "../cookies";
+import { toBoolean } from "@/lib/utils";
 
 export async function getUser() {
 	"use server"
@@ -42,6 +43,13 @@ export async function updateUser(formData: FormData) {
 		changes = {
 			...changes,
 			visibility: formData.get("visibility")
+		}
+	}
+
+	if (formData.has("oauth_auto_link")) {
+		changes = {
+			...changes,
+			oauth_auto_link: toBoolean(formData.get("oauth_auto_link"))
 		}
 	}
 
@@ -95,6 +103,18 @@ export async function updateUser(formData: FormData) {
 				}
 
 				if (val === user.visibility) {
+					return {
+						error: true,
+						message: "Please make some changes before saving"
+					}
+				}
+				break;
+			}
+
+			case "oauth_auto_link": {
+				const val = toBoolean(value);
+
+				if (val === user.oauth_auto_link) {
 					return {
 						error: true,
 						message: "Please make some changes before saving"

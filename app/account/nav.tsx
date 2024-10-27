@@ -40,12 +40,12 @@ export default function AccountNavigation() {
 						Privacy
 					</Button>
 				</Link>
-				<Link href="/account/providers" className="w-full">
+				<Link href="/account/oauth" className="w-full">
 					<Button
 						variant="ghost"
 						className={cn(
 							"w-full justify-start flex flex-row gap-2",
-							`${path === "/account/providers"
+							`${path === "/account/oauth"
 								? "bg-neutral-200 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-50"
 								: ""
 							}`

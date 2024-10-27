@@ -38,6 +38,13 @@ export async function login(prevState: ActionResult, formData: FormData) {
 		};
 	}
 
+	if (!existing.password_hash) {
+		return {
+			error: true,
+			message: "This account does not have a password set. Please login with a social provider."
+		};
+	}
+
 	const validPassword = await verify(existing.password_hash, password, {
 		memoryCost: 19456,
 		timeCost: 2,
