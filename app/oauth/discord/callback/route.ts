@@ -190,7 +190,7 @@ export async function GET(request: Request): Promise<Response> {
 			username: discordUsername,
 			email: discordEmail,
 			email_verified: true,
-			avatar: "",
+			avatar: `https://api.dicebear.com/7.x/lorelei-neutral/png?seed=${discordUsername}`,
 			banner: "https://images.unsplash.com/photo-1636955816868-fcb881e57954?q=25",
 			password_hash: null,
 			visibility: "public",

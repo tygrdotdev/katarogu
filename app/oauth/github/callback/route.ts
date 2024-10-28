@@ -185,7 +185,8 @@ export async function GET(request: Request): Promise<Response> {
 			visibility: "public",
 			oauth_auto_link: true,
 			github_id: githubUserId,
-			google_id: null
+			google_id: null,
+			discord_id: null,
 		});
 
 		const sessionToken = generateSessionToken();

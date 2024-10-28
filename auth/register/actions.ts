@@ -99,6 +99,7 @@ export async function register(prevState: ActionResult, formData: FormData) {
 		oauth_auto_link: true,
 		github_id: null,
 		google_id: null,
+		discord_id: null,
 	});
 
 	const sessionToken = generateSessionToken();
