@@ -13,11 +13,18 @@ export default function VerifyAccountSuccessPage() {
 						You have successfully verified your email address. You can now access all the features of Katarogu.
 					</p>
 				</div>
-				<Link href="/">
+				<div className="flex flex-wrap gap-4">
+					<Link href="/">
+						<Button variant="secondary">
+							Back to Dashboard
+						</Button>
+					</Link>
+					<Link href="/account">
 					<Button>
-						Continue to Dashboard
+							Continue to Account
 					</Button>
-				</Link>
+					</Link>
+				</div>
 			</div>
 		</>
 	)

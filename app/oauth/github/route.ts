@@ -1,10 +1,13 @@
 import { generateState } from "arctic";
 import { github } from "@/auth/oauth/providers";
 import { cookies } from "next/headers";
+import { NextRequest } from "next/server";
 
-export async function GET(): Promise<Response> {
+export async function GET(request: NextRequest): Promise<Response> {
+	const flow = request.nextUrl.searchParams.get("flow") ?? "auth";
 	const state = generateState();
 	const url = github.createAuthorizationURL(state, []);
+	url.searchParams.set("flow", flow);
 
 	cookies().set("github_oauth_state", state, {
 		path: "/",

@@ -1,11 +1,15 @@
 import { generateState, generateCodeVerifier } from "arctic";
 import { google } from "@/auth/oauth/providers";
 import { cookies } from "next/headers";
+import { NextRequest } from "next/server";
 
-export async function GET(): Promise<Response> {
+export async function GET(request: NextRequest): Promise<Response> {
+	const flow = request.nextUrl.searchParams.get("flow") ?? "auth";
+	console.log(flow)
 	const state = generateState();
 	const codeVerifier = generateCodeVerifier();
 	const url = google.createAuthorizationURL(state, codeVerifier, ["openid", "profile", "email"]);
+	url.searchParams.set("flow", flow);
 
 	cookies().set("google_oauth_state", state, {
 		path: "/",

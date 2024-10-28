@@ -163,10 +163,10 @@ export default function BannerUpload(props: ButtonProps) {
 					}).then(async (res) => {
 						const json = await res.json();
 						if (res.ok) {
-							router.refresh();
 							toast.success("Success!", {
 								description: "Your banner has been uploaded. It may take a few minutes to update."
 							});
+							router.refresh();
 						} else {
 							toast.error("Failed to upload banner.", {
 								description: json.message

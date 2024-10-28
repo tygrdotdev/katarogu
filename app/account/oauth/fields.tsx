@@ -12,7 +12,6 @@ import Spinner from "@/components/ui/spinner"
 import { Icons } from "@/components/icons"
 import Alert from "@/components/alert"
 import { unlinkOAuthGithub, unlinkOAuthGoogle } from "@/auth/oauth/actions"
-import logInWithOAuth from "@/auth/oauth"
 
 export default function OAuthFields({ user }: { user: User }) {
 	const [autoLink, setAutoLink] = React.useState<boolean>(user.oauth_auto_link);
@@ -20,6 +19,39 @@ export default function OAuthFields({ user }: { user: User }) {
 	const [unlinkGoogle, setUnlinkGoogle] = React.useState(false);
 	const [unlinkDiscord, setUnlinkDiscord] = React.useState(false);
 	const router = useRouter();
+
+	const loginWithOAuth = (provider: "github" | "google" | "discord") => {
+		const w = 600;
+		const h = 600;
+		const dualScreenLeft = window.screenLeft !== undefined ? window.screenLeft : window.screenX;
+		const dualScreenTop = window.screenTop !== undefined ? window.screenTop : window.screenY;
+
+		const width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+		const height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+
+		const systemZoom = width / window.screen.availWidth;
+		const left = (width - w) / 2 / systemZoom + dualScreenLeft
+		const top = (height - h) / 2 / systemZoom + dualScreenTop
+		const popup = window.open(`${process.env.NEXT_PUBLIC_URL}/oauth/${provider}?flow=link`, "popup", `popup=true, scrollbars=no, width=${w / systemZoom}, height=${h / systemZoom}, top=${top}, left=${left}`);
+		console.log("popup", popup)
+
+		const checkPopup = setInterval(async () => {
+			if (!popup) return;
+			console.log(popup.window.location.href);
+			if (popup.window.location.href.includes("/oauth/success")) {
+				// Close the window and get the latest data
+				popup.close();
+				router.refresh();
+				clearInterval(checkPopup);
+				toast.success("Success!", {
+					description: `Your account has been linked with ${provider[0].toUpperCase() + provider.substring(1)}.`,
+				});
+			}
+
+			// If the popup is not closed, return
+			if (!popup.closed) return;
+		}, 1000);
+	}
 
 	const save = (formData: FormData, message?: string) => {
 		toast.promise(updateUser(formData), {
@@ -67,7 +99,7 @@ export default function OAuthFields({ user }: { user: User }) {
 							className="w-fit"
 							variant="outline"
 							onClick={() => {
-								logInWithOAuth({ provider: "github" });
+								loginWithOAuth("github");
 								router.refresh();
 							}}
 						>
@@ -102,7 +134,7 @@ export default function OAuthFields({ user }: { user: User }) {
 							className="w-fit"
 							variant="outline"
 							onClick={() => {
-								logInWithOAuth({ provider: "google" })
+								loginWithOAuth("google")
 								router.refresh();
 							}}
 						>

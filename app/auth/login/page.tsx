@@ -2,8 +2,6 @@ import { Button } from "@/components/ui/button";
 import LoginForm from "../../../auth/login/form";
 import Link from "next/link";
 import React from "react";
-import { Icons } from "@/components/icons";
-import logInWithOAuth from "@/auth/oauth";
 import OAuthProviders from "@/components/auth/oauth-providers";
 
 export default function LoginPage() {
