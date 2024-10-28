@@ -96,7 +96,7 @@ export async function register(prevState: ActionResult, formData: FormData) {
 		banner: "https://images.unsplash.com/photo-1636955816868-fcb881e57954?q=25",
 		password_hash: passwordHash,
 		visibility: "public",
-		oauth_auto_link: false,
+		oauth_auto_link: true,
 		github_id: null,
 		google_id: null,
 	});

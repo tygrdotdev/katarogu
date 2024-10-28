@@ -24,11 +24,10 @@ export default function OAuthProviders() {
 		const systemZoom = width / window.screen.availWidth;
 		const left = (width - w) / 2 / systemZoom + dualScreenLeft
 		const top = (height - h) / 2 / systemZoom + dualScreenTop
-		const popup = window.open(`${process.env.NEXT_PUBLIC_URL}/oauth/${provider}`, "popup", `popup=true, scrollbars=no, width=${w / systemZoom}, height=${h / systemZoom}, top=${top}, left=${left}`);
+		const popup = window.open(`${process.env.NEXT_PUBLIC_URL}/oauth/${provider}?flow=auth`, "popup", `popup=true, scrollbars=no, width=${w / systemZoom}, height=${h / systemZoom}, top=${top}, left=${left}`);
 		console.log("popup", popup)
 		const checkPopup = setInterval(async () => {
 			if (!popup) return;
-			console.log(popup.window.location.href);
 			if (popup.window.location.href.includes("/oauth/success")) {
 				popup.close();
 				router.refresh()
@@ -43,6 +42,10 @@ export default function OAuthProviders() {
 					});
 					router.push("/dashboard");
 				}
+			}
+			if (popup.window.location.href.includes("/oauth/error")) {
+				setLoading(false);
+				clearInterval(checkPopup);
 			}
 			if (!popup.closed) return;
 		}, 1000);

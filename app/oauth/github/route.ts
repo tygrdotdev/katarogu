@@ -7,7 +7,14 @@ export async function GET(request: NextRequest): Promise<Response> {
 	const flow = request.nextUrl.searchParams.get("flow") ?? "auth";
 	const state = generateState();
 	const url = github.createAuthorizationURL(state, []);
-	url.searchParams.set("flow", flow);
+
+	cookies().set("github_oauth_flow", flow, {
+		path: "/",
+		httpOnly: true,
+		secure: process.env.NODE_ENV === "production",
+		maxAge: 60 * 10,
+		sameSite: "lax"
+	});
 
 	cookies().set("github_oauth_state", state, {
 		path: "/",

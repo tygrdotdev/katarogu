@@ -11,10 +11,9 @@ export async function GET(request: Request): Promise<Response> {
 	const url = new URL(request.url);
 	const code = url.searchParams.get("code");
 	const state = url.searchParams.get("state");
-	const flow = url.searchParams.get("flow") ?? "auth";
-	console.log(flow)
 	const storedState = cookies().get("google_oauth_state")?.value ?? null;
 	const codeVerifier = cookies().get("google_code_verifier")?.value ?? null;
+	const flow = cookies().get("google_oauth_flow")?.value ?? "auth";
 
 	if (code === null || state === null || storedState === null || codeVerifier === null) {
 		return new Response(null, {
@@ -54,15 +53,11 @@ export async function GET(request: Request): Promise<Response> {
 	const email = claims.email;
 
 	if (flow === "link") {
-		/// ---
-		/// If a session already exists, link the Google account to the user.
-		/// ---
-
+		// First, check if a linked user already exists.
 		await client.connect();
 
 		const existingUser = await client.db().collection<UsersCollection>("users").findOne({ google_id: id });
 
-		// If the Google account is already linked, return an error.
 		if (existingUser !== null) {
 			return new Response(null, {
 				status: 302,
@@ -72,12 +67,11 @@ export async function GET(request: Request): Promise<Response> {
 			});
 		}
 
-		// First, check if an account with the Google ID already exists.
+		// Then, check if the user is logged in and link the account.
 		const { session: currentSession, user } = await getCurrentSession();
 		console.log(currentSession, user);
 
 		if (currentSession !== null) {
-			// If the user is logged in, link the Google account to the user.
 			client.db().collection<UsersCollection>("users").updateOne({ _id: user.id }, {
 				$set: {
 					google_id: id
@@ -91,7 +85,6 @@ export async function GET(request: Request): Promise<Response> {
 				}
 			});
 		} else {
-			// If the user is not logged in, return an error.
 			return new Response(null, {
 				status: 302,
 				headers: {
@@ -100,15 +93,11 @@ export async function GET(request: Request): Promise<Response> {
 			});
 		}
 	} else {
-		/// ---
-		/// If user that already exists with the Google ID, log them in.
-		/// ---
+		// Check if the linked user already exists, if so, log them in.
 		await client.connect();
 
-		// Check if the user already exist with the Google ID.
 		const existingUser = await client.db().collection<UsersCollection>("users").findOne({ google_id: id });
 
-		// If the user exists, log them in
 		if (existingUser !== null) {
 			const sessionToken = generateSessionToken();
 			const session = await createSession(sessionToken, existingUser._id);
@@ -122,16 +111,15 @@ export async function GET(request: Request): Promise<Response> {
 		}
 
 		/// ---
-		/// If an account with a matching email exists which is verified, link the Google account to the user.
+		/// If the user does not have Github linked, but the emails match and they have oauth_auto_link enabled, link the account.
 		/// ---
 
-		// If a linked user cannot be found, either update the existing user or create a new user.
 		const row = await client.db().collection<UsersCollection>("users").findOne({ email });
 
-		// If a user exists, link the Google account to the existing user, or create a new user.
-		if (row !== null && email === row.email) {
-			if (row.email_verified === false) {
-				// If the user's email is not verified, return an error.
+		if (row !== null && row.email === email) {
+			// A matching Katarogu account that has the same email exists.
+
+			if (row.email_verified !== true) {
 				return new Response(null, {
 					status: 302,
 					headers: {
@@ -140,8 +128,7 @@ export async function GET(request: Request): Promise<Response> {
 				});
 			}
 
-			if (row.oauth_auto_link === false) {
-				// If the matching account doesn't have auto-linking enabled, return an error.
+			if (row.oauth_auto_link !== true) {
 				return new Response(null, {
 					status: 302,
 					headers: {
@@ -150,7 +137,7 @@ export async function GET(request: Request): Promise<Response> {
 				});
 			}
 
-			// If the user's email is verified, and matches the Google email, or create a new user.
+			// Link the account.
 			client.db().collection<UsersCollection>("users").updateOne({ _id: row._id }, {
 				$set: {
 					google_id: id
@@ -168,9 +155,7 @@ export async function GET(request: Request): Promise<Response> {
 			});
 		}
 
-		/// ---
-		/// If not user exists, create a new user.
-		/// --- 
+		// Else, create a new user.
 
 		const userId = generateIdFromEntropySize(10);
 
@@ -184,7 +169,7 @@ export async function GET(request: Request): Promise<Response> {
 			banner: "https://images.unsplash.com/photo-1636955816868-fcb881e57954?q=25",
 			password_hash: null,
 			visibility: "public",
-			oauth_auto_link: false,
+			oauth_auto_link: true,
 			github_id: null,
 			google_id: id
 		});
