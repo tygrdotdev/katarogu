@@ -20,6 +20,7 @@ export default function OAuthErrorPage() {
 							{error_code === "invalid_request" && "The internet gods have spoken, and they say your request is invalid. Please try again."}
 							{error_code === "email_not_verified" && "Failed to link to existing account as the email has not been verified yet. If you own this account, verify your email and try again."}
 							{error_code === "auto_link_disabled" && "An account with this email already exists and has OAuth Link disabled. If you own this account, enable it and try again."}
+							{error_code === "oauth_email_unverified" && "The email associated with this OAuth2 account has not been verified. Please verify your email and try again."}
 							{error_code === "account_already_linked" && "This OAuth2 account is already linked to another account."}
 						</>
 					) : (

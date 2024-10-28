@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation"
 import Spinner from "@/components/ui/spinner"
 import { Icons } from "@/components/icons"
 import Alert from "@/components/alert"
-import { unlinkOAuthGithub, unlinkOAuthGoogle } from "@/auth/oauth/actions"
+import { unlinkOAuthDiscord, unlinkOAuthGithub, unlinkOAuthGoogle } from "@/auth/oauth/actions"
 
 export default function OAuthFields({ user }: { user: User }) {
 	const [autoLink, setAutoLink] = React.useState<boolean>(user.oauth_auto_link);
@@ -140,6 +140,41 @@ export default function OAuthFields({ user }: { user: User }) {
 						>
 							<Icons.Google className="w-4 h-4 mr-2" /> Connect with
 							Google
+						</Button>
+					)}
+					{user.discord_id ? (
+						<Suspense fallback={<Spinner />}>
+							<Button
+								className="w-fit"
+								variant="secondary"
+								onClick={() => setUnlinkDiscord(true)}
+							>
+								<Icons.Discord className="w-4 h-4 mr-2" />
+								Unlink Discord
+							</Button>
+							<Alert
+								title="Disconnect Discord?"
+								description="Are you sure you want to disconnect your Discord account?"
+								onSubmit={async () => {
+									await unlinkOAuthDiscord();
+									router.refresh();
+								}}
+								onCancel={() => setUnlinkDiscord(false)}
+								open={unlinkDiscord}
+								setOpen={setUnlinkDiscord}
+							/>
+						</Suspense>
+					) : (
+						<Button
+							className="w-fit"
+							variant="outline"
+							onClick={() => {
+								loginWithOAuth("discord")
+								router.refresh();
+							}}
+						>
+							<Icons.Discord className="w-4 h-4 mr-2" /> Connect with
+							Discord
 						</Button>
 					)}
 				</div>

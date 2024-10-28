@@ -52,3 +52,28 @@ export async function unlinkOAuthGoogle() {
 		message: "Google account unlinked"
 	}
 }
+
+export async function unlinkOAuthDiscord() {
+	"use server";
+	const { user } = await getCurrentSession();
+
+	if (!user) {
+		return {
+			error: true,
+			message: "Unauthorized"
+		}
+	}
+
+	await client.connect();
+
+	await client.db().collection<UsersCollection>("users").updateOne({ _id: user?.id }, {
+		$unset: {
+			discord_id: ""
+		}
+	});
+
+	return {
+		error: false,
+		message: "Discord account unlinked"
+	}
+}

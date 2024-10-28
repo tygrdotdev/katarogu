@@ -63,7 +63,8 @@ export async function validateSessionToken(token: string): Promise<SessionValida
 		visibility: userDoc.visibility,
 		oauth_auto_link: userDoc.oauth_auto_link,
 		github_id: userDoc.github_id,
-		google_id: userDoc.google_id
+		google_id: userDoc.google_id,
+		discord_id: userDoc.discord_id
 	};
 
 	if (Date.now() >= session.expires_at.getTime()) {
@@ -119,6 +120,7 @@ export type UsersCollection = {
 	oauth_auto_link: boolean;
 	github_id: string | null;
 	google_id: string | null;
+	discord_id: string | null;
 };
 
 export interface Session {
@@ -139,4 +141,5 @@ export interface User {
 	oauth_auto_link: boolean;
 	github_id: string | null;
 	google_id: string | null;
+	discord_id: string | null;
 }

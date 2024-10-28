@@ -17,7 +17,6 @@ Katarogu is a free, open-source and community driven manga and anime tracking se
 - UI: [shadcn/ui](https://ui.shadcn.com/)
 - Styling: [TailwindCSS](https://tailwindcss.com/)
 - Database: [MongoDB](https://www.mongodb.com/)
-- Authentication: [Lucia](https://lucia-auth.com/)
 
 ## Running locally
 
