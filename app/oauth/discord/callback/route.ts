@@ -86,7 +86,6 @@ export async function GET(request: Request): Promise<Response> {
 
 		// Then, check if the user is logged in and link the account.
 		const { session: currentSession, user } = await getCurrentSession();
-		console.log(currentSession, user);
 
 		if (currentSession !== null) {
 			client.db().collection<UsersCollection>("users").updateOne({ _id: user.id }, {

@@ -25,7 +25,6 @@ export default function OAuthProviders() {
 		const left = (width - w) / 2 / systemZoom + dualScreenLeft
 		const top = (height - h) / 2 / systemZoom + dualScreenTop
 		const popup = window.open(`${process.env.NEXT_PUBLIC_URL}/oauth/${provider}?flow=auth`, "popup", `popup=true, scrollbars=no, width=${w / systemZoom}, height=${h / systemZoom}, top=${top}, left=${left}`);
-		console.log("popup", popup)
 		const checkPopup = setInterval(async () => {
 			if (!popup) return;
 			if (popup.window.location.href.includes("/oauth/success")) {
@@ -33,7 +32,6 @@ export default function OAuthProviders() {
 				router.refresh()
 				const res = await fetch("/api/auth/user");
 				const data = await res.json();
-				console.log(data);
 				if (data.id) {
 					setLoading(false);
 					clearInterval(checkPopup);

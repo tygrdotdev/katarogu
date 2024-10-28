@@ -33,11 +33,9 @@ export default function OAuthFields({ user }: { user: User }) {
 		const left = (width - w) / 2 / systemZoom + dualScreenLeft
 		const top = (height - h) / 2 / systemZoom + dualScreenTop
 		const popup = window.open(`${process.env.NEXT_PUBLIC_URL}/oauth/${provider}?flow=link`, "popup", `popup=true, scrollbars=no, width=${w / systemZoom}, height=${h / systemZoom}, top=${top}, left=${left}`);
-		console.log("popup", popup)
 
 		const checkPopup = setInterval(async () => {
 			if (!popup) return;
-			console.log(popup.window.location.href);
 			if (popup.window.location.href.includes("/oauth/success")) {
 				// Close the window and get the latest data
 				popup.close();
@@ -86,7 +84,13 @@ export default function OAuthFields({ user }: { user: User }) {
 								title="Disconnect GitHub?"
 								description="Are you sure you want to disconnect your GitHub account?"
 								onSubmit={async () => {
-									await unlinkOAuthGithub();
+									const res = await unlinkOAuthGithub();
+									if (res.error) {
+										toast.error("Something went wrong!", {
+											description: res.message
+										});
+										return;
+									}
 									router.refresh();
 								}}
 								onCancel={() => setUnlinkGithub(false)}
@@ -121,7 +125,13 @@ export default function OAuthFields({ user }: { user: User }) {
 								title="Disconnect Google?"
 								description="Are you sure you want to disconnect your Google account?"
 								onSubmit={async () => {
-									await unlinkOAuthGoogle();
+									const res = await unlinkOAuthGoogle();
+									if (res.error) {
+										toast.error("Something went wrong!", {
+											description: res.message
+										});
+										return;
+									}
 									router.refresh();
 								}}
 								onCancel={() => setUnlinkGoogle(false)}
@@ -156,7 +166,13 @@ export default function OAuthFields({ user }: { user: User }) {
 								title="Disconnect Discord?"
 								description="Are you sure you want to disconnect your Discord account?"
 								onSubmit={async () => {
-									await unlinkOAuthDiscord();
+									const res = await unlinkOAuthDiscord();
+									if (res.error) {
+										toast.error("Something went wrong!", {
+											description: res.message
+										});
+										return;
+									}
 									router.refresh();
 								}}
 								onCancel={() => setUnlinkDiscord(false)}
