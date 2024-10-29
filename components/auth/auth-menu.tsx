@@ -173,39 +173,12 @@ export default function AuthMenu() {
 							<div className="flex w-full flex-col gap-3 px-4">
 								{mode === "login" && (
 									<>
-										{/* <div className="flex flex-col gap-4">
-											<div className="w-full flex flex-row gap-4 items-center justify-center">
-												<Button
-													className="w-full"
-													variant="outline"
-													onClick={async () => await onOAuthSignIn("github")}
-												>
-													<Icons.Github className="w-4 h-4 mr-2" />
-													<span className="hidden xs:block">GitHub</span>
-												</Button>
-
-												<Button
-													className="w-full"
-													variant="outline"
-													onClick={async () => await onOAuthSignIn("google")}
-												>
-													<Icons.Google className="w-4 h-4 mr-2" />
-													<span className="hidden xs:block">Google</span>
-												</Button>
-
-												<Button
-													className="w-full"
-													variant="outline"
-													onClick={async () => await onOAuthSignIn("discord")}
-												>
-													<Icons.Discord className="w-4 h-4 mr-2" />
-													<span className="hidden xs:block">Discord</span>
-												</Button>
-											</div>
+										<div className="flex flex-col gap-4">
+											<OAuthProviders />
 										</div>
 										<div className="w-full py-2 flex items-center">
 											<hr className="w-full border-t border-black/10 dark:border-white/10" />
-										</div> */}
+										</div>
 									</>
 								)}
 								{mode === "login" && (
