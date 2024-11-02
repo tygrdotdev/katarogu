@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCurrentSession } from "@/auth/sessions";
-import AccountNavigation from "./nav";
+import AccountNavigation from "@/app/account/nav";
 
 export default async function AccountLayout({
 	children,

@@ -1,7 +1,8 @@
 "use server";
 
 import client from "@/lib/mongodb";
-import { getCurrentSession, UsersCollection } from "../sessions";
+import { getCurrentSession } from "@/auth/sessions";
+import { UsersCollection } from "@/types/database/user";
 
 export async function unlinkOAuthGithub() {
 	"use server";

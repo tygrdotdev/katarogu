@@ -7,8 +7,9 @@ import { render } from "jsx-email";
 import { alphabet, generateRandomString } from "oslo/crypto";
 import VerifyAccountEmail from "@/auth/verify/email";
 import { createTransport } from "nodemailer";
-import { createSession, generateSessionToken, getCurrentSession, invalidateSession, UsersCollection } from "../sessions";
-import { setSessionTokenCookie } from "../cookies";
+import { createSession, generateSessionToken, getCurrentSession, invalidateSession } from "@/auth/sessions";
+import { setSessionTokenCookie } from "@/auth/cookies";
+import { UsersCollection } from "@/types/database/user";
 
 // Email actions
 export async function generateEmailVerificationCode(userId: string, email: string): Promise<string> {

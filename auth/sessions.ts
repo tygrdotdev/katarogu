@@ -4,6 +4,8 @@ import { sha256 } from "@oslojs/crypto/sha2";
 import client from "@/lib/mongodb";
 import { cache } from "react";
 import { cookies } from "next/headers";
+import { Session, SessionCollection, SessionValidationResult } from "@/types/database/session";
+import { User, UsersCollection } from "@/types/database/user";
 
 export function generateSessionToken(): string {
 	const bytes = new Uint8Array(20);
@@ -95,51 +97,4 @@ export const getCurrentSession = cache(async (): Promise<SessionValidationResult
 
 export async function invalidateSession(sessionId: string): Promise<void> {
 	await client.db().collection<SessionCollection>("sessions").deleteOne({ _id: sessionId });
-}
-
-export type SessionValidationResult =
-	| { session: Session; user: User }
-	| { session: null; user: null };
-
-export type SessionCollection = {
-	_id: string;
-	user_id: string;
-	expires_at: Date;
-};
-
-export type UsersCollection = {
-	_id: string;
-	name: string | null;
-	username: string;
-	email: string;
-	email_verified: boolean;
-	avatar: string;
-	banner: string;
-	password_hash: string | null;
-	visibility: "public" | "unlisted" | "private";
-	oauth_auto_link: boolean;
-	github_id: string | null;
-	google_id: string | null;
-	discord_id: string | null;
-};
-
-export interface Session {
-	id: string;
-	user_id: string;
-	expires_at: Date;
-}
-
-export interface User {
-	id: string;
-	name: string | null;
-	username: string;
-	email: string;
-	email_verified: boolean;
-	avatar: string;
-	banner: string;
-	visibility: "public" | "unlisted" | "private";
-	oauth_auto_link: boolean;
-	github_id: string | null;
-	google_id: string | null;
-	discord_id: string | null;
 }

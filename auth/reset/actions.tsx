@@ -9,10 +9,10 @@ import { encodeHex } from "oslo/encoding";
 import { hash } from "@node-rs/argon2";
 import { redirect } from "next/navigation";
 import { createTransport } from "nodemailer";
-import ResetPasswordEmail from "./email";
-import { verifyEmailInput } from "../email";
-import { createSession, generateSessionToken, invalidateSession } from "../sessions";
-import { setSessionTokenCookie } from "../cookies";
+import ResetPasswordEmail from "@/auth/reset/email";
+import { verifyEmailInput } from "@/lib/utils"
+import { createSession, generateSessionToken, invalidateSession } from "@/auth/sessions";
+import { setSessionTokenCookie } from "@/auth/cookies";
 
 // Email functions
 export async function generateResetPasswordToken(userId: string, email: string): Promise<string> {

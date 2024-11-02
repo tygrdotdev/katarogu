@@ -1,7 +1,8 @@
-import { getCurrentSession, UsersCollection } from "@/auth/sessions";
+import { getCurrentSession } from "@/auth/sessions";
 import minio, { publicBucketExists } from "@/lib/minio";
 import client from "@/lib/mongodb";
 import { MAX_FILE_SIZE } from "@/lib/utils";
+import { UsersCollection } from "@/types/database/user";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {

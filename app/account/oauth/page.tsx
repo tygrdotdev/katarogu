@@ -1,5 +1,5 @@
+import OAuthFields from "@/app/account/oauth/fields";
 import { getCurrentSession } from "@/auth/sessions"
-import OAuthFields from "./fields";
 import { redirect } from "next/navigation";
 
 export default async function OAuthSettingsPage() {

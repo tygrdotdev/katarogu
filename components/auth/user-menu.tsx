@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/drawer";
 import Alert from "@/components/alert";
 import { logout } from "@/auth/logout/actions";
-import { User } from "@/auth/sessions";
+import { User } from "@/types/database/user";
 
 export default function UserMenu({ user }: { user: User }) {
 	const [open, setOpen] = useState(false);

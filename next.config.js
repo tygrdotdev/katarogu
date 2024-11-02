@@ -12,12 +12,10 @@ const nextConfig = {
 	},
 	images: {
 		remotePatterns: [
-			{
-				hostname: "localhost",
-			},
-			{
-				hostname: "images.unsplash.com",
-			},
+			{ hostname: "localhost" },
+			{ hostname: "images.unsplash.com" },
+			{ hostname: "placehold.co" },
+			{ hostname: "cdn.myanimelist.net" },
 		],
 	},
 };

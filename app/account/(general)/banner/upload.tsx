@@ -14,6 +14,7 @@ import { MAX_FILE_SIZE } from "@/lib/utils";
 import useSWR from "swr";
 import Spinner from "@/components/ui/spinner";
 import { useRouter } from "next/navigation";
+import { User } from "@/types/database/user";
 
 export default function BannerUpload(props: ButtonProps) {
 	const [open, setOpen] = React.useState(false);
@@ -28,7 +29,7 @@ export default function BannerUpload(props: ButtonProps) {
 	const [loading, setLoading] = React.useState(false);
 	const router = useRouter();
 
-	const { data: user } = useSWR("/api/auth/user", (...args) => fetch(...args).then((res) => res.json()));
+	const { data: user } = useSWR<User>("/api/auth/user", (url: string) => fetch(url).then((res) => res.json()));
 
 	const [crop, setCrop] = React.useState<Crop>({
 		unit: "%",
@@ -150,6 +151,7 @@ export default function BannerUpload(props: ButtonProps) {
 						base64Image.replace(/^data:image\/\w+;base64,/, ""),
 						"base64"
 					);
+					if (!user) return;
 					const file = new File([buffer], user.id, {
 						type: fileType,
 					});

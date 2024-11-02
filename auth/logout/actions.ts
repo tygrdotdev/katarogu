@@ -2,8 +2,8 @@
 
 import { ActionResult } from "@/components/form";
 import { redirect } from "next/navigation";
-import { getCurrentSession, invalidateSession } from "../sessions";
-import { deleteSessionTokenCookie } from "../cookies";
+import { getCurrentSession, invalidateSession } from "@/auth/sessions";
+import { deleteSessionTokenCookie } from "@/auth/cookies";
 
 export async function logout(): Promise<ActionResult> {
 	"use server";

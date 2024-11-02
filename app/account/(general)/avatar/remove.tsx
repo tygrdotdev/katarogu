@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/drawer";
 import { ArrowRight } from "lucide-react";
 import useSWR from "swr";
-import { User } from "@/auth/sessions";
+import { User } from "@/types/database/user";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 

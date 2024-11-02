@@ -1,7 +1,7 @@
-import { getCurrentSession, User } from "@/auth/sessions";
+import { getCurrentSession } from "@/auth/sessions";
 import React from "react";
-import PrivacyFields from "./fields";
 import { redirect } from "next/navigation";
+import PrivacyFields from "@/app/account/privacy/fields";
 
 export default async function PrivacyPage() {
 	const { user } = await getCurrentSession();

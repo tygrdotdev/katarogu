@@ -4,11 +4,12 @@ import { hash } from "@node-rs/argon2";
 import { redirect } from "next/navigation";
 import { ActionResult } from "@/components/form";
 import client from "@/lib/mongodb";
-import { verifyEmailInput } from "../email";
-import { generateIdFromEntropySize } from "../crypto";
-import { createSession, generateSessionToken, UsersCollection } from "../sessions";
-import { setSessionTokenCookie } from "../cookies";
-import { generateEmailVerificationCode, sendVerificationEmail } from "../verify/actions";
+import { verifyEmailInput } from "@/lib/utils";
+import { generateIdFromEntropySize } from "@/auth/crypto";
+import { createSession, generateSessionToken } from "@/auth/sessions";
+import { UsersCollection } from "@/types/database/user";
+import { setSessionTokenCookie } from "@/auth/cookies";
+import { generateEmailVerificationCode, sendVerificationEmail } from "@/auth/verify/actions";
 
 export async function register(prevState: ActionResult, formData: FormData) {
 	"use server";

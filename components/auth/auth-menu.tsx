@@ -23,7 +23,7 @@ import React, { useState } from "react";
 import LoginForm from "@/auth/login/form";
 import RegisterForm from "@/auth/register/form";
 import { RequestPasswordResetForm } from "@/auth/reset/form";
-import OAuthProviders from "./oauth-providers";
+import OAuthProviders from "@/components/auth/oauth-providers";
 
 export default function AuthMenu() {
 	const [open, setOpen] = useState(false);

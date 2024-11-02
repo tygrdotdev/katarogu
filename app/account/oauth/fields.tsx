@@ -1,7 +1,5 @@
 "use client"
 
-import { User } from "@/auth/sessions"
-import AccountCard from "../card"
 import { Checkbox } from "@/components/ui/checkbox"
 import React, { Suspense } from "react"
 import { Button } from "@/components/ui/button"
@@ -12,6 +10,8 @@ import Spinner from "@/components/ui/spinner"
 import { Icons } from "@/components/icons"
 import Alert from "@/components/alert"
 import { unlinkOAuthDiscord, unlinkOAuthGithub, unlinkOAuthGoogle } from "@/auth/oauth/actions"
+import { User } from "@/types/database/user"
+import AccountCard from "@/app/account/card"
 
 export default function OAuthFields({ user }: { user: User }) {
 	const [autoLink, setAutoLink] = React.useState<boolean>(user.oauth_auto_link);

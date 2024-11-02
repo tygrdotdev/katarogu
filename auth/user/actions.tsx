@@ -1,9 +1,10 @@
 "use server";
 
 import client from "@/lib/mongodb";
-import { getCurrentSession, invalidateSession, SessionCollection, UsersCollection } from "../sessions";
-import { deleteSessionTokenCookie } from "../cookies";
+import { getCurrentSession, invalidateSession } from "@/auth/sessions";
+import { deleteSessionTokenCookie } from "@/auth/cookies";
 import { toBoolean } from "@/lib/utils";
+import { UsersCollection } from "@/types/database/user";
 
 export async function getUser() {
 	"use server"

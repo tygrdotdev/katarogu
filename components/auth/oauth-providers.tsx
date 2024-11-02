@@ -1,10 +1,9 @@
 "use client";
 
-import { redirect, useRouter } from "next/navigation";
-import { Button } from "../ui/button";
-import { Icons } from "../icons";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Icons } from "@/components/icons";
 import React from "react";
-import Spinner from "../ui/spinner";
 import { toast } from "sonner";
 
 export default function OAuthProviders() {

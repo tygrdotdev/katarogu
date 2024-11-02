@@ -1,7 +1,7 @@
 import { getCurrentSession } from "@/auth/sessions"
 import { redirect } from "next/navigation";
-import { DeleteAccountConfirm } from "./confirm"
 import { Button } from "@/components/ui/button"
+import { DeleteAccountConfirm } from "@/app/account/danger/confirm";
 
 export default async function DangerZonePage() {
 	const { user } = await getCurrentSession();

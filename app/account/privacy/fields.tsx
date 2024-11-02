@@ -1,13 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import AccountCard from "../card";
-import { User } from "@/auth/sessions";
 import React from "react";
 import { toast } from "sonner";
 import { updateUser } from "@/auth/user/actions";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
+import { User } from "@/types/database/user";
+import AccountCard from "@/app/account/card";
 
 export default function PrivacyFields({ user }: { user: User }) {
 	const [visibility, setVisibility] = React.useState<string>(

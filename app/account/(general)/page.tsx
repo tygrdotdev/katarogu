@@ -5,10 +5,10 @@ import Image from "next/image";
 import AvatarUpload from "@/app/account/(general)/avatar/upload";
 import BannerUpload from "@/app/account/(general)/banner/upload";
 import { getCurrentSession } from "@/auth/sessions";
-import BannerRemove from "./banner/remove";
-import AvatarRemove from "./avatar/remove";
-import GeneralAccountFields from "./fields";
 import { redirect } from "next/navigation";
+import AvatarRemove from "@/app/account/(general)/avatar/remove";
+import BannerRemove from "@/app/account/(general)/banner/remove";
+import GeneralAccountFields from "@/app/account/(general)/fields";
 
 export default async function AccountPage() {
 	const { user } = await getCurrentSession();

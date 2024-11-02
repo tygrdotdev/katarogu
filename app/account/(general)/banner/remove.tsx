@@ -26,7 +26,7 @@ import { ArrowDown } from "lucide-react";
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 import { toast } from "sonner";
 import useSWR from "swr";
-import { User } from "@/auth/sessions";
+import { User } from "@/types/database/user";
 import { useRouter } from "next/navigation";
 
 export default function BannerRemove(props: ButtonProps) {

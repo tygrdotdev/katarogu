@@ -1,13 +1,13 @@
 "use client";
 
-import { User } from "@/auth/sessions";
 import { updateUser } from "@/auth/user/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import React from "react";
 import { toast } from "sonner";
-import AccountCard from "../card";
 import { useRouter } from "next/navigation";
+import { User } from "@/types/database/user";
+import AccountCard from "@/app/account/card";
 
 export default function GeneralAccountFields({ user }: { user: User }) {
 	const [username, setUsername] = React.useState(user.username);

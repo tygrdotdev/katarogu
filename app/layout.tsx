@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Sora } from "next/font/google";
 
-import "./globals.css";
+import "@/app/globals.css";
 import "react-image-crop/dist/ReactCrop.css";
 
 import { cn } from "@/lib/utils";

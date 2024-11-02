@@ -1,4 +1,4 @@
-import { generateSessionToken, createSession, UsersCollection, getCurrentSession } from "@/auth/sessions";
+import { generateSessionToken, createSession, getCurrentSession } from "@/auth/sessions";
 import { cookies } from "next/headers";
 
 import type { OAuth2Tokens } from "arctic";
@@ -6,6 +6,7 @@ import client from "@/lib/mongodb";
 import { setSessionTokenCookie } from "@/auth/cookies";
 import { generateIdFromEntropySize } from "@/auth/crypto";
 import { discord } from "@/auth/oauth/providers";
+import { UsersCollection } from "@/types/database/user";
 
 export async function GET(request: Request): Promise<Response> {
 	const url = new URL(request.url);

@@ -1,9 +1,10 @@
 import React from "react";
 import Link from "next/link";
-import { ThemeToggle } from "./theme/toggle";
+import { ThemeToggle } from "@/components/theme/toggle";
 import { getCurrentSession } from "@/auth/sessions";
 import AuthMenu from "@/components/auth/auth-menu";
 import UserPopup from "@/components/auth/user-menu";
+import { Button } from "@/components/ui/button";
 
 export default async function Navbar() {
 	const { user } = await getCurrentSession();
@@ -42,6 +43,14 @@ export default async function Navbar() {
 								Katarogu
 							</span>
 						</Link>
+						<div className="flex flex-row gap-2 items-center pl-4">
+							<Link href="/manga">
+								<Button variant="link">Manga</Button>
+							</Link>
+							<Link href="/anime">
+								<Button variant="link">Anime</Button>
+							</Link>
+						</div>
 					</div>
 					<div className="flex flex-row items-center gap-3">
 						<ThemeToggle />

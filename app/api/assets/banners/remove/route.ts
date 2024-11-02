@@ -1,6 +1,7 @@
-import { getCurrentSession, UsersCollection } from "@/auth/sessions";
+import { getCurrentSession } from "@/auth/sessions";
 import minio from "@/lib/minio";
 import client from "@/lib/mongodb";
+import { UsersCollection } from "@/types/database/user";
 import { NextResponse } from "next/server";
 
 export async function DELETE() {

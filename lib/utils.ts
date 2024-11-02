@@ -14,4 +14,8 @@ export function toBoolean(value: unknown): boolean {
   return strValue === 'true' || strValue === '1' ? true : false
 };
 
+export function verifyEmailInput(email: string): boolean {
+  return /^.+@.+\..+$/.test(email) && email.length < 256;
+}
+
 export const MAX_FILE_SIZE = parseInt(process.env.MAX_FILE_SIZE!) ?? 12582912; // 12 MB

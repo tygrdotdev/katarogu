@@ -4,7 +4,7 @@ import { useFormState, useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
 import Spinner from "@/components/ui/spinner";
 import { Input } from "@/components/ui/input";
-import { requestPasswordReset, resetPassword } from "./actions";
+import { requestPasswordReset, resetPassword } from "@/auth/reset/actions";
 
 export function RequestPasswordResetForm() {
 	const [state, formAction] = useFormState(requestPasswordReset, {

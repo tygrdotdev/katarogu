@@ -1,11 +1,12 @@
 "use server";
 
 import { ActionResult } from "@/components/form";
-import { verifyEmailInput } from "../email";
+import { verifyEmailInput } from "@/lib/utils";
 import client from "@/lib/mongodb";
 import { verify } from "@node-rs/argon2"
-import { createSession, generateSessionToken, UsersCollection } from "../sessions";
-import { setSessionTokenCookie } from "../cookies";
+import { createSession, generateSessionToken } from "@/auth/sessions";
+import { UsersCollection } from "@/types/database/user";
+import { setSessionTokenCookie } from "@/auth/cookies";
 import { redirect } from "next/navigation";
 
 export async function login(prevState: ActionResult, formData: FormData) {

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import LoginForm from "../../../auth/login/form";
+import LoginForm from "@/auth/login/form";
 import Link from "next/link";
 import React from "react";
 import OAuthProviders from "@/components/auth/oauth-providers";

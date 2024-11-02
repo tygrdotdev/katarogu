@@ -24,9 +24,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
-import { User } from "@/auth/sessions";
 import { toast } from "sonner";
 import { deleteUser } from "@/auth/user/actions";
+import { User } from "@/types/database/user";
 
 export function DeleteAccountConfirm({
 	user,

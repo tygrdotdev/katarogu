@@ -1,4 +1,4 @@
-import RegisterForm from "../../../auth/register/form";
+import RegisterForm from "@/auth/register/form";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
