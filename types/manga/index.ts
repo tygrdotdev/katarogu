@@ -10,10 +10,13 @@ export default interface Manga {
 	background: string;
 	start_date: string;
 	end_date: string;
+	/// TODO
 	nsfw: "nsfw" | "suggestive" | "sfw";
 	status: "unpublished" | "publishing" | "finished";
+	/// TODO
 	authors: string[];
 	genres: string[];
+	/// TODO
 	media: string[];
 	characters: any[];
 }

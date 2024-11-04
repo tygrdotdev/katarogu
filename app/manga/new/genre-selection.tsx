@@ -34,7 +34,7 @@ export default function GenreSelection({ value, setValue }: { value: string[], s
 
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
-			<PopoverTrigger asChild>
+			<PopoverTrigger asChild className='py-2 px-3'>
 				<Button
 					variant="outline"
 					role="combobox"
@@ -56,7 +56,7 @@ export default function GenreSelection({ value, setValue }: { value: string[], s
 							<span className="text-muted-foreground">Select genres</span>
 						)}
 					</div>
-					<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+					<ChevronsUpDown className="ml-2 h-2 w-2 shrink-0 opacity-50" />
 				</Button>
 			</PopoverTrigger>
 			<PopoverContent className="w-[300px] p-0" align="start">

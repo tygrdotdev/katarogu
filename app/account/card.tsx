@@ -23,7 +23,7 @@ export default function AccountCard({
 					</div>
 					{children}
 				</div>
-				<div className="flex flex-row items-center justify-between gap-4 p-4">
+				<div className="flex flex-row items-center justify-between gap-4 p-4 bg-neutral-50/50 dark:bg-neutral-900/50">
 					<span className="text-sm text-neutral-600 dark:text-neutral-400">
 						{footer}
 					</span>

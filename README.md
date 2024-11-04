@@ -7,9 +7,6 @@ Katarogu is a free, open-source and community driven manga and anime tracking se
 > [!WARNING]  
 > Katarogu is currently in alpha stages of development, breaking changes, bugs and missing features are to be expected.  
 
-> [!NOTE]
-> This is a complete rewrite from the original version of Katarogu which depended on PocketBase. You can find the original's source under the [old](https://github.com/tygrdotdev/katarogu/tree/old) branch. Once Katarogu reaches beta stages, this branch will be deleted.
-
 ## Tech stack
 
 - Framework: [NextJS](https://nextjs.org/)
@@ -29,16 +26,16 @@ Since MongoDB is schemaless, you do not need to run any migrations on the databa
 
 ### Mail
 
-Since Katarogu handles authentication using [Lucia](https://lucia-auth.com/), a mail server is required to send verification codes, notifications, etc.  
+Since Katarogu handles it's own authentication, a mail server is required to send verification codes, notifications, etc.  
 Update the SMTP values inside the `.env` file to setup mail.
 
-I personally use a service called [Plunk](https://www.useplunk.com/).
+I personally use a service called [Plunk](https://www.useplunk.com/) since they're cheap and easy to use.
 
-TLDR; any SMTP server should work fine, just update the `.env` values.
+Any SMTP server should work fine, just update the `.env` values.
 
 ### S3
 
-When hosting Katarogu, you can either store assets (such as avatars, banners, etc) in an S3 bucket, or directly inside the Mongo Database.  
+Katarogu can either store assets (such as avatars, banners, etc) in an S3 bucket, or directly inside the Mongo Database.  
 To enable storing assets inside an S3 bucket, add the following properties to your environment variables:  
 
 ```bash

@@ -1,6 +1,7 @@
 export default interface Character {
 	created: string;
 	updated: string;
+	status: "pending" | "approved" | "rejected";
 	english_name: string;
 	japanese_name: string;
 	alternate_names: string[];

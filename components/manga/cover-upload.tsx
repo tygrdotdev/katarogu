@@ -140,9 +140,8 @@ export default function CoverUpload(
 					);
 				}
 
-				const base64Image = canvas.toDataURL("image/png"); // can be changed to jpeg/jpg etc
+				const base64Image = canvas.toDataURL("image/png"); // can be changed to jpeg/jpg et
 
-				// Store the image in a react state
 				props.setValue(base64Image);
 
 				onOpenChange();

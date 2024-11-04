@@ -13,21 +13,17 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Calendar } from "@/components/ui/calendar";
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { format } from "date-fns";
-import { CalendarIcon, Plus, Trash, X } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import GenreSelection from "@/app/manga/new/genre-selection";
 import CharacterSelection from "@/app/manga/new/character/selection";
 import Character from "@/types/character";
 import CoverUpload from "@/components/manga/cover-upload";
+import Author from "@/types/person";
+import DatePicker from "@/components/date-picker";
+import PeopleSelection from "@/app/manga/new/people/selection";
+import Person from "@/types/person";
 
 export default function NewMangaPage() {
 	const [englishTitle, setEngTitle] = useState("");
@@ -40,41 +36,11 @@ export default function NewMangaPage() {
 	const [start_date, setStartDate] = useState<Date>(new Date(Date.now()));
 	const [end_date, setEndDate] = useState<Date>(new Date(Date.now()));
 	const [nsfw, setNsfw] = useState<Manga["nsfw"]>("sfw");
-	const [authors, setAuthors] = useState<Manga["authors"]>([]);
+	const [people, setPeople] = useState<Person[]>([]);
 	const [genres, setGenres] = useState<Manga["genres"]>([]);
 	// const [media, setMedia] = useState<Manga["media"]>();
 	const [status, setStatus] = useState<Manga["status"]>("unpublished");
 	const [characters, setCharacters] = useState<Character[]>([]);
-
-	function DatePicker({ value, setValue }: any) {
-		return (
-			<Popover>
-				<PopoverTrigger asChild>
-					<Button
-						variant={"outline"}
-						className={cn("w-full justify-start text-left font-normal", !value && "text-muted-foreground")}
-					>
-						<CalendarIcon className="mr-2 h-4 w-4" />
-						{value ? format(value, "PPP") : <span>Pick a date</span>}
-					</Button>
-				</PopoverTrigger>
-				<PopoverContent align="start" className=" w-auto p-0">
-					<Calendar
-						mode="single"
-						captionLayout="dropdown-buttons"
-						selected={value}
-						onSelect={setValue}
-						fromYear={1960}
-						toYear={2030}
-					/>
-				</PopoverContent>
-			</Popover>
-		);
-	}
-
-	function MangaCoverRemove() {
-		return <></>;
-	}
 
 	useEffect(() => {
 		const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -180,6 +146,25 @@ export default function NewMangaPage() {
 										</div>
 										<div className="flex flex-col gap-1 w-full">
 											<span className="font-semibold text-neutral-500 dark:text-neutral-400">
+												NSFW:{" "}
+											</span>
+											<Select
+												name="nsfw"
+												value={nsfw}
+												onValueChange={(e: Manga["nsfw"]) => setNsfw(e)}
+											>
+												<SelectTrigger className="w-full">
+													<SelectValue placeholder="Select a status" />
+												</SelectTrigger>
+												<SelectContent>
+													<SelectItem value="sfw">Safe for Work</SelectItem>
+													<SelectItem value="suggestive">Suggestive</SelectItem>
+													<SelectItem value="nsfw">Not Safe for Work</SelectItem>
+												</SelectContent>
+											</Select>
+										</div>
+										<div className="flex flex-col gap-1 w-full">
+											<span className="font-semibold text-neutral-500 dark:text-neutral-400">
 												Started:{" "}
 											</span>
 											<DatePicker value={start_date} setValue={setStartDate} />
@@ -222,13 +207,13 @@ export default function NewMangaPage() {
 							<h2 className="text-lg font-medium">
 								Synopsis
 							</h2>
-							<Textarea className="min-h-32" placeholder="A brief summary or general survey of the manga entry. If you take the Synopsis from a different manga site, please make sure to add them as credit." />
+							<Textarea value={synopsis} onChange={(e) => setSynopsis(e.target.value)} className="min-h-32" placeholder="A brief summary or general survey of the manga entry. If you take the Synopsis from a different manga site, please make sure to add them as credit." />
 						</div>
 						<div className="flex flex-col gap-2 items-start w-full">
 							<h2 className="text-lg font-medium">
 								Background
 							</h2>
-							<Textarea className="min-h-32" placeholder="Encyclopedic information on the series, written in full sentences, which expands upon the database information. This includes the history of the work, awards it may have won, details on how this work may have impacted the industry or individuals' careers, North American licensing information, media adaptations outside of anime/manga, etc." />
+							<Textarea value={background} onChange={(e) => setBackground(e.target.value)} className="min-h-32" placeholder="Encyclopedic information on the series, written in full sentences, which expands upon the database information. This includes the history of the work, awards it may have won, details on how this work may have impacted the industry or individuals' careers, North American licensing information, media adaptations outside of anime/manga, etc." />
 						</div>
 						<div className="flex flex-col gap-2 items-start w-full">
 							<div className="flex flex-row w-full gap-2 items-center justify-between">
@@ -245,7 +230,7 @@ export default function NewMangaPage() {
 								<>
 									<div className="grid grid-cols-2 md:grid-cols-4 w-full lg:grid-cols-6 gap-4 py-2">
 										{characters.map((character: Character) => (
-											<div className="flex flex-col items-start w-full h-full" onClick={() => {
+											<div className="flex flex-col items-start w-full h-full cursor-pointer" onClick={() => {
 												setCharacters((prev) => prev.filter((c) => c !== character));
 											}}>
 												<Image src={character.cover} alt={character.english_name} width={800} height={900} className="w-full h-full object-cover rounded-md" />
@@ -254,6 +239,9 @@ export default function NewMangaPage() {
 														<h3 className="text-lg font-medium">
 															{character.english_name}
 														</h3>
+														<p className="text-sm text-neutral-500 dark:text-neutral-400">
+															{character.japanese_name}
+														</p>
 													</div>
 												</div>
 											</div>
@@ -265,6 +253,48 @@ export default function NewMangaPage() {
 									<h1 className="text-xl font-black">┐(￣∀￣)┌</h1>
 									<h2 className="">
 										No character have been added yet.
+									</h2>
+								</main>
+							)}
+						</div>
+						<div className="flex flex-col gap-2 items-start w-full">
+							<div className="flex flex-row w-full gap-2 items-center justify-between">
+								<h2 className="text-lg font-medium">
+									People
+								</h2>
+								<PeopleSelection value={people} setValue={setPeople}>
+									<Button size="sm">
+										<Plus className="h-4 w-4" /> Add Person
+									</Button>
+								</PeopleSelection>
+							</div>
+							{people.length !== 0 ? (
+								<>
+									<div className="grid grid-cols-2 md:grid-cols-4 w-full lg:grid-cols-6 gap-4 py-2">
+										{people.map((person: Person) => (
+											<div className="flex flex-col items-start w-full h-full cursor-pointer" onClick={() => {
+												setPeople((prev) => prev.filter((p) => p !== person));
+											}}>
+												<Image src={person.cover} alt={person.name} width={800} height={900} className="w-full h-full object-cover rounded-md" />
+												<div className="relative w-full h-full">
+													<div className="absolute left-0 bottom-0 right-0 bg-black/10 backdrop-blur-md border-black/10 dark:border-white/10 p-2 text-white rounded-b-md">
+														<h3 className="text-lg font-medium">
+															{person.name}
+														</h3>
+														<p className="text-sm text-neutral-500 dark:text-neutral-400">
+															{person.given_name}
+														</p>
+													</div>
+												</div>
+											</div>
+										))}
+									</div>
+								</>
+							) : (
+								<main className="flex h-full w-full flex-1 grow flex-col items-center justify-center gap-4 py-4">
+									<h1 className="text-xl font-black">┐(￣∀￣)┌</h1>
+									<h2 className="">
+										No people have been added yet.
 									</h2>
 								</main>
 							)}
