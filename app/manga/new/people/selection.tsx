@@ -9,7 +9,7 @@ import Person from "@/types/person";
 import PersonCollection from "@/types/database/person";
 import CreatePerson from "@/app/manga/new/people/creation";
 
-export default function PeopleSelection({ value, setValue, children }: { value: Person[], setValue: React.Dispatch<React.SetStateAction<Person[]>>, children: React.ReactNode }) {
+export default function PeopleSelection({ value, setValue, children, ref }: { value: Person[], setValue: React.Dispatch<React.SetStateAction<Person[]>>, children: React.ReactNode, ref?: React.RefObject<HTMLButtonElement> }) {
 	const [query, setQuery] = React.useState<string>("");
 	const [loading, setLoading] = React.useState<boolean>(false);
 	const [people, setPeople] = React.useState<PersonCollection[]>([]);
@@ -28,7 +28,7 @@ export default function PeopleSelection({ value, setValue, children }: { value: 
 
 	return (
 		<Dialog>
-			<DialogTrigger asChild>
+			<DialogTrigger asChild ref={ref}>
 				{children}
 			</DialogTrigger>
 			<DialogContent>
@@ -58,7 +58,7 @@ export default function PeopleSelection({ value, setValue, children }: { value: 
 									</CreatePerson>
 								</div>
 							)}
-							<div className="grid grid-cols-3 w-full">
+								<div className="grid grid-cols-3 w-full gap-3">
 								{people.filter((person) => !value.includes(person)).map((person) => (
 									<div
 										className="flex h-full w-full flex-col items-center cursor-pointer"
@@ -67,13 +67,19 @@ export default function PeopleSelection({ value, setValue, children }: { value: 
 											setValue((prev) => [...prev, person]);
 										}}
 									>
-										<Image
+										{person.cover ? (
+											<Image
 											src={person.cover}
 											alt={person.name}
 											width={800}
 											height={900}
 											className="h-full w-full rounded-md object-cover"
-										/>
+											/>
+										) : (
+											<div className="w-full min-h-full px-2 bg-neutral-200 dark:bg-neutral-800 flex flex-col items-center py-24 text-center rounded-md">
+												<h1 className="text-xl font-semibold">No Cover Found</h1>
+											</div>
+										)}
 										<div className="relative w-full">
 											<div className="absolute bottom-0 left-0 right-0 rounded-b-md border-black/10 bg-black/10 p-2 text-white backdrop-blur-md dark:border-white/10">
 												<h3 className="text-lg font-medium">

@@ -45,16 +45,6 @@ export async function POST(req: NextRequest) {
 		return Response.json({ error: true, message: "Biography must be between 2 and 500 characters" }, { status: 400 });
 	}
 
-	if (typeof person.cover === undefined || typeof person.cover !== "string") {
-		return Response.json({ error: true, message: "Cover is required" }, { status: 400 });
-	}
-
-	const coverFile = new File([person.cover], "cover.jpg", { type: person.cover.split(';')[0].split('/')[1] ?? "image/jpeg" });
-
-	if (coverFile.size > MAX_FILE_SIZE) {
-		return Response.json({ error: true, message: "Cover image must be smaller than 12MB" }, { status: 400 });
-	}
-
 	const id = person.id ?? generateIdFromEntropySize(10);
 
 	await client.connect();
@@ -69,7 +59,7 @@ export async function POST(req: NextRequest) {
 		anime_relations: [],
 		manga_relations: [],
 		biography: person.biography,
-		cover: `/api/assets/people/${id}`
+		cover: null
 	});
 
 	return Response.json({ error: false, message: "Person created successfully" }, { status: 200 });

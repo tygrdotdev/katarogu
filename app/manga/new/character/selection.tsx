@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import CreateCharacter from "@/app/manga/new/character/creation";
 import Spinner from "@/components/ui/spinner";
 
-export default function CharacterSelection({ value, setValue, children }: { value: Character[], setValue: React.Dispatch<React.SetStateAction<Character[]>>, children: React.ReactNode }) {
+export default function CharacterSelection({ value, setValue, children, ref }: { value: Character[], setValue: React.Dispatch<React.SetStateAction<Character[]>>, children: React.ReactNode, ref?: React.RefObject<HTMLButtonElement> }) {
 	const [query, setQuery] = React.useState<string>("");
 	const [loading, setLoading] = React.useState<boolean>(false);
 	const [characters, setCharacters] = React.useState<CharacterCollection[]>([]);
@@ -27,7 +27,7 @@ export default function CharacterSelection({ value, setValue, children }: { valu
 
 	return (
 		<Dialog>
-			<DialogTrigger asChild>
+			<DialogTrigger asChild ref={ref}>
 				{children}
 			</DialogTrigger>
 			<DialogContent>
@@ -57,7 +57,7 @@ export default function CharacterSelection({ value, setValue, children }: { valu
 										</CreateCharacter>
 									</div>
 								)}
-								<div className="grid grid-cols-3 w-full">
+								<div className="grid grid-cols-3 w-full gap-3">
 									{characters.filter((character) => !value.includes(character)).map((character) => (
 										<div
 											className="flex h-full w-full flex-col items-center cursor-pointer"
@@ -66,13 +66,19 @@ export default function CharacterSelection({ value, setValue, children }: { valu
 												setValue((prev) => [...prev, character]);
 											}}
 										>
-											<Image
-												src={character.cover}
-												alt={character.english_name}
-												width={800}
-												height={900}
-												className="h-full w-full rounded-md object-cover"
-											/>
+											{character.cover ? (
+												<Image
+													src={character.cover}
+													alt={character.english_name}
+													width={800}
+													height={900}
+													className="h-full w-full rounded-md object-cover"
+												/>
+											) : (
+												<div className="w-full min-h-full px-2 bg-neutral-200 dark:bg-neutral-800 flex flex-col items-center py-24 text-center rounded-md">
+													<h1 className="text-xl font-semibold">No Cover Found</h1>
+												</div>
+											)}
 											<div className="relative w-full">
 												<div className="absolute bottom-0 left-0 right-0 rounded-b-md border-black/10 bg-black/10 p-2 text-white backdrop-blur-md dark:border-white/10">
 													<h3 className="text-lg font-medium">
